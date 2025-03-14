@@ -69,7 +69,6 @@ bool Tas5805mComponent::configure_registers() {
     i++;
   }
   this->number_registers_configured_ = counter;
-  if (!this->get_digital_volume(&this->old_digital_volume_)) return false;
   if (!this->get_gain(&this->analog_gain_)) return false;
   this->set_volume(0.1);
   return true;
@@ -88,8 +87,8 @@ void Tas5805mComponent::dump_config() {
       break;
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
-      ESP_LOGD(TAG, "  Digital Volume: %i", this->old_digital_volume_);
       ESP_LOGD(TAG, "  Analog Gain: %i", this->analog_gain_);
+      ESP_LOGD(TAG, "  Volume: %3.2f", this->volume_);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
