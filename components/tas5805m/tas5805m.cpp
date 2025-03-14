@@ -70,7 +70,7 @@ bool Tas5805mComponent::configure_registers() {
   }
   this->number_registers_configured_ = counter;
   if (!this->get_gain(&this->analog_gain_)) return false;
-  this->set_volume(0.1);
+  this->set_volume(0.01);
   return true;
 }
 
