@@ -71,7 +71,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    uint8_t i2c_error_{0};
    uint8_t analog_gain_{0};
    uint8_t digital_volume_{0};
-   uint8_t old_digital_volume_{0};
 
    uint16_t number_registers_configured_{0};
 };
