@@ -143,13 +143,22 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 
 // controls both left and right channel digital volume
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
-  if (new_volume > 158) return false;
+  if (new_volume > 158) {
+    ESP_LOGE(TAG, "  set volume too high = %i", new_volume);
+    return false;
+  }
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) return false;
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)&tas5805m_volume[new_volume], 4)) return false;
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+    ESP_LOGE(TAG, "  set left volume error ");
+    return false;
+  }
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+    ESP_LOGE(TAG, "  set right volume error ");
+    return false;
+  }
   if (!tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
-  ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
+  ESP_LOGD(TAG, "  Tas5805m LR Raw Volume: %i", new_volume);
   return true;
 }
 
@@ -179,9 +188,18 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
 }
 
 bool Tas5805mComponent::tas5805m_set_book_and_page(uint8_t book, uint8_t page) {
-    if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) return false;
-    if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) return false;
-    if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) return false;
+    if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
+      ESP_LOGE(TAG, "  write set book-page error 1");
+      return false;
+    }
+    if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) {
+      ESP_LOGE(TAG, "  write set book-page error 2");
+      return false;
+    }
+    if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) {
+      ESP_LOGE(TAG, "  write set book-page error 3");
+      return false;
+    }
     return true;
 }
 
