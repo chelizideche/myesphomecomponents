@@ -97,7 +97,7 @@ void Tas5805mComponent::dump_config() {
 
 bool Tas5805mComponent::set_volume(float volume) {
   float new_volume = clamp<float>(volume, 0.0, 1.0);
-  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 1, 158);
+  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 0, 158);
   if (!this->set_digital_volume(raw_volume)) return false;
   this->volume_ = new_volume;
   ESP_LOGD(TAG, "  Volume changed to: %2.0f%%", new_volume*100);
@@ -143,9 +143,10 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 
 // controls both left and right channel digital volume
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
+  if (new_volume > 158) return false;
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[raw_volume]), 4)) return false;
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[raw_volume]), 4)) return false;
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[new_volume]), 4)) return false;
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[new_volume]), 4)) return false;
   if (!tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
@@ -178,10 +179,10 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
 }
 
 bool Tas5805mComponent::tas5805m_set_book_and_page(uint8_t book, uint8_t page) {
-    if (!this->tas5805m_write_byte9REG_PAGE_SET, REG_PAGE_ZERO)) return false;
+    if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) return false;
     if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) return false;
     if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) return false;
-    return true
+    return true;
 }
 
 bool Tas5805mComponent::tas5805m_read_byte(uint8_t a_register, uint8_t* data) {
