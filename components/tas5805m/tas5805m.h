@@ -47,7 +47,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
-   bool tas5805m_write_bytes(uint8_t a_register, const uint8_t *data, uint8_t len);
+   bool tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len);
 
 
    enum ErrorCode {

@@ -212,7 +212,7 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
     return true;
 }
 
-bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, const uint8_t *data, uint8_t len) {
+bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
   i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
   if (error_code != i2c::ERROR_OK) {
     ESP_LOGE(TAG, "  write register error %i", error_code);
