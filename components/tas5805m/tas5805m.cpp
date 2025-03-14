@@ -26,7 +26,7 @@ static const uint8_t REG_PAGE_SET           = 0x00;
 static const uint8_t REG_PAGE_ZERO          = 0x00;
 
 static const uint8_t REG_BOOK_CONTROL_PORT  = 0x00;
-
+static const uint8_t REG_BOOK_5             = 0x8C;
 static const uint8_t REG_BOOK_5_VOLUME_PAGE = 0x2A;
 static const uint8_t REG_LEFT_VOLUME        = 0x24;
 static const uint8_t REG_RIGHT_VOLUME       = 0x28;
@@ -144,8 +144,8 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 // controls both left and right channel digital volume
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME, reinterpret_cast<uint8_t *>&tas5805m_volume[raw_volume], 4)) return false;
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, reinterpret_cast<uint8_t *>&tas5805m_volume[raw_volume], 4)) return false;
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[raw_volume]), 4)) return false;
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[raw_volume]), 4)) return false;
   if (!tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
@@ -178,9 +178,9 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
 }
 
 bool Tas5805mComponent::tas5805m_set_book_and_page(uint8_t book, uint8_t page) {
-    if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) return false;
-    if (!this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, book)) return false;
-    if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, page)) return false;
+    if (!this->tas5805m_write_byte9REG_PAGE_SET, REG_PAGE_ZERO)) return false;
+    if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) return false;
+    if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) return false;
     return true
 }
 
