@@ -145,8 +145,8 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
   if (new_volume > 158) return false;
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[new_volume]), 4)) return false;
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, reinterpret_cast<uint8_t *>(&tas5805m_volume[new_volume]), 4)) return false;
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) return false;
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)&tas5805m_volume[new_volume], 4)) return false;
   if (!tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
