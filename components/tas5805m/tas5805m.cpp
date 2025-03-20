@@ -149,7 +149,7 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
     return false;
   }
 
-  uint8_t* vp
+  uint8_t* vp;
   // uint8_t v[4];
 	// uint32_t x = tas5805m_volume[new_volume];
 	// int i;
