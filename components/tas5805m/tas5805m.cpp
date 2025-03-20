@@ -148,14 +148,15 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
     ESP_LOGE(TAG, "  set volume too high = %i", new_volume);
     return false;
   }
+
   uint8_t* vp
-  uint8_t v[4];
-	uint32_t x = tas5805m_volume[new_volume];
-	int i;
-  for (i = 0; i < 4; i++) {
-		v[3 - i] = x;
-		x >>= 8;
-	}
+  // uint8_t v[4];
+	// uint32_t x = tas5805m_volume[new_volume];
+	// int i;
+  // for (i = 0; i < 4; i++) {
+	// 	v[3 - i] = x;
+	// 	x >>= 8;
+	// }
 
 
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
