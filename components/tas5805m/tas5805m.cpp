@@ -161,12 +161,12 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
   vp = (uint8_t*)&tas5805m_volume[new_volume];
   ESP_LOGE(TAG, "Volume byte 0x%02X%02X%02X%02X",*vp, *(vp+1), *(vp+2), *(vp+3));
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4))
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
   //if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)v, 4)) {
      ESP_LOGE(TAG, "  set left volume error ");
      return false;
    }
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4))
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
   //if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)v, 4)) {
      ESP_LOGE(TAG, "  set right volume error ");
      return false;
