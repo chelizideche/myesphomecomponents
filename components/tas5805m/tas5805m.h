@@ -43,6 +43,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_gain(uint8_t* raw_gain);
    bool set_gain(uint8_t new_gain);
 
+   void decode_32bit(uint32_t v, uint8_t* a);
+
    bool tas5805m_set_book_and_page(uint8_t book, uint8_t page);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);

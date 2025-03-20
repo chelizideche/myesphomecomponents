@@ -142,6 +142,13 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
   return true;
 }
 
+void decode_32bit(uint32_t v, uint8_t* a) {
+  for (uint8_t i = 4; i > 0; i--) {
+	  *(a + i - 1) = v & 0xFF;
+	  v >>= 8;
+  }
+}
+
 // controls both left and right channel digital volume
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
   if (new_volume > 158) {
@@ -149,30 +156,35 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
     return false;
   }
 
-  uint8_t* vp;
-  // uint8_t v[4];
-	// uint32_t x = tas5805m_volume[new_volume];
+  //uint8_t* vp;
+
+	//uint32_t x = tas5805m_volume[new_volume];
+  //v[0] = uint8_t(x)
+  //v[1] = uint8_t(x>>8);
+  //v[2] = uint8_t(x>>16);
+
 	// int i;
   // for (i = 0; i < 4; i++) {
 	// 	v[3 - i] = x;
 	// 	x >>= 8;
 	// }
 
-
-  if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  vp = (uint8_t*)&tas5805m_volume[new_volume];
-  ESP_LOGE(TAG, "Volume byte 0x%02X%02X%02X%02X",*vp, *(vp+1), *(vp+2), *(vp+3));
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
-  //if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)v, 4)) {
+  uint8_t volume_settings[4];
+  this->decode_32bit(tas5805m_volume[new_volume], volume_settings);
+  if (!this->tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
+  //vp = (uint8_t*)&tas5805m_volume[new_volume];
+  ESP_LOGE(TAG, "Volume byte 0x%02X%02X%02X%02X",volume_settings[0], volume_settings[1], volume_settings[3], volume_settings[4]);
+  //if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+  if (!this->tas5805m_write_bytes(REG_LEFT_VOLUME , volume_settings, 4)) {
      ESP_LOGE(TAG, "  set left volume error ");
      return false;
    }
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
-  //if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)v, 4)) {
+  //if (!tas5805m_write_bytes(REG_RIGHT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+  if (!this->tas5805m_write_bytes(REG_RIGHT_VOLUME, volume_settings, 4)) {
      ESP_LOGE(TAG, "  set right volume error ");
      return false;
   }
-  if (!tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
+  if (!this->tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m LR Raw Volume: %i", new_volume);
   return true;
