@@ -148,12 +148,21 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
     ESP_LOGE(TAG, "  set volume too high = %i", new_volume);
     return false;
   }
+  uint8_t v[4];
+	uint32_t x = tas5805m_volume[new_volume];
+	int i;
+  for (i = 0; i < 4; i++) {
+		v[3 - i] = x;
+		x >>= 8;
+	}
+
+
   if (!tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+  if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)v, 4)) {
     ESP_LOGE(TAG, "  set left volume error ");
     return false;
   }
-  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)&tas5805m_volume[new_volume], 4)) {
+  if (!tas5805m_write_bytes(REG_RIGHT_VOLUME, (uint8_t*)v, 4)) {
     ESP_LOGE(TAG, "  set right volume error ");
     return false;
   }
