@@ -142,7 +142,7 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
   return true;
 }
 
-void decode_32bit(uint32_t v, uint8_t* a) {
+void Tas5805mComponent::decode_32bit(uint32_t v, uint8_t* a) {
   for (uint8_t i = 4; i > 0; i--) {
 	  *(a + i - 1) = v & 0xFF;
 	  v >>= 8;
