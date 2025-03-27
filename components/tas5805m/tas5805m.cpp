@@ -192,7 +192,7 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
     ESP_LOGE(TAG, "  write set book-page error 2");
     return false;
   }
-  if (this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY)) {
+  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY)) {
     ESP_LOGE(TAG, "  write play mode error");
     return false;
   }
