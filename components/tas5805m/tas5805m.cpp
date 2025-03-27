@@ -1,6 +1,5 @@
 #include "tas5805m.h"
 #include "tas5805m_minimal.h"
-#include "tas5805m_eq.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/hal.h"
@@ -20,16 +19,6 @@ static const uint8_t LR_CHANNEL_MUTE         = 0x08; // Left-Right Channel Mute
 static const uint8_t DEVICE_CTRL_2_REGISTER = 0x03; // Device state control register
 static const uint8_t DIG_VOL_CTRL_REGISTER  = 0x4C;
 static const uint8_t AGAIN_REGISTER         = 0x54;
-
-static const uint8_t REG_BOOK_SET           = 0x7F;
-static const uint8_t REG_PAGE_SET           = 0x00;
-static const uint8_t REG_PAGE_ZERO          = 0x00;
-
-static const uint8_t REG_BOOK_CONTROL_PORT  = 0x00;
-static const uint8_t REG_BOOK_5             = 0x8C;
-static const uint8_t REG_BOOK_5_VOLUME_PAGE = 0x2A;
-static const uint8_t REG_LEFT_VOLUME        = 0x24;
-static const uint8_t REG_RIGHT_VOLUME       = 0x28;
 
 static const uint8_t ESPHOME_MAXIMUM_DELAY  = 5;    // Milliseconds
 
@@ -85,11 +74,10 @@ void Tas5805mComponent::dump_config() {
     case WRITE_REGISTER_FAILED:
       ESP_LOGE(TAG, "  Write register failure with error code = %i",this->i2c_error_);
       break;
-    case NONE:
+      case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
+      ESP_LOGD(TAG, "  Digital Volume: %i", this->digital_volume_);
       ESP_LOGD(TAG, "  Analog Gain: %i", this->analog_gain_);
-      ESP_LOGD(TAG, "  Volume: %3.2f", this->volume_);
-      ESP_LOGD(TAG, "  LR Raw Volume: %i", this->digital_volume_);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -98,7 +86,7 @@ void Tas5805mComponent::dump_config() {
 
 bool Tas5805mComponent::set_volume(float volume) {
   float new_volume = clamp<float>(volume, 0.0, 1.0);
-  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 0, 158);
+  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 254, 0);
   if (!this->set_digital_volume(raw_volume)) return false;
   this->volume_ = new_volume;
   ESP_LOGD(TAG, "  Volume changed to: %2.0f%%", new_volume*100);
@@ -142,64 +130,19 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
   return true;
 }
 
-void Tas5805mComponent::decode_32bit(uint32_t v, uint8_t* a) {
-  for (uint8_t i = 4; i > 0; i--) {
-	  *(a + i - 1) = v & 0xFF;
-	  v >>= 8;
-  }
-}
-
 // controls both left and right channel digital volume
+// digital volume is 24 dB to -103 dB in -0.5 dB step
+// 00000000: +24.0 dB
+// 00000001: +23.5 dB
+// 00101111: +0.5 dB
+// 00110000: 0.0 dB
+// 00110001: -0.5 dB
+// 11111110: -103 dB
+// 11111111: Mute
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
-  if (new_volume > 158) {
-    ESP_LOGE(TAG, "  set volume too high = %i", new_volume);
-    return false;
-  }
-
-  //uint8_t* vp;
-
-	//uint32_t x = tas5805m_volume[new_volume];
-  //v[0] = uint8_t(x)
-  //v[1] = uint8_t(x>>8);
-  //v[2] = uint8_t(x>>16);
-
-	// int i;
-  // for (i = 0; i < 4; i++) {
-	// 	v[3 - i] = x;
-	// 	x >>= 8;
-	// }
-
-  uint8_t volume_settings[4];
-  this->decode_32bit(tas5805m_volume[new_volume], volume_settings);
-  if (!this->tas5805m_set_book_and_page(REG_BOOK_5, REG_BOOK_5_VOLUME_PAGE)) return false;
-  //vp = (uint8_t*)&tas5805m_volume[new_volume];
-  ESP_LOGE(TAG, "Volume byte 0x%02X%02X%02X%02X",volume_settings[0], volume_settings[1], volume_settings[2], volume_settings[3]);
-  //if (!tas5805m_write_bytes(REG_LEFT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
-  if (!this->tas5805m_write_bytes(REG_LEFT_VOLUME , volume_settings, 4)) {
-     ESP_LOGE(TAG, "  set left volume error ");
-     return false;
-   }
-  //if (!tas5805m_write_bytes(REG_RIGHT_VOLUME , (uint8_t*)&tas5805m_volume[new_volume], 4)) {
-  if (!this->tas5805m_write_bytes(REG_RIGHT_VOLUME, volume_settings, 4)) {
-     ESP_LOGE(TAG, "  set right volume error ");
-     return false;
-  }
-  if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
-    ESP_LOGE(TAG, "  write set book-page error 3");
-    return false;
-  }
-  if (!this->tas5805m_write_byte(REG_BOOK_SET, 0x00)) {
-    ESP_LOGE(TAG, "  write set book-page error 2");
-    return false;
-  }
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY)) {
-    ESP_LOGE(TAG, "  write play mode error");
-    return false;
-  }
-
-  //if (!this->tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
+  if (!this->tas5805m_write_byte(DIG_VOL_CTRL_REGISTER, new_volume)) return false;
   this->digital_volume_ = new_volume;
-  ESP_LOGD(TAG, "  Tas5805m LR Raw Volume: %i", new_volume);
+  ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
   return true;
 }
 
@@ -226,22 +169,6 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
   this->analog_gain_ = new_gain;
   ESP_LOGD(TAG, "  Tas5805m Analog Gain: %i", new_gain);
   return true;
-}
-
-bool Tas5805mComponent::tas5805m_set_book_and_page(uint8_t book, uint8_t page) {
-    if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
-      ESP_LOGE(TAG, "  write set book-page error 1");
-      return false;
-    }
-    if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) {
-      ESP_LOGE(TAG, "  write set book-page error 2");
-      return false;
-    }
-    if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) {
-      ESP_LOGE(TAG, "  write set book-page error 3");
-      return false;
-    }
-    return true;
 }
 
 bool Tas5805mComponent::tas5805m_read_byte(uint8_t a_register, uint8_t* data) {

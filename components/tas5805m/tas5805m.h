@@ -43,10 +43,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_gain(uint8_t* raw_gain);
    bool set_gain(uint8_t new_gain);
 
-   void decode_32bit(uint32_t v, uint8_t* a);
-
-   bool tas5805m_set_book_and_page(uint8_t book, uint8_t page);
-
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
    bool tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len);
@@ -63,7 +59,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     CTRL_SLEEP      = 0x01, // Sleep
     CTRL_HI_Z       = 0x02, // Hi-Z
     CTRL_PLAY       = 0x03, // Play
-    CTRL_MUTE       = 0x08  // Play
+    CTRL_MUTE       = 0x08  // LR Channel Mute
    } state_control_;
 
    bool deep_sleep_mode_{false};
