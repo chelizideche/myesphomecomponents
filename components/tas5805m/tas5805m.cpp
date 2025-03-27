@@ -184,7 +184,20 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
      ESP_LOGE(TAG, "  set right volume error ");
      return false;
   }
-  if (!this->tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
+  if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
+    ESP_LOGE(TAG, "  write set book-page error 3");
+    return false;
+  }
+  if (!this->tas5805m_write_byte(REG_BOOK_SET, 0x00)) {
+    ESP_LOGE(TAG, "  write set book-page error 2");
+    return false;
+  }
+  this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY) {
+    ESP_LOGE(TAG, "  write play mode error");
+    return false;
+  }
+
+  //if (!this->tas5805m_set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m LR Raw Volume: %i", new_volume);
   return true;
