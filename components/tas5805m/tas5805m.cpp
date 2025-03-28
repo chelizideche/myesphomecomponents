@@ -106,8 +106,8 @@ bool Tas5805mComponent::set_mute_off() {
   return true;
 }
 
-// set bit 3 MUTE in DEVICE_CTRL_2_REGISTER and retains current Control State
-// ensures get_power_state = tas5805m_state_.state
+// set bit 3 MUTE in DEVICE_CTRL_2_REGISTER and retain current Control State
+// ensures get_state = get_power_state
 bool Tas5805mComponent::set_mute_on() {
   if (this->is_muted_) return true;
   if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, this->tas5805m_state_.state + MUTE_CONTROL)) return false;
@@ -118,29 +118,26 @@ bool Tas5805mComponent::set_mute_on() {
 
 bool Tas5805mComponent::set_deep_sleep_on() {
   if (this->tas5805m_state_.state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
-  // retain mute state
-  uint8_t keep_mute_state = 0;
-  if (this->is_muted_) {
-    keep_mute_state = MUTE_CONTROL;
-    ESP_LOGD(TAG, "  Tas5805m retain Mute On");
-  }
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_DEEP_SLEEP + keep_mute_state)) return false;
+
+  // preserve mute state
+  uint8_t new_value = (this->is_muted_) ? (CTRL_DEEP_SLEEP + MUTE_CONTROL) : CTRL_DEEP_SLEEP;
+  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, new_value)) return false;
+
   this->tas5805m_state_.state = CTRL_DEEP_SLEEP;                   // set Control State to deep sleep
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep On");
+  if (this->is_muted_) ESP_LOGD(TAG, "  Tas5805m Mute On preserved");
   return true;
 }
 
 bool Tas5805mComponent::set_deep_sleep_off() {
   if (this->tas5805m_state_.state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
-  // retain mute state
-  uint8_t keep_mute_state = 0;
-  if (this->is_muted_) {
-    keep_mute_state = MUTE_CONTROL;
-    ESP_LOGD(TAG, "  Tas5805m retain Mute On");
-  }
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_PLAY + keep_mute_state)) return false;
+  // preserve mute state
+  uint8_t new_value = (this->is_muted_) ? (CTRL_PLAY + MUTE_CONTROL) : CTRL_PLAY;
+  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, new_value)) return false;
+
   this->tas5805m_state_.state = CTRL_PLAY;                        // set Control State to play
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep Off");
+  if (this->is_muted_) ESP_LOGD(TAG, "  Tas5805m Mute On preserved");
   return true;
 }
 
