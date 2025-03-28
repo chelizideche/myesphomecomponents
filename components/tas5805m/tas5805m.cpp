@@ -9,12 +9,6 @@ namespace tas5805m {
 
 static const char *const TAG = "tas5805m";
 
-static const uint8_t CTRL_STATE_DEEP_SLEEP   = 0x00;
-static const uint8_t CTRL_STATE_SLEEP        = 0x01;
-static const uint8_t CTRL_STATE_HI_Z         = 0x02;
-static const uint8_t CTRL_STATE_PLAY         = 0x03;
-static const uint8_t LR_CHANNEL_MUTE         = 0x08; // Left-Right Channel Mute
-
 // tas5805m registers
 static const uint8_t DEVICE_CTRL_2_REGISTER = 0x03; // Device state control register
 static const uint8_t DIG_VOL_CTRL_REGISTER  = 0x4C;
@@ -58,8 +52,11 @@ bool Tas5805mComponent::configure_registers() {
     i++;
   }
   this->number_registers_configured_ = counter;
+
+  if (!this->set_state(CTRL_PLAY)) return false;
+  this->set_volume(0.05);
+
   if (!this->get_gain(&this->analog_gain_)) return false;
-  this->set_volume(0.01);
   return true;
 }
 
@@ -95,7 +92,7 @@ bool Tas5805mComponent::set_volume(float volume) {
 
 bool Tas5805mComponent::set_mute_off() {
   if (!this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY)) return false;
+  if (!this->set_state(CTRL_PLAY)) return false;
   this->is_muted_ = false;
   ESP_LOGD(TAG, "  Tas5805m Mute Off");
   return true;
@@ -103,24 +100,37 @@ bool Tas5805mComponent::set_mute_off() {
 
 bool Tas5805mComponent::set_mute_on() {
   if (this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, LR_CHANNEL_MUTE)) return false;
+  if (!this->set_state(CTRL_MUTE)) return false;
   this->is_muted_ = true;
   ESP_LOGD(TAG, "  Tas5805m Mute On");
   return true;
 }
 
 bool Tas5805mComponent::set_deep_sleep_on() {
-  if (this->deep_sleep_mode_) return true; // already in deep sleep
-  this->deep_sleep_mode_ = this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_DEEP_SLEEP);
+  if (this->tas5805m_state_.state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
+  if (!this->set_state(CTRL_DEEP_SLEEP)) return false;
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep On");
-  return this->deep_sleep_mode_;
+  return true;
 }
 
 bool Tas5805mComponent::set_deep_sleep_off() {
-  if (!this->deep_sleep_mode_) return true; // already not in deep sleep
-  this->deep_sleep_mode_ = (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_STATE_PLAY));
+  if (this->tas5805m_state_.state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
+  if (!this->set_state(CTRL_PLAY)) return false;
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep Off");
-  return this->deep_sleep_mode_;
+  return true;
+}
+
+bool Tas5805mComponent::get_state(ControlState* state) {
+  *state = this->tas5805m_state_.state;
+  return true;
+}
+
+bool Tas5805mComponent::set_state(ControlState state) {
+  if (this->tas5805m_state_.state == state) return true;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, state)) return false;
+  this->tas5805m_state_.state = state;
+  ESP_LOGD(TAG, "  Tas5805m state set to: 0x%02x", state);
+  return true;
 }
 
 bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {

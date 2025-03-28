@@ -37,6 +37,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool configure_registers();
 
+   bool get_state(ControlState* state);
+   bool set_state(ControlState state);
+
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
 
@@ -47,22 +50,36 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
    bool tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len);
 
-
    enum ErrorCode {
      NONE = 0,
      CONFIGURATION_FAILED,
      WRITE_REGISTER_FAILED
    } error_code_{NONE};
 
-   enum {
+   enum ControlState {
     CTRL_DEEP_SLEEP = 0x00, // Deep Sleep
     CTRL_SLEEP      = 0x01, // Sleep
     CTRL_HI_Z       = 0x02, // Hi-Z
     CTRL_PLAY       = 0x03, // Play
     CTRL_MUTE       = 0x08  // LR Channel Mute
-   } state_control_;
+   };
 
-   bool deep_sleep_mode_{false};
+  enum MixerMode {
+    MIXER_UNKNOWN = 0,
+    MIXER_STEREO,
+    MIXER_STEREO_INVERSE,
+    MIXER_MONO,
+    MIXER_RIGHT,
+    MIXER_LEFT,
+  };
+
+  struct {
+    //bool           is_muted; // not used as esphome AudioDac component has its own is_muted variables
+    bool           is_powered;
+    //int8_t       eq_gain[TAS5805M_EQ_BANDS]; // not implemented yet
+    ControlState   state;
+    MixerMode      mixer_mode;
+  } tas5805_state_;
 
    float volume_{0};
 
