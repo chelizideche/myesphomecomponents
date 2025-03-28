@@ -100,11 +100,7 @@ bool Tas5805mComponent::set_volume(float volume) {
 
 bool Tas5805mComponent::set_mute_off() {
   if (!this->is_muted_) return true;
-  Tas5805mControlState state;
-  if (!get_state(&state)) return false;
-  // set mute bit = 0
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, state)) return false;
-  ESP_LOGD(TAG, "  DEVICE_CTRL_2_REGISTER = 0x%02x", state);
+  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, this->tas5805m_state_.state)) return false;
   this->is_muted_ = false;
   ESP_LOGD(TAG, "  Tas5805m Mute Off");
   return true;
@@ -114,11 +110,7 @@ bool Tas5805mComponent::set_mute_off() {
 // ensures get_power_state = tas5805m_state_.state
 bool Tas5805mComponent::set_mute_on() {
   if (this->is_muted_) return true;
-  Tas5805mControlState state;
-  if (!get_state(&state)) return false;
-  // set mute bit = 1
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, state + MUTE_CONTROL)) return false;
-  ESP_LOGD(TAG, "  DEVICE_CTRL_2_REGISTER = 0x%02X", state + MUTE_CONTROL);
+  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, this->tas5805m_state_.state + MUTE_CONTROL)) return false;
   this->is_muted_ = true;
   ESP_LOGD(TAG, "  Tas5805m Mute On");
   return true;
@@ -128,9 +120,11 @@ bool Tas5805mComponent::set_deep_sleep_on() {
   if (this->tas5805m_state_.state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
   // retain mute state
   uint8_t keep_mute_state = 0;
-  if (this->is_muted_) keep_mute_state = MUTE_CONTROL;
+  if (this->is_muted_) {
+    keep_mute_state = MUTE_CONTROL;
+    ESP_LOGD(TAG, "  Tas5805m retain Mute On");
+  }
   if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_DEEP_SLEEP + keep_mute_state)) return false;
-  ESP_LOGD(TAG, "  DEVICE_CTRL_2_REGISTER = 0x%02X", CTRL_DEEP_SLEEP + keep_mute_state);
   this->tas5805m_state_.state = CTRL_DEEP_SLEEP;                   // set Control State to deep sleep
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep On");
   return true;
@@ -140,10 +134,12 @@ bool Tas5805mComponent::set_deep_sleep_off() {
   if (this->tas5805m_state_.state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
   // retain mute state
   uint8_t keep_mute_state = 0;
-  if (this->is_muted_) keep_mute_state = MUTE_CONTROL;
+  if (this->is_muted_) {
+    keep_mute_state = MUTE_CONTROL;
+    ESP_LOGD(TAG, "  Tas5805m retain Mute On");
+  }
   if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, CTRL_PLAY + keep_mute_state)) return false;
-  ESP_LOGD(TAG, "  DEVICE_CTRL_2_REGISTER = 0x%02X", CTRL_PLAY + keep_mute_state);
-  this->tas5805m_state_.state = CTRL_PLAY;                   // set Control State to play
+  this->tas5805m_state_.state = CTRL_PLAY;                        // set Control State to play
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep Off");
   return true;
 }
