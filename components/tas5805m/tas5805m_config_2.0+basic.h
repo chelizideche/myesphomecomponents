@@ -7,7 +7,7 @@
 
 // static const uint8_t CFG_META_DELAY = 254;
 
-// static const tas5805m_cfg_reg_t tas5805m_registers[] = {
+// static const Tas5805mConfiguration tas5805m_registers[] = {
 //   // RESET
 //       { 0x00, 0x00 },
 //       { 0x7f, 0x00 },
