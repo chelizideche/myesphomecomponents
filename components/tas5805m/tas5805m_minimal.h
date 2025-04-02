@@ -12,7 +12,7 @@ static const Tas5805mConfiguration tas5805m_registers[] = {
     { 0x03, 0x02 },
     { 0x01, 0x11 },
     { 0x03, 0x02 },
-    { CFG_META_DELAY, 5 },
+    { TAS5805M_CFG_META_DELAY, 5 },
     { 0x03, 0x00 },
     { 0x46, 0x01 },
     { 0x03, 0x02 },
