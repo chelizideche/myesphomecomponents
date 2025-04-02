@@ -9,6 +9,8 @@
 namespace esphome {
 namespace tas5805m {
 
+static const uint8_t  TAS5805M_EQ_BANDS = 15;
+
 enum Tas5805mControlState : uint8_t {
   CTRL_DEEP_SLEEP = 0x00, // Deep Sleep
   CTRL_SLEEP      = 0x01, // Sleep
