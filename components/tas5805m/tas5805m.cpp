@@ -1,5 +1,5 @@
-#include "tas5805m.h"
 #include "tas5805m_cfg.h"
+#include "tas5805m.h"
 #include "tas5805m_minimal.h"
 #include "tas5805m_eq.h"
 #include "esphome/core/log.h"
@@ -216,7 +216,7 @@ bool Tas5805mComponent::tas5805m_set_eq(bool enable) {
   return this->tas5805m_write_byte(DSP_MISC_REGISTER, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
 }
 
-bool Tas5805mComponent:tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
+bool Tas5805mComponent::tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "No change to EQ Band: invalid band %d", band);
     return false;
@@ -235,7 +235,7 @@ bool Tas5805mComponent:tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
   uint16_t y = band * TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF;
 
   for (int16_t i = 0; i < TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF; i++) {
-      const reg_sequence_eq *reg_value = &tas5805m_eq_registers[x][y + i];
+      const RegisterSequenceEq* reg_value = &tas5805m_eq_registers[x][y + i];
       if (reg_value == NULL) {
           ESP_LOGW(TAG, "NULL pointer encountered at row[%d]", y + i);
           continue;

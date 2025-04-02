@@ -12,10 +12,9 @@ namespace tas5805m {
 			uint8_t value;
 	};
 
-	static const uint8_t  TAS5805M_EQ_MAX_DB         = 15;
-	static const int8_t   TAS5805M_EQ_MIN_DB         = -TAS5805M_EQ_MAX_DB;
+	static const int8_t  TAS5805M_EQ_MAX_DB          = 15;
+	static const int8_t  TAS5805M_EQ_MIN_DB          = -TAS5805M_EQ_MAX_DB;
 
-	static const uint8_t  TAS5805M_EQ_STEPS          = 1 + TAS5805M_EQ_MAX_DB - TAS5805M_EQ_MIN_DB;
 	static const uint8_t  TAS5805M_EQ_BANDS          = 15;
 	static const uint8_t  TAS5805M_EQ_KOEF_PER_BAND  = 5;
 	static const uint8_t  TAS5805M_EQ_REG_PER_KOEF   = 4;
