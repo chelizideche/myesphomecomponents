@@ -257,7 +257,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  return this->set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO);
+  return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
