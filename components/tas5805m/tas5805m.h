@@ -112,8 +112,10 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_fs_freq(Tas5805mFsFreq* freq);
    bool get_bck_ratio(uint8_t *ratio);
    bool get_power_state(Tas5805mControlState* state);
-   bool tas5805m_set_eq(bool enable);
-   bool tas5805m_set_eq_gain(uint8_t band, int8_t gain);
+   bool set_eq(bool enable);
+   bool set_eq_gain(uint8_t band, int8_t gain);
+
+   bool set_book_and_page(uint8_t book, uint8_t page);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);

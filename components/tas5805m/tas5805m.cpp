@@ -211,25 +211,25 @@ bool Tas5805mComponent::get_eq(bool* enabled) {
   return true;
 }
 
-bool Tas5805mComponent::tas5805m_set_eq(bool enable) {
+bool Tas5805mComponent::set_eq(bool enable) {
   ESP_LOGD(TAG, "Setting EQ to %d", enable);
   return this->tas5805m_write_byte(DSP_MISC_REGISTER, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
 }
 
-bool Tas5805mComponent::tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
+bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
-    ESP_LOGE(TAG, "No change to EQ Band: invalid band %d", band);
+    ESP_LOGE(TAG, "No Gain change to EQ Band: invalid band %d", band);
     return false;
   }
 
   if (gain < TAS5805M_EQ_MIN_DB || gain > TAS5805M_EQ_MAX_DB) {
-    ESP_LOGE(TAG, "No change to EQ Band %d Gain: invalid gain %d", band, gain);
+    ESP_LOGE(TAG, "No Gain change to EQ Band %d Gain: invalid gain %d", band, gain);
     return false;
   }
 
   uint8_t current_page = 0;
   bool ok = true;
-  ESP_LOGD(TAG, "%s: Setting EQ band %d (%d Hz) to gain %d",band, tas5805m_eq_bands[band], gain);
+  ESP_LOGD(TAG, "Setting EQ Band %d (%d Hz) to Gain %d", band, tas5805m_eq_bands[band], gain);
 
   int x = gain + TAS5805M_EQ_MAX_DB;
   uint16_t y = band * TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF;
@@ -243,24 +243,20 @@ bool Tas5805mComponent::tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
 
       if (reg_value->page != current_page) {
           current_page = reg_value->page;
-          this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
-          this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, TAS5805M_REG_BOOK_EQ);
-          this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, reg_value->page);
+          if(!this->set_book_and_page(TAS5805M_REG_BOOK_EQ, reg_value->page)) {
+            ESP_LOGE(TAG, "  Setting Gain of EQ Band %d (%d Hz) aborted", band, tas5805m_eq_bands[band]);
+          return false;
       }
 
       ESP_LOGV(TAG, "write: %d: w 0x%X 0x%X", i, reg_value->offset, reg_value->value);
       ok = tas5805m_write_byte(reg_value->offset, reg_value->value);
       if (!ok) {
-          ESP_LOGE(TAG, "Error writing to register 0x%x", reg_value->offset);
+          ESP_LOGE(TAG, "Error writing Eq Gain setting to register 0x%X", reg_value->offset);
       }
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
-  this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, TAS5805M_REG_BOOK_CONTROL_PORT);
-  this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
-
-  return true;
+  return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
@@ -298,6 +294,22 @@ bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
   uint8_t current_value;
   if (!this->tas5805m_read_byte(POWER_STATE_REGISTER, &current_value)) return false;
   *state = static_cast<Tas5805mControlState>(current_value);
+  return true;
+}
+
+bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
+  if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
+    ESP_LOGE(TAG, "  Set book-page write error on writing page_zero");
+    return false;
+  }
+  if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) {
+    ESP_LOGE(TAG, "  Set book-page write error on writing book");
+    return false;
+  }
+  if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) {
+    ESP_LOGE(TAG, "  Set book-page write error on writing page ");
+    return false;
+  }
   return true;
 }
 
