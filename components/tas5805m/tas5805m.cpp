@@ -1,5 +1,6 @@
 #include "tas5805m.h"
 #include "tas5805m_minimal.h"
+#include "tas5805m_eq.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/hal.h"
@@ -8,17 +9,6 @@ namespace esphome {
 namespace tas5805m {
 
 static const char *const TAG = "tas5805m";
-
-// tas5805m registers
-static const uint8_t DEVICE_CTRL_1_REGISTER = 0x02;
-static const uint8_t DEVICE_CTRL_2_REGISTER = 0x03;
-static const uint8_t FS_MON_REGISTER        = 0x37;
-static const uint8_t BCK_MON_REGISTER       = 0x38;
-static const uint8_t DIG_VOL_CTRL_REGISTER  = 0x4C;
-static const uint8_t ANA_CTRL_REGISTER      = 0x53;
-static const uint8_t AGAIN_REGISTER         = 0x54;
-static const uint8_t DSP_MISC_REGISTER      = 0x66;
-static const uint8_t POWER_STATE_REGISTER   = 0x68;
 
 static const uint8_t MUTE_CONTROL           = 0x08;  // LR Channel Mute
 
@@ -217,6 +207,58 @@ bool Tas5805mComponent::get_eq(bool* enabled) {
   uint8_t current_value;
   if (!this->tas5805m_read_byte(DSP_MISC_REGISTER, &current_value)) return false;
   *enabled = !(current_value & 0x01);
+  return true;
+}
+
+bool Tas5805mComponent::tas5805m_set_eq(bool enable) {
+  ESP_LOGD(TAG, "Setting EQ to %d", enable);
+  return this->tas5805m_write_byte(DSP_MISC_REGISTER, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
+}
+
+bool Tas5805mComponent:tas5805m_set_eq_gain(uint8_t band, int8_t gain) {
+  if (band < 0 || band >= TAS5805M_EQ_BANDS) {
+    ESP_LOGE(TAG, "No change to EQ Band: invalid band %d", band);
+    return false;
+  }
+
+  if (gain < TAS5805M_EQ_MIN_DB || gain > TAS5805M_EQ_MAX_DB) {
+    ESP_LOGE(TAG, "No change to EQ Band %d Gain: invalid gain %d", band, gain);
+    return false;
+  }
+
+  uint8_t current_page = 0;
+  bool ok = true;
+  ESP_LOGD(TAG, "%s: Setting EQ band %d (%d Hz) to gain %d",band, tas5805m_eq_bands[band], gain);
+
+  int x = gain + TAS5805M_EQ_MAX_DB;
+  uint16_t y = band * TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF;
+
+  for (int16_t i = 0; i < TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF; i++) {
+      const reg_sequence_eq *reg_value = &tas5805m_eq_registers[x][y + i];
+      if (reg_value == NULL) {
+          ESP_LOGW(TAG, "NULL pointer encountered at row[%d]", y + i);
+          continue;
+      }
+
+      if (reg_value->page != current_page) {
+          current_page = reg_value->page;
+          this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
+          this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, TAS5805M_REG_BOOK_EQ);
+          this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, reg_value->page);
+      }
+
+      ESP_LOGV(TAG, "write: %d: w 0x%X 0x%X", i, reg_value->offset, reg_value->value);
+      ok = tas5805m_write_byte(reg_value->offset, reg_value->value);
+      if (!ok) {
+          ESP_LOGE(TAG, "Error writing to register 0x%x", reg_value->offset);
+      }
+  }
+
+  this->tas5805m_state_.eq_gain[band] = gain;
+  this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
+  this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, TAS5805M_REG_BOOK_CONTROL_PORT);
+  this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO);
+
   return true;
 }
 
