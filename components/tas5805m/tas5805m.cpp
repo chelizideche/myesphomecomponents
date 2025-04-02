@@ -11,9 +11,9 @@ namespace tas5805m {
 
 static const char *const TAG = "tas5805m";
 
-static const uint8_t MUTE_CONTROL           = 0x08;  // LR Channel Mute
+static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
-static const uint8_t ESPHOME_MAXIMUM_DELAY  = 5;     // Milliseconds
+static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // Milliseconds
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -39,7 +39,7 @@ bool Tas5805mComponent::configure_registers() {
 
   while (i < number_configurations) {
     switch (tas5805m_registers[i].offset) {
-      case CFG_META_DELAY:
+      case TAS5805M_CFG_META_DELAY:
         if (tas5805m_registers[i].value > ESPHOME_MAXIMUM_DELAY) return false;
         delay(tas5805m_registers[i].value);
         break;
@@ -91,17 +91,17 @@ bool Tas5805mComponent::set_volume(float volume) {
 
 bool Tas5805mComponent::set_mute_off() {
   if (!this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, this->tas5805m_state_.state)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.state)) return false;
   this->is_muted_ = false;
   ESP_LOGD(TAG, "  Tas5805m Mute Off");
   return true;
 }
 
-// set bit 3 MUTE in DEVICE_CTRL_2_REGISTER and retain current Control State
+// set bit 3 MUTE in TAS5805M_DEVICE_CTRL_2 and retain current Control State
 // ensures get_state = get_power_state
 bool Tas5805mComponent::set_mute_on() {
   if (this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, this->tas5805m_state_.state + MUTE_CONTROL)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.state + TAS5805M_MUTE_CONTROL)) return false;
   this->is_muted_ = true;
   ESP_LOGD(TAG, "  Tas5805m Mute On");
   return true;
@@ -111,8 +111,8 @@ bool Tas5805mComponent::set_deep_sleep_on() {
   if (this->tas5805m_state_.state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
 
   // preserve mute state
-  uint8_t new_value = (this->is_muted_) ? (CTRL_DEEP_SLEEP + MUTE_CONTROL) : CTRL_DEEP_SLEEP;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, new_value)) return false;
+  uint8_t new_value = (this->is_muted_) ? (CTRL_DEEP_SLEEP + TAS5805M_MUTE_CONTROL) : CTRL_DEEP_SLEEP;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, new_value)) return false;
 
   this->tas5805m_state_.state = CTRL_DEEP_SLEEP;                   // set Control State to deep sleep
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep On");
@@ -123,8 +123,8 @@ bool Tas5805mComponent::set_deep_sleep_on() {
 bool Tas5805mComponent::set_deep_sleep_off() {
   if (this->tas5805m_state_.state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
   // preserve mute state
-  uint8_t new_value = (this->is_muted_) ? (CTRL_PLAY + MUTE_CONTROL) : CTRL_PLAY;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, new_value)) return false;
+  uint8_t new_value = (this->is_muted_) ? (CTRL_PLAY + TAS5805M_MUTE_CONTROL) : CTRL_PLAY;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, new_value)) return false;
 
   this->tas5805m_state_.state = CTRL_PLAY;                        // set Control State to play
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep Off");
@@ -139,7 +139,7 @@ bool Tas5805mComponent::get_state(Tas5805mControlState* state) {
 
 bool Tas5805mComponent::set_state(Tas5805mControlState state) {
   if (this->tas5805m_state_.state == state) return true;
-  if (!this->tas5805m_write_byte(DEVICE_CTRL_2_REGISTER, state)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, state)) return false;
   this->tas5805m_state_.state = state;
   ESP_LOGD(TAG, "  Tas5805m state set to: 0x%02X", state);
   return true;
@@ -147,7 +147,7 @@ bool Tas5805mComponent::set_state(Tas5805mControlState state) {
 
 bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
   uint8_t current;
-  if(!this->tas5805m_read_byte(DIG_VOL_CTRL_REGISTER, &current)) return false;
+  if(!this->tas5805m_read_byte(TAS5805M_DIG_VOL_CTRL, &current)) return false;
   *raw_volume = current;
   return true;
 }
@@ -162,7 +162,7 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 // 11111110: -103 dB
 // 11111111: Mute
 bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
-  if (!this->tas5805m_write_byte(DIG_VOL_CTRL_REGISTER, new_volume)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, new_volume)) return false;
   this->digital_volume_ = new_volume;
   ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
   return true;
@@ -170,7 +170,7 @@ bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
 
 bool Tas5805mComponent::get_gain(uint8_t* raw_gain) {
   uint8_t current;
-  if (!this->tas5805m_read_byte(AGAIN_REGISTER, &current)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current)) return false;
   // remove top 3 reserved bits
   *raw_gain = current & 0x1F;
   return true;
@@ -187,7 +187,7 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
   if (!this->get_gain(&raw_gain)) return false;
   // keep top 3 reserved bits combine with bottom 5 analog gain bits
   raw_gain = (raw_gain & 0xE0) | new_gain;
-  if (!this->tas5805m_write_byte(AGAIN_REGISTER, raw_gain)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_AGAIN, raw_gain)) return false;
   this->analog_gain_ = new_gain;
   ESP_LOGD(TAG, "  Tas5805m Analog Gain: %i", new_gain);
   return true;
@@ -195,7 +195,7 @@ bool Tas5805mComponent::set_gain(uint8_t new_gain) {
 
 bool Tas5805mComponent::get_dac_mode(Tas5805mDacMode* mode) {
     uint8_t current_value;
-    if (!this->tas5805m_read_byte(DEVICE_CTRL_1_REGISTER, &current_value)) return false;
+    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
     if (current_value & (1 << 2)) {
         *mode = DAC_MODE_PBTL;
     } else {
@@ -206,14 +206,14 @@ bool Tas5805mComponent::get_dac_mode(Tas5805mDacMode* mode) {
 
 bool Tas5805mComponent::get_eq(bool* enabled) {
   uint8_t current_value;
-  if (!this->tas5805m_read_byte(DSP_MISC_REGISTER, &current_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_DSP_MISC, &current_value)) return false;
   *enabled = !(current_value & 0x01);
   return true;
 }
 
 bool Tas5805mComponent::set_eq(bool enable) {
   ESP_LOGD(TAG, "Setting EQ to %d", enable);
-  return this->tas5805m_write_byte(DSP_MISC_REGISTER, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
+  return this->tas5805m_write_byte(TAS5805M_DSP_MISC, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
 }
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
@@ -262,10 +262,10 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
   uint8_t device_ctrl1_value;
-  if (!this->tas5805m_read_byte(DEVICE_CTRL_1_REGISTER, &device_ctrl1_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;
   // Read the BD frequency
   uint8_t ana_ctrl_value;
-  if (!this->tas5805m_read_byte(ANA_CTRL_REGISTER, &ana_ctrl_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_ANA_CTRL, &ana_ctrl_value)) return false;
 
   // Extract DAMP_MOD bits 0-1
   *mode = static_cast<Tas5805mModMode>(device_ctrl1_value & 0x02);
@@ -279,21 +279,21 @@ bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFre
 
 bool Tas5805mComponent::get_fs_freq(Tas5805mFsFreq* freq) {
   uint8_t current_value;
-  if (!this->tas5805m_read_byte(FS_MON_REGISTER, &current_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_FS_MON, &current_value)) return false;
   *freq = static_cast<Tas5805mFsFreq>(current_value);
   return true;
 }
 
 bool Tas5805mComponent::get_bck_ratio(uint8_t *ratio) {
   uint8_t current_value;
-  if (!this->tas5805m_read_byte(BCK_MON_REGISTER, &current_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_BCK_MON, &current_value)) return false;
   *ratio = current_value;
   return true;
 }
 
 bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
   uint8_t current_value;
-  if (!this->tas5805m_read_byte(POWER_STATE_REGISTER, &current_value)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_POWER_STATE, &current_value)) return false;
   *state = static_cast<Tas5805mControlState>(current_value);
   return true;
 }
