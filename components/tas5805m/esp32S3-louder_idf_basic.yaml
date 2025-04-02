@@ -54,15 +54,11 @@ wifi:
    gateway: 192.168.2.1
    subnet: 255.255.255.0
   # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Esp32-Louder Fallback Hotspot"
-    password: "2SJ8qzBXk3SN"
+  #ap:
+    #ssid: "Esp32-Louder Fallback Hotspot"
+    #password: "2SJ8qzBXk3SN"
 
-captive_portal:
-
-globals:
-  - id: current_volume
-    type: float
+#captive_portal:
 
 psram:
   mode: octal
@@ -96,85 +92,30 @@ speaker:
     audio_dac: tas5805m_dac
     channel: stereo
     sample_rate: 48000
-
-  - platform: mixer
-    id: mixer_speaker_id
-    task_stack_in_psram: true
-    output_speaker: speaker_id
-    source_speakers:
-      - id: announcement_spk_mixer_input
-      - id: media_spk_mixer_input
-
-  - platform: resampler
-    id: media_spk_resampling_input
-    task_stack_in_psram: true
-    output_speaker: media_spk_mixer_input
-
-  - platform: resampler
-    id: announcement_spk_resampling_input
-    task_stack_in_psram: true
-    output_speaker: announcement_spk_mixer_input
+    buffer_duration: 60ms
 
 media_player:
   - platform: speaker
     name: Louder Mediaplayer
     id: louder_mediaplayer
-    task_stack_in_psram: true
     volume_increment: 0.5%
     volume_min: 45%
     volume_max: 80%
-    media_pipeline:
-      speaker: media_spk_resampling_input
-      num_channels: 2
     announcement_pipeline:
-      speaker: announcement_spk_resampling_input
-      num_channels: 1
-
+      speaker: speaker_id
+    buffer_size: 100000
     on_play:
       if:
         condition:
           switch.is_off: enable_louder
         then:
           switch.turn_on: enable_louder
-
     on_announcement:
       - if:
           condition:
             switch.is_off: enable_louder
           then:
             switch.turn_on: enable_louder
-      - lambda: |-
-          id(current_volume) = id(tas5805m_dac).volume();
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 40
-            duration: 0.0s
-      - wait_until:
-            media_player.is_announcing:
-      - delay: 1.0s
-      - lambda: |-
-          id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
-      - wait_until:
-          not:
-            media_player.is_announcing:
-      - mixer_speaker.apply_ducking:
-            id: media_spk_mixer_input
-            decibel_reduction: 0
-            duration: 2.0s
-      - lambda: |-
-          id(tas5805m_dac).set_volume(id(current_volume));
-
-number:
-  - platform: template
-    name: Announce Volume
-    id: announce_volume
-    icon: mdi:volume-source
-    unit_of_measurement: "%"
-    min_value: 0
-    max_value: 100
-    step: 1
-    initial_value: 50
-    optimistic: true
 
 switch:
   - platform: template
