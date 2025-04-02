@@ -245,7 +245,8 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
           current_page = reg_value->page;
           if(!this->set_book_and_page(TAS5805M_REG_BOOK_EQ, reg_value->page)) {
             ESP_LOGE(TAG, "  Setting Gain of EQ Band %d (%d Hz) aborted", band, tas5805m_eq_bands[band]);
-          return false;
+            return false;
+          }
       }
 
       ESP_LOGV(TAG, "write: %d: w 0x%X 0x%X", i, reg_value->offset, reg_value->value);
