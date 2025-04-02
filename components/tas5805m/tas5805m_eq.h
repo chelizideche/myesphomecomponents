@@ -13,7 +13,7 @@ namespace tas5805m {
 	};
 
 	static const uint8_t  TAS5805M_EQ_MAX_DB         = 15;
-	static const uint8_t  TAS5805M_EQ_MIN_DB         = -TAS5805M_EQ_MAX_DB;
+	static const int8_t   TAS5805M_EQ_MIN_DB         = -TAS5805M_EQ_MAX_DB;
 
 	static const uint8_t  TAS5805M_EQ_STEPS          = 1 + TAS5805M_EQ_MAX_DB - TAS5805M_EQ_MIN_DB;
 	static const uint8_t  TAS5805M_EQ_BANDS          = 15;
@@ -332,7 +332,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0xef },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_me[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_me[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -14dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfd },
 			{ 0x24, 0x1a, 0x50 },
@@ -635,7 +635,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x6e },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_md[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_md[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -13dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfd },
 			{ 0x24, 0x1a, 0xae },
@@ -938,7 +938,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x74 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_mc[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_mc[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -12dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfe },
 			{ 0x24, 0x1a, 0x01 },
@@ -1241,7 +1241,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x2f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_mb[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_mb[TAS5805M_EQ_REG_PER_STEP] = {
 
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -11dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfe },
@@ -1545,7 +1545,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0xa5 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_ma[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_ma[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -10dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfe },
 			{ 0x24, 0x1a, 0x8d },
@@ -1848,7 +1848,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x35 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m9[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m9[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -9dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfe },
 			{ 0x24, 0x1a, 0xc8 },
@@ -2151,7 +2151,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x06 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m8[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m8[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -8dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xfe },
 			{ 0x24, 0x1a, 0xfc },
@@ -2454,7 +2454,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x34 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m7[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m7[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -7dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0x2b },
@@ -2757,7 +2757,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x8f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m6[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m6[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -6dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0x55 },
@@ -3060,7 +3060,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0xd3 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m5[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m5[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -5dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0x7a },
@@ -3363,7 +3363,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x1b },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m4[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m4[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -4dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0x9b },
@@ -3666,7 +3666,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x7b },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m3[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m3[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -3dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0xb9 },
@@ -3969,7 +3969,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0xa9 },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m2[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m2[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -2dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0xd3 },
@@ -4272,7 +4272,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0xaa },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_m1[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_m1[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x07 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: -1dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0xff },
 			{ 0x24, 0x1a, 0xeb },
@@ -4575,7 +4575,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x8c },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_0[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_0[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x00 },
@@ -4878,7 +4878,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p1[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p1[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 1dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x14 },
@@ -5181,7 +5181,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p2[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p2[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 2dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x2c },
@@ -5484,7 +5484,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p3[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p3[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 3dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x46 },
@@ -5787,7 +5787,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p4[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p4[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 4dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x64 },
@@ -6090,7 +6090,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p5[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p5[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 5dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0x85 },
@@ -6393,7 +6393,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p6[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p6[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 6dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0xaa },
@@ -6696,7 +6696,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p7[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p7[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 7dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x00 },
 			{ 0x24, 0x1a, 0xd4 },
@@ -6999,7 +6999,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p8[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p8[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 8dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x01 },
 			{ 0x24, 0x1a, 0x03 },
@@ -7302,7 +7302,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_p9[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_p9[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 9dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x01 },
 			{ 0x24, 0x1a, 0x37 },
@@ -7605,7 +7605,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pa[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pa[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 10dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x01 },
 			{ 0x24, 0x1a, 0x72 },
@@ -7908,7 +7908,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pb[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pb[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 11dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x01 },
 			{ 0x24, 0x1a, 0xb5 },
@@ -8211,7 +8211,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pc[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pc[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 12dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x01 },
 			{ 0x24, 0x1a, 0xff },
@@ -8514,7 +8514,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pd[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pd[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 13dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x02 },
 			{ 0x24, 0x1a, 0x52 },
@@ -8817,7 +8817,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pe[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pe[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 14dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x02 },
 			{ 0x24, 0x1a, 0xb0 },
@@ -9120,7 +9120,7 @@ namespace tas5805m {
 			{ 0x26, 0x53, 0x4f },
 	};
 
-	static const reg_sequence_eq tas5805m_eq_registers_pf[TAS5805M_EQ_REG_PER_STEP] = {
+	static const RegisterSequenceEq tas5805m_eq_registers_pf[TAS5805M_EQ_REG_PER_STEP] = {
 			{ 0x24, 0x18, 0x08 }, //  Biquad -  BQ1 Left   -     Filter: Equalizer (Q Factor)  Frequency: 20 Hz  Gain: 15dB  QVal: 2  Bandwidth: 1000 Hz
 			{ 0x24, 0x19, 0x03 },
 			{ 0x24, 0x1a, 0x18 },
