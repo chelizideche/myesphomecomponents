@@ -257,7 +257,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
+  return this->set_book_and_page(REG_BOOK_CONTROL_PORT, REG_PAGE_ZERO);
 }
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
@@ -299,15 +299,15 @@ bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
 }
 
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
-  if (!this->tas5805m_write_byte(REG_PAGE_SET, REG_PAGE_ZERO)) {
+  if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
     ESP_LOGE(TAG, "  Set book-page write error on writing page_zero");
     return false;
   }
-  if (!this->tas5805m_write_byte(REG_BOOK_SET, book)) {
+  if (!this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, book)) {
     ESP_LOGE(TAG, "  Set book-page write error on writing book");
     return false;
   }
-  if (!this->tas5805m_write_byte(REG_PAGE_SET, page)) {
+  if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, page)) {
     ESP_LOGE(TAG, "  Set book-page write error on writing page ");
     return false;
   }
