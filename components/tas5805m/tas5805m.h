@@ -92,6 +92,10 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
 
+  bool set_eq_on();
+  bool set_eq_off()
+  bool set_eq_gain(uint8_t band, int8_t gain);
+
  protected:
    GPIOPin *enable_pin_{nullptr};
 
@@ -113,7 +117,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_bck_ratio(uint8_t *ratio);
    bool get_power_state(Tas5805mControlState* state);
    bool set_eq(bool enable);
-   bool set_eq_gain(uint8_t band, int8_t gain);
 
    bool set_book_and_page(uint8_t book, uint8_t page);
 
@@ -130,6 +133,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    struct Tas5805mState {
     //bool                 is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
     bool                   is_powered;
+    bool                   eq_enabled;
     int8_t                 eq_gain[TAS5805M_EQ_BANDS];
     Tas5805mControlState   state;
     Tas5805mMixerMode      mixer_mode;

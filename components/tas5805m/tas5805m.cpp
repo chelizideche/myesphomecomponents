@@ -211,17 +211,36 @@ bool Tas5805mComponent::get_eq(bool* enabled) {
   return true;
 }
 
+bool Tas5805mComponent::set_eq_on() {
+  if (this->tas5805m_state_.eq_enabled) return true;
+  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_ON)) return false;
+  this->tas5805m_state_.eq_enabled = true;
+  ESP_LOGD(TAG, "  Tas5805m EQ control On");
+  return true;
+}
+
+bool Tas5805mComponent::set_eq_off() {
+  if (!this->tas5805m_state_.eq_enabled) return true;
+  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_OFF)) return false;
+  this->tas5805m_state_.eq_enabled = false;
+  ESP_LOGD(TAG, "  Tas5805m EQ control Off");
+  return true;
+}
+
 bool Tas5805mComponent::set_eq(bool enable) {
   ESP_LOGD(TAG, "Setting EQ to %d", enable);
   return this->tas5805m_write_byte(TAS5805M_DSP_MISC, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
 }
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
+  if (!this->tas5805m_state_.eq_enabled) {
+    ESP_LOGE(TAG, "No Gain change to EQ Band %d Gain: EQ control is not enabled", band, gain);
+    return false;
+  }
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "No Gain change to EQ Band: invalid band %d", band);
     return false;
   }
-
   if (gain < TAS5805M_EQ_MIN_DB || gain > TAS5805M_EQ_MAX_DB) {
     ESP_LOGE(TAG, "No Gain change to EQ Band %d Gain: invalid gain %d", band, gain);
     return false;

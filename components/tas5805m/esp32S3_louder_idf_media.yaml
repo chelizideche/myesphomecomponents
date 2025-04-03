@@ -178,6 +178,32 @@ number:
     initial_value: 50
     optimistic: true
 
+  - platform: template
+    name: Band 0 Gain
+    id: band_0_gain
+    icon: mdi:volume-source
+    unit_of_measurement: "dB"
+    min_value: -15
+    max_value: 5
+    step: 1
+    initial_value: 0
+    optimistic: true
+    on_value:
+      id(tas5805m_dac).set_eq_gain(0, id(band_0_gain).state);
+
+  - platform: template
+    name: Band 1 Gain
+    id: band_1_gain
+    icon: mdi:volume-source
+    unit_of_measurement: "dB"
+    min_value: -15
+    max_value: 5
+    step: 1
+    initial_value: 0
+    optimistic: true
+    on_value:
+      id(tas5805m_dac).set_eq_gain(1, id(band_1_gain).state);
+
 switch:
   - platform: template
     name: Enable Louder
@@ -190,6 +216,18 @@ switch:
     turn_off_action:
       - lambda: !lambda |-
           id(tas5805m_dac).set_deep_sleep_on();
+
+  - platform: template
+    name: Enable EQ Control
+    id: enable_eq_control
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    turn_on_action:
+      - lambda: !lambda |-
+          id(tas5805m_dac).set_eq_on();
+    turn_off_action:
+      - lambda: !lambda |-
+          id(tas5805m_dac).set_eq_off();
 
 interval:
   - interval: 30s
