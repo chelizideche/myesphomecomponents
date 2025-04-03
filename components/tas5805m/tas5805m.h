@@ -93,7 +93,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_deep_sleep_on();
 
   bool set_eq_on();
-  bool set_eq_off()
+  bool set_eq_off();
   bool set_eq_gain(uint8_t band, int8_t gain);
 
  protected:
