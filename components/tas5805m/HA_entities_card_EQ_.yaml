@@ -1,0 +1,18 @@
+type: entities
+entities:
+  - entity: number.gain_20_hz
+  - entity: number.gain_31_5_hz
+  - entity: number.gain_50_hz
+  - entity: number.gain_80_hz
+  - entity: number.gain_125_hz
+  - entity: number.gain_200_hz
+  - entity: number.gain_315_hz
+  - entity: number.gain_500_hz
+  - entity: number.gain_800_hz
+  - entity: number.gain_1250_hz
+  - entity: number.gain_2000_hz
+  - entity: number.gain_3150_hz
+  - entity: number.gain_5000_hz
+  - entity: number.gain_8000hz
+  - entity: number.gain_16000_hz
+

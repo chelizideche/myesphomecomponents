@@ -1,0 +1,167 @@
+type: entities
+entities:
+  - entity: number.gain_20_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_31_5_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_50_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_80_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_125_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_200_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_315_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_500_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_800_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_1250_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_2000_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_3150_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_5000_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_8000hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
+  - entity: number.gain_16000_hz
+    card_mod:
+      style:
+        hui-generic-entity-row:
+          $: |
+            state-badge {
+              display: none;
+            }
+            .info {
+              margin-left:0 !important;
+            }
