@@ -6,7 +6,7 @@
 #include "esphome/core/hal.h"
 
 #include "tas5805m_cfg.h"
-#include "tas5805_eq.h"
+#include "tas5805m_eq.h"
 
 namespace esphome {
 namespace tas5805m {
