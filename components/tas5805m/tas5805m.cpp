@@ -72,9 +72,7 @@ void Tas5805mComponent::dump_config() {
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Digital Volume: %i", this->digital_volume_);
-      ESP_LOGD(TAG, "  Analog Gain: %3.1f", this->analog_gain_);
-      ESP_LOGD(TAG, "  Raw Analog Gain: %d", this->raw_analog_gain_val_);
-      ESP_LOGD(TAG, "  Raw Analog Gain Register: %d", this->raw_analog_gain_reg_);
+      ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -179,17 +177,15 @@ bool Tas5805mComponent::set_analog_gain(float gain_db) {
   if ((gain_db < TAS5805M_MIN_ANALOG_GAIN) || (gain_db > TAS5805M_MAX_ANALOG_GAIN)) return false;
 
   uint8_t new_again = static_cast<uint8_t>(-gain_db * 2.0);
-  this->raw_analog_gain_val_ = new_again;
 
   uint8_t current_again;
   if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current_again)) return false;
 
   // keep top 3 reserved bits combine with bottom 5 analog gain bits
   new_again = (current_again & 0xE0) | new_again;
-  //if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again) return false;
 
   this->analog_gain_ = gain_db;
-  this->raw_analog_gain_reg_ = new_again;
   ESP_LOGD(TAG, "  Tas5805m Analog Gain: %fdB (0x%02X)", gain_db, new_again);
   return true;
 }
