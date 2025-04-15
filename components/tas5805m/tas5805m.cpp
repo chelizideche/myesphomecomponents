@@ -194,7 +194,7 @@ bool Tas5805mComponent::set_analog_gain(float gain_db) {
   return true;
 }
 
-bool Tas5805mComponent::get_again(uint8_t* raw_gain) {
+bool Tas5805mComponent::get_analog_gain(uint8_t* raw_gain) {
   uint8_t current;
   if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current)) return false;
   // remove top 3 reserved bits

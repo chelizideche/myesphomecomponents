@@ -110,9 +110,11 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
+   
+   // set analog gain in dB from -15.5 to 0 in 0.5dB increments
+   bool set_analog_gain(float gain_db);
 
-   bool set_analog_gain_db(float gain_db);
-
+   // reads analog gain register and returns number 0-31
    bool get_analog_gain(uint8_t* raw_gain);
 
    bool get_dac_mode(Tas5805mDacMode* mode);
