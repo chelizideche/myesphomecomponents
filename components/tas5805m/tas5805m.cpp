@@ -242,10 +242,10 @@ bool Tas5805mComponent::set_eq(bool enable) {
 }
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
-  if (!this->tas5805m_state_.eq_enabled) {
-    ESP_LOGE(TAG, "EQ Control Not enabled - no change to EQ Band: %d Gain: %d", band, gain);
-    return false;
-  }
+  // if (!this->tas5805m_state_.eq_enabled) {
+  //   ESP_LOGD(TAG, "EQ Control Not enabled - no change to EQ Band: %d Gain: %d", band, gain);
+  //   return false;
+  // }
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
     return false;
