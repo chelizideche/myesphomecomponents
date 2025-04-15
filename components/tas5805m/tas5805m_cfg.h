@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tas5805m.h"
-
 namespace esphome {
 namespace tas5805m {
 

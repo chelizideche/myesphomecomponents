@@ -5,6 +5,8 @@
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/hal.h"
 
+#include "tas5805m_cfg.h"
+#include "tas5805_eq.h"
 
 namespace esphome {
 namespace tas5805m {
@@ -110,7 +112,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
-   
+
    // set analog gain in dB from -15.5 to 0 in 0.5dB increments
    bool set_analog_gain(float gain_db);
 
@@ -119,9 +121,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool get_dac_mode(Tas5805mDacMode* mode);
    bool get_eq(bool* enabled);
-   bool get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq);
+   bool get_modulation_mode(Tas5805mModMode* mode, Tas5805mSwFreq* freq, Tas5805mBdFreq* bd_freq);
    bool get_fs_freq(Tas5805mFsFreq* freq);
-   bool get_bck_ratio(uint8_t *ratio);
+   bool get_bck_ratio(uint8_t* ratio);
    bool get_power_state(Tas5805mControlState* state);
    bool set_eq(bool enable);
 
