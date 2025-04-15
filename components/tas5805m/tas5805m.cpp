@@ -251,8 +251,15 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
-  if ((this->tas5805m_state_.eq_gain[band] == gain) && this->tas5805m_state_.eq_gain_set[band]) {
+  if (this->tas5805m_state_.eq_enabled && (this->tas5805m_state_.eq_gain[band] == gain) && this->tas5805m_state_.eq_gain_set[band]) {
     ESP_LOGD(TAG, "EQ Gain set on Band %d with %ddB gain: no change required", band, gain);
+    return true;
+  }
+
+  if (!this->tas5805m_state_.eq_enabled) {
+    this->tas5805m_state_.eq_gain[band] = gain;
+    this->tas5805m_state_.eq_gain_set[band] = false;
+    ESP_LOGD(TAG, "EQ Band: %d Gain: %ddB-> updated for later setup", band, gain);
     return true;
   }
 
@@ -286,7 +293,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  if (this->tas5805m_state_.eq_enabled) this->tas5805m_state_.eq_gain_set[band] = true;
+  this->tas5805m_state_.eq_gain_set[band] = this->tas5805m_state_.eq_enabled;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
