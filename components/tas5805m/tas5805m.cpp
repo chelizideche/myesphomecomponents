@@ -293,7 +293,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  this->tas5805m_state_.eq_gain_set[band] = this->tas5805m_state_.eq_enabled;
+  this->tas5805m_state_.eq_gain_set[band] = true;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
