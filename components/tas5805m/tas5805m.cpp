@@ -183,7 +183,7 @@ bool Tas5805mComponent::set_analog_gain(float gain_db) {
 
   // keep top 3 reserved bits combine with bottom 5 analog gain bits
   new_again = (current_again & 0xE0) | new_again;
-  if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again)) return false;
 
   this->analog_gain_ = gain_db;
   ESP_LOGD(TAG, "  Tas5805m Analog Gain: %fdB (0x%02X)", gain_db, new_again);
