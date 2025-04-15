@@ -142,6 +142,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     bool                   is_powered;
     bool                   eq_enabled;
     int8_t                 eq_gain[TAS5805M_EQ_BANDS]{0};
+    bool                   eq_gain_set[TAS5805M_EQ_BANDS]{false}
     Tas5805mControlState   state;
     Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
