@@ -13,7 +13,7 @@ static const char *const TAG = "tas5805m";
 
 static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
-static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // Milliseconds
+static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // milliseconds
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -53,15 +53,14 @@ bool Tas5805mComponent::configure_registers() {
   this->number_registers_configured_ = counter;
 
   if (!this->set_state(CTRL_PLAY)) return false;
-  this->set_volume(0.05);
+  if (!this->set_volume(0.05)) return false;
 
-  if (!this->get_gain(&this->analog_gain_)) return false;
+  if (!this->set_analog_gain(&this->analog_gain_)) return false;
   return true;
 }
 
 void Tas5805mComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "Tas5805m:");
-  uint8_t volume;
 
   switch (this->error_code_) {
     case CONFIGURATION_FAILED:
@@ -70,10 +69,12 @@ void Tas5805mComponent::dump_config() {
     case WRITE_REGISTER_FAILED:
       ESP_LOGE(TAG, "  Write register failure with error code = %i",this->i2c_error_);
       break;
-      case NONE:
+    case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Digital Volume: %i", this->digital_volume_);
-      ESP_LOGD(TAG, "  Analog Gain: %i", this->analog_gain_);
+      ESP_LOGD(TAG, "  Analog Gain: %3.1f", this->analog_gain_);
+      ESP_LOGD(TAG, "  Raw Analog Gain: %d", this->raw_analog_gain_val_);
+      ESP_LOGD(TAG, "  Raw Analog Gain Register: %d", this->raw_analog_gain_reg_);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -161,18 +162,10 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 // 00110001: -0.5 dB
 // 11111110: -103 dB
 // 11111111: Mute
-bool Tas5805mComponent::set_digital_volume(uint8_t new_volume) {
-  if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, new_volume)) return false;
-  this->digital_volume_ = new_volume;
-  ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", new_volume);
-  return true;
-}
-
-bool Tas5805mComponent::get_gain(uint8_t* raw_gain) {
-  uint8_t current;
-  if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current)) return false;
-  // remove top 3 reserved bits
-  *raw_gain = current & 0x1F;
+bool Tas5805mComponent::set_digital_volume(uint8_t raw_volume) {
+  if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, raw_volume)) return false;
+  this->digital_volume_ = raw_volume;
+  ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", raw_volume);
   return true;
 }
 
@@ -181,15 +174,31 @@ bool Tas5805mComponent::get_gain(uint8_t* raw_gain) {
 // 00000: 0 dB (29.5V peak voltage)
 // 00001: -0.5db
 // 11111: -15.5 dB
-bool Tas5805mComponent::set_gain(uint8_t new_gain) {
-  if (new_gain > 0x1F) return false;
-  uint8_t raw_gain;
-  if (!this->get_gain(&raw_gain)) return false;
+// set analog gain in dB
+bool Tas5805mComponent::set_analog_gain(float gain_db) {
+  if ((gain_db < TAS5805M_MIN_ANALOG_GAIN) || (gain_db > TAS5805M_MAX_ANALOG_GAIN)) return false;
+
+  uint8_t new_again = static_cast<uint8_t>(-gain_db * 2.0);
+  this->raw_analog_gain_val_ = new_again;
+
+  uint8_t current_again;
+  if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current_again)) return false;
+
   // keep top 3 reserved bits combine with bottom 5 analog gain bits
-  raw_gain = (raw_gain & 0xE0) | new_gain;
-  if (!this->tas5805m_write_byte(TAS5805M_AGAIN, raw_gain)) return false;
-  this->analog_gain_ = new_gain;
-  ESP_LOGD(TAG, "  Tas5805m Analog Gain: %i", new_gain);
+  new_again = (current_again & 0xE0) | new_again;
+  //if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again) return false;
+
+  this->analog_gain_ = gain_db;
+  this->raw_analog_gain_reg_ = new_again;
+  ESP_LOGD(TAG, "  Tas5805m Analog Gain: %i (0x%02X)", new_gain, new_again);
+  return true;
+}
+
+bool Tas5805mComponent::get_again(uint8_t* raw_gain) {
+  uint8_t current;
+  if (!this->tas5805m_read_byte(TAS5805M_AGAIN, &current)) return false;
+  // remove top 3 reserved bits
+  *raw_gain = current & 0x1F;
   return true;
 }
 
@@ -234,15 +243,15 @@ bool Tas5805mComponent::set_eq(bool enable) {
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   if (!this->tas5805m_state_.eq_enabled) {
-    ESP_LOGE(TAG, "No Gain change to EQ Band %d Gain: EQ control is not enabled", band, gain);
+    ESP_LOGE(TAG, "EQ Control Not enabled - no change to EQ Band: %d Gain: %d", band, gain);
     return false;
   }
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
-    ESP_LOGE(TAG, "No Gain change to EQ Band: invalid band %d", band);
+    ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
     return false;
   }
   if (gain < TAS5805M_EQ_MIN_DB || gain > TAS5805M_EQ_MAX_DB) {
-    ESP_LOGE(TAG, "No Gain change to EQ Band %d Gain: invalid gain %d", band, gain);
+    ESP_LOGE(TAG, "Invalid EQ Gain: %d - no change to EQ Band: %d", gain, band);
     return false;
   }
 
@@ -263,20 +272,28 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
       if (reg_value->page != current_page) {
           current_page = reg_value->page;
           if(!this->set_book_and_page(TAS5805M_REG_BOOK_EQ, reg_value->page)) {
-            ESP_LOGE(TAG, "  Setting Gain of EQ Band %d (%d Hz) aborted", band, tas5805m_eq_bands[band]);
+            ESP_LOGE(TAG, "  Error writing EQ Gain for EQ Band %d (%d Hz)", band, tas5805m_eq_bands[band]);
             return false;
           }
       }
 
-      ESP_LOGV(TAG, "write: %d: w 0x%X 0x%X", i, reg_value->offset, reg_value->value);
+      ESP_LOGV(TAG, "Writing gain: %d at 0x%02X with 0x%02X", i, reg_value->offset, reg_value->value);
       ok = tas5805m_write_byte(reg_value->offset, reg_value->value);
       if (!ok) {
-          ESP_LOGE(TAG, "Error writing Eq Gain setting to register 0x%X", reg_value->offset);
+        ESP_LOGE(TAG, "Error writing EQ Gain to register 0x%02X", reg_value->offset);
       }
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
+}
+
+int8_t Tas5805mComponent::eq_gain(uint8_t band) {
+  if (band < 0 || band >= TAS5805M_EQ_BANDS) {
+    ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
+    return -15;
+  }
+  return this->tas5805m_state_.eq_gain[band]; }
 }
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
@@ -319,15 +336,15 @@ bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
 
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
-    ESP_LOGE(TAG, "  Set book-page write error on writing page_zero");
+    ESP_LOGE(TAG, "  Error writing page_zero");
     return false;
   }
   if (!this->tas5805m_write_byte(TAS5805M_REG_BOOK_SET, book)) {
-    ESP_LOGE(TAG, "  Set book-page write error on writing book");
+    ESP_LOGE(TAG, "  Error writing book: 0x%02X", book);
     return false;
   }
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, page)) {
-    ESP_LOGE(TAG, "  Set book-page write error on writing page ");
+    ESP_LOGE(TAG, "  Error writing page: 0x%02X", page);
     return false;
   }
   return true;
@@ -337,13 +354,13 @@ bool Tas5805mComponent::tas5805m_read_byte(uint8_t a_register, uint8_t* data) {
   i2c::ErrorCode error_code;
   error_code = this->write(&a_register, 1);
   if (error_code != i2c::ERROR_OK) {
-    ESP_LOGE(TAG, "  read register - first write error %i", error_code);
+    ESP_LOGE(TAG, "  Read register - first write error %i", error_code);
     this->i2c_error_ = (uint8_t)error_code;
     return false;
   }
   error_code = this->read_register(a_register, data, 1, true);
   if (error_code != i2c::ERROR_OK) {
-    ESP_LOGE(TAG, "  read register error %i", error_code);
+    ESP_LOGE(TAG, "  Read register error %i", error_code);
     this->i2c_error_ = (uint8_t)error_code;
     return false;
   }
@@ -353,7 +370,7 @@ bool Tas5805mComponent::tas5805m_read_byte(uint8_t a_register, uint8_t* data) {
 bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
     i2c::ErrorCode error_code = this->write_register(a_register, &data, 1, true);
     if (error_code != i2c::ERROR_OK) {
-      ESP_LOGE(TAG, "  write register error %i", error_code);
+      ESP_LOGE(TAG, "  Write register error %i", error_code);
       this->i2c_error_ = (uint8_t)error_code;
       return false;
     }
@@ -363,7 +380,7 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
 bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
   i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
   if (error_code != i2c::ERROR_OK) {
-    ESP_LOGE(TAG, "  write register error %i", error_code);
+    ESP_LOGE(TAG, "  Write register error %i", error_code);
     this->i2c_error_ = (uint8_t)error_code;
     return false;
   }

@@ -83,7 +83,7 @@ media_player:
   - platform: speaker
     name: Louder Mediaplayer
     id: louder_mediaplayer
-    #task_stack_in_psram: true
+    task_stack_in_psram: true
     volume_increment: 0.5%
     volume_min: 45%
     volume_max: 80%

@@ -9,6 +9,9 @@ namespace tas5805m {
 // Startup sequence codes
 static const uint8_t TAS5805M_CFG_META_DELAY         = 254;
 
+static const float TAS5805M_MIN_ANALOG_GAIN         = -15.0;
+static const float TAS5805M_MAX_ANALOG_GAIN         = 0.0;
+
 // set book and page registers
 static const uint8_t TAS5805M_REG_PAGE_SET           = 0x00;
 static const uint8_t TAS5805M_REG_BOOK_SET           = 0x7F;

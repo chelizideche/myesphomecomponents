@@ -76,11 +76,14 @@ struct Tas5805mFault {
 
 class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i2c::I2CDevice {
  public:
+  void config_analog_gain(int8_t analog_gain) { analog_gain_ = analog_gain; }
+
   void setup() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::IO; }
 
   void set_enable_pin(GPIOPin *enable) { this->enable_pin_ = enable; }
+  void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
 
   float volume() override { return this->volume_; }
   bool set_volume(float value) override;
@@ -95,6 +98,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_eq_on();
   bool set_eq_off();
   bool set_eq_gain(uint8_t band, int8_t gain);
+  int8_t eq_gain(uint8_t band);
 
  protected:
    GPIOPin *enable_pin_{nullptr};
@@ -107,8 +111,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
 
-   bool get_gain(uint8_t* raw_gain);
-   bool set_gain(uint8_t new_gain);
+   bool set_analog_gain_db(float gain_db);
+
+   bool get_analog_gain(uint8_t* raw_gain);
 
    bool get_dac_mode(Tas5805mDacMode* mode);
    bool get_eq(bool* enabled);
@@ -134,15 +139,19 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     //bool                 is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
     bool                   is_powered;
     bool                   eq_enabled;
-    int8_t                 eq_gain[TAS5805M_EQ_BANDS];
+    int8_t                 eq_gain[TAS5805M_EQ_BANDS]{0};
     Tas5805mControlState   state;
     Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
 
    float volume_{0};
 
+   float analog_gain_{0};
+   uint8_t raw_analog_gain_val_{0};
+   uint8_t raw_analog_gain_reg_{0};
+
    uint8_t i2c_error_{0};
-   uint8_t analog_gain_{0};
+
    uint8_t digital_volume_{0};
 
    uint16_t number_registers_configured_{0};
