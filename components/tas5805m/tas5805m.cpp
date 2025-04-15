@@ -251,6 +251,11 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
+  if (this->tas5805m_state_.eq_gain[band] == gain) {
+    ESP_LOGD(TAG, "EQ Band %d gain already set to %d", band, gain);
+    return true;
+  }
+
   uint8_t current_page = 0;
   bool ok = true;
   ESP_LOGD(TAG, "Setting EQ Band %d (%d Hz) to Gain %d", band, tas5805m_eq_bands[band], gain);
