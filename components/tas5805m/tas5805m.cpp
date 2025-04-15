@@ -190,7 +190,7 @@ bool Tas5805mComponent::set_analog_gain(float gain_db) {
 
   this->analog_gain_ = gain_db;
   this->raw_analog_gain_reg_ = new_again;
-  ESP_LOGD(TAG, "  Tas5805m Analog Gain: %i (0x%02X)", new_gain, new_again);
+  ESP_LOGD(TAG, "  Tas5805m Analog Gain: %fdB (0x%02X)", gain_db, new_again);
   return true;
 }
 
@@ -293,7 +293,7 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
     return -15;
   }
-  return this->tas5805m_state_.eq_gain[band]; }
+  return this->tas5805m_state_.eq_gain[band];
 }
 
 bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
