@@ -149,8 +149,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    float volume_{0};
 
    float analog_gain_{0};
-   uint8_t raw_analog_gain_val_{0};
-   uint8_t raw_analog_gain_reg_{0};
 
    uint8_t i2c_error_{0};
 
