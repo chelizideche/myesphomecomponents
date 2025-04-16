@@ -308,13 +308,14 @@ void Tas5805mComponent::refresh_eq_gains() {
   // }
   for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
   //   this->refresh_band_ = i;
-    this->set_timeout(20, [this]() {});
+    //this->set_timeout(20, [this]() {});
     this->set_eq_gain(i, this->tas5805m_state_.eq_gain[i]);
   }
 }
 
 void Tas5805mComponent::refresh_gains_for_eq_band() {
-   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
+
+  this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
 }
 
 
