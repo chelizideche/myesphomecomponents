@@ -302,7 +302,7 @@ void Tas5805mComponent::refresh_eq_gains() {
     this->refresh_band_ = i;
     this->set_timeout(10, [this]() {
       //this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
-      this->set_eq_gain(i, refresh_gains_for_eq_band());
+      this->refresh_gains_for_eq_band();
     });
   }
 }
