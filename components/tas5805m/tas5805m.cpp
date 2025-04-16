@@ -251,10 +251,10 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
-  if (this->tas5805m_state_.eq_enabled && (this->tas5805m_state_.eq_gain[band] == gain) && this->tas5805m_state_.eq_gain_set[band]) {
-    ESP_LOGD(TAG, "EQ Gain set on Band %d with %ddB gain: no change required", band, gain);
-    return true;
-  }
+  // if (this->tas5805m_state_.eq_enabled && (this->tas5805m_state_.eq_gain[band] == gain) && this->tas5805m_state_.eq_gain_set[band]) {
+  //   ESP_LOGD(TAG, "EQ Gain set on Band %d with %ddB gain: no change required", band, gain);
+  //   return true;
+  // }
 
   if (!this->tas5805m_state_.eq_enabled) {
     this->tas5805m_state_.eq_gain[band] = gain;
@@ -301,15 +301,15 @@ void Tas5805mComponent::refresh_eq_gains() {
   for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
     this->refresh_band_ = i;
     this->set_timeout(10, [this]() {
-      this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
-      //this->set_eq_gain(i, refresh_gains_for_eq_band());
+      //this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
+      this->set_eq_gain(i, refresh_gains_for_eq_band());
     });
   }
 }
 
-// void Tas5805mComponent::refresh_gains_for_eq_band() {
-//   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
-// }
+void Tas5805mComponent::refresh_gains_for_eq_band() {
+   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
+}
 
 
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
