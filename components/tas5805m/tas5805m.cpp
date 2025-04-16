@@ -32,6 +32,10 @@ void Tas5805mComponent::setup() {
   });
 }
 
+void Tas5805mComponent::loop() {
+  return;
+}
+
 bool Tas5805mComponent::configure_registers() {
   uint16_t i = 0;
   uint16_t counter = 0;

@@ -79,6 +79,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(int8_t analog_gain) { analog_gain_ = analog_gain; }
 
   void setup() override;
+  void loop() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::IO; }
 
