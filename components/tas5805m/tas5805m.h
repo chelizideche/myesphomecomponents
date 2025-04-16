@@ -99,6 +99,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_eq_off();
   bool set_eq_gain(uint8_t band, int8_t gain);
   int8_t eq_gain(uint8_t band);
+  void refresh_eq_gains();
 
  protected:
    GPIOPin *enable_pin_{nullptr};

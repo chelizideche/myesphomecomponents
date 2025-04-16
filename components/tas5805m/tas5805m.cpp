@@ -297,6 +297,14 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
+void Tas5805mComponent::refresh_eq_gains() {
+  for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
+    this->set_timeout(10, [this]() {
+      this->set_eq_gain(i, this->tas5805m_state_.eq_gain[i]);
+    });
+  }
+}
+
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
