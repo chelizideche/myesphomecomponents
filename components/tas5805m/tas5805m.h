@@ -126,7 +126,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_bck_ratio(uint8_t* ratio);
    bool get_power_state(Tas5805mControlState* state);
    bool set_eq(bool enable);
-   void refresh_gains_for_eq_band();
+   //void refresh_gains_for_eq_band();
    bool set_book_and_page(uint8_t book, uint8_t page);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
@@ -148,6 +148,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     Tas5805mControlState   state;
     Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
+
+   bool run_refresh_eq_gains_{false};
 
    float volume_{0};
 

@@ -33,7 +33,15 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::loop() {
-  return;
+  if (!this->run_refresh_eq_gains_) return;
+  if (this->refresh_band_ == TAS5805M_EQ_BANDS) {
+    this->run_refresh_eq_gains_ = false;
+    this->refresh_band_ = 0;
+    return;
+  }
+
+  this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
+  this->refresh_band_ = this->refresh_band_ + 1;
 }
 
 bool Tas5805mComponent::configure_registers() {
@@ -302,6 +310,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 }
 
 void Tas5805mComponent::refresh_eq_gains() {
+  this->run_refresh_eq_gains_ = true;
   // for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
   //   this->refresh_band_ = i;
     // this->set_timeout(10, [this]() {
@@ -310,17 +319,17 @@ void Tas5805mComponent::refresh_eq_gains() {
     // });
 
   // }
-  for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
+  //for (int8_t i = 0; i < TAS5805M_EQ_BANDS; i++) {
   //   this->refresh_band_ = i;
     //this->set_timeout(20, [this]() {});
-    this->set_eq_gain(i, this->tas5805m_state_.eq_gain[i]);
-  }
+    //this->set_eq_gain(i, this->tas5805m_state_.eq_gain[i]);
+  //}
 }
 
-void Tas5805mComponent::refresh_gains_for_eq_band() {
+// void Tas5805mComponent::refresh_gains_for_eq_band() {
 
-  this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
-}
+//   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
+// }
 
 
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
