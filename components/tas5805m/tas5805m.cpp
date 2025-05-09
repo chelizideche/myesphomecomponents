@@ -92,7 +92,7 @@ void Tas5805mComponent::dump_config() {
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
-      ESP_LOGD(TAG, "  Volume: %3.0f%%", 100.0*this->volume());
+      ESP_LOGD(TAG, "  Volume: %.0f%%", 100.0*this->volume());
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
