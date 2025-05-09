@@ -29,23 +29,20 @@ audio_dac:
 ***enable_pin:*** is required and is the enable pin of ESP32-Louder<BR>
 
 # YAML examples in this Repository
-Arduino or esp-idf frameworks can be used for defining the mediaplayer.
+Esp-idf framework can be used for defining the mediaplayer.
 
-Three example yaml configurations are provided in the repository. All examples:
- 1) create a switch so the tas5805m can be enabled/disabled(into deep sleep) by Homeassistant
- 2) include an interval configuration to disable the tas65805m if there is not activity
- 3) use mediaplayer on_play trigger to enable the tas5805m if it is disabled
-
-The example yaml for arduino framework configures a mediaplayer that uses software control for volume and mute/unmute.
-The compatible audio files are limited; mp3 audio files has been tested but other formats can cause the esp32 to reboot.
-It is provided for compatibility and is not the recommended framework.
-
-Two esp-idf example configurations are provided which both use the new speaker mediaplayer component. This component using
-Homeassistant supports a wide range of common audio formats and has also been tested with text-to-speech.
-The idf-basic yaml example has a single audio pipeline(announce) with volume control and mute/unmute undertaken by the tas5805m dac.
-Note that this configuration does not support mediaplay pause.
-
-The idf-media yaml example configures more use of psram and has two audio pipelines - media and announce.
-Volume control and mute/unmute are again undertaken by the tas5805m dac. This example reduces the volume of the media pipeline
+The "esp32S3_louder_idf_media.yaml" example configures more use of psram and has two audio pipelines - media and announce.
+Volume control and mute/unmute are undertaken by the tas5805m dac. This example reduces the volume of the media pipeline
 if the announce pipeline plays and also adjusts the announce pipeline volume, then reverts back when the announce audio pipeline stops.
 The announce pipeline volume used can be altered through a number template which can be adjusted in Homeassistant.
+EQ control is setup through Enable Eq Control switch and several number templates.
+
+To control via Homeassistant, quite a few cards need to be defined. The example view config "HA_dashboard_view_setup.yaml" can be used as follows:
+Create a new dashboard by going to "Setting then "Dashboards" and add a new Dashboard and give it a Title.
+A single view called Home will be created on this new dashboard. Go to edit mode for that dashboard by pressing the top right Pencil,
+then using the top right 3 dots menu, select Raw configuration editor. Copy and paste the contents of "HA_dashboard_view_setup.yaml"
+over the second line "- title: Home" and press save, then cross out and press Done.
+
+Now you should have a dashboard view that looks like this:
+
+![alt text](dashboard.png)
