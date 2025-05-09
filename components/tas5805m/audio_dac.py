@@ -32,7 +32,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_GAIN, default="-15.5dB"): cv.All(
                         cv.decibel, cv.one_of(*ANALOG_GAINS)
                     ),
-            cv.optional(CONF_ENABLE_EQ, default=False): cv.boolean,
+            cv.Optional(CONF_ENABLE_EQ, default=False): cv.boolean,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
