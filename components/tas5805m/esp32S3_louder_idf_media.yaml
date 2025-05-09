@@ -1,6 +1,7 @@
 esphome:
+  name: louder-s3
+  friendly_name: Louder-S3
   min_version: 2025.2.0
-  name: esp32-louder
   platformio_options:
     board_build.flash_mode: dio
   on_boot:
@@ -37,9 +38,8 @@ logger:
 
 # Enable Home Assistant API
 api:
-  id: this_api
   encryption:
-    key: "w520PFA3Ik65hxHdBkVM/Q5wR/LIngfOFfX0QgQtduM="
+    key: "ThIGPAL4Tde3pNvWy1tyHeitB9XlUcXn+LZ5q/N9OuY="
 
 ota:
   - platform: esphome
@@ -120,7 +120,7 @@ speaker:
 
 media_player:
   - platform: speaker
-    name: Louder Mediaplayer
+    name: Mediaplayer
     id: louder_mediaplayer
     task_stack_in_psram: true
     volume_increment: 0.1%
@@ -414,7 +414,7 @@ number:
 
 switch:
   - platform: template
-    name: Enable Louder
+    name: Enable
     id: enable_louder
     optimistic: true
     restore_mode: ALWAYS_ON
