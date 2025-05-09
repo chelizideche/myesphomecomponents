@@ -26,7 +26,7 @@ CONFIG_SCHEMA = (
         {
             cv.GenerateID(): cv.declare_id(Tas5805mComponent),
             cv.Required(CONF_ENABLE_PIN): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_GAIN, default="-14.5dB"): cv.All(
+            cv.Optional(CONF_GAIN, default="-15.5dB"): cv.All(
                         cv.decibel, cv.one_of(*ANALOG_GAINS)
                     ),
         }

@@ -33,15 +33,23 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::loop() {
+  // do a re-write of gains for all eq bands when triggered by boolean
+  // write gains for one band per loop so component does not take too long
+
   if (!this->run_refresh_eq_gains_) return;
+
+  // refresh_band_ is initially set to 0 in tas5805m.h
+  // when finished reset variables ready for next time
   if (this->refresh_band_ == TAS5805M_EQ_BANDS) {
     this->run_refresh_eq_gains_ = false;
     this->refresh_band_ = 0;
     return;
   }
 
+  // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
+  return;
 }
 
 bool Tas5805mComponent::configure_registers() {
@@ -64,10 +72,10 @@ bool Tas5805mComponent::configure_registers() {
   }
   this->number_registers_configured_ = counter;
 
+  if (!this->set_analog_gain(this->analog_gain_)) return false;
+
   if (!this->set_state(CTRL_PLAY)) return false;
   if (!this->set_volume(0.05)) return false;
-
-  if (!this->set_analog_gain(this->analog_gain_)) return false;
   return true;
 }
 
@@ -83,8 +91,8 @@ void Tas5805mComponent::dump_config() {
       break;
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
-      ESP_LOGD(TAG, "  Digital Volume: %i", this->digital_volume_);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
+      ESP_LOGD(TAG, "  Volume: %3.0f%%", 100.0*this->volume());
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -250,10 +258,6 @@ bool Tas5805mComponent::set_eq(bool enable) {
 }
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
-  // if (!this->tas5805m_state_.eq_enabled) {
-  //   ESP_LOGD(TAG, "EQ Control Not enabled - no change to EQ Band: %d Gain: %d", band, gain);
-  //   return false;
-  // }
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
     return false;
@@ -266,13 +270,13 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   if (!this->tas5805m_state_.eq_enabled) {
     this->tas5805m_state_.eq_gain[band] = gain;
     this->tas5805m_state_.eq_gain_set[band] = false;
-    ESP_LOGD(TAG, "EQ Band: %d Gain: %ddB-> updated for later setup", band, gain);
+    ESP_LOGD(TAG, "EQ Band: %d updated Gain: %ddB for later setup", band, gain);
     return true;
   }
 
   uint8_t current_page = 0;
   bool ok = true;
-  ESP_LOGD(TAG, "Setting EQ Band %d (%d Hz) to Gain %d", band, tas5805m_eq_bands[band], gain);
+  ESP_LOGD(TAG, "EQ Band %d (%dHz) set to Gain %ddB", band, tas5805m_eq_bands[band], gain);
 
   int x = gain + TAS5805M_EQ_MAX_DB;
   uint16_t y = band * TAS5805M_EQ_KOEF_PER_BAND * TAS5805M_EQ_REG_PER_KOEF;
@@ -292,7 +296,7 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
           }
       }
 
-      ESP_LOGV(TAG, "Writing gain: %d at 0x%02X with 0x%02X", i, reg_value->offset, reg_value->value);
+      ESP_LOGV(TAG, "Writing EQ Band gain: %d at 0x%02X with 0x%02X", i, reg_value->offset, reg_value->value);
       ok = tas5805m_write_byte(reg_value->offset, reg_value->value);
       if (!ok) {
         ESP_LOGE(TAG, "Error writing EQ Gain to register 0x%02X", reg_value->offset);
@@ -311,7 +315,7 @@ void Tas5805mComponent::refresh_eq_gains() {
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
-    return -15;
+    return TAS5805M_EQ_MIN_DB;
   }
   return this->tas5805m_state_.eq_gain[band];
 }

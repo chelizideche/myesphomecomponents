@@ -29,7 +29,7 @@ static const Tas5805mConfiguration tas5805m_registers[] = {
     { 0x30, 0x00 },
     { 0x4c, 0x30 },
     { 0x53, 0x00 },
-    { 0x54, 0x1F }, //   originally 0x00 @mrtoy-me changed to analog gain -15db (31 decimal) to suit 5 volt supply voltage
+    { 0x54, 0x1F }, //   originally 0x00 @mrtoy-me changed to analog gain -15.5db (31 decimal) to suit 5 volt supply voltage
     { 0x03, 0x03 },
     { 0x78, 0x80 },
 };
