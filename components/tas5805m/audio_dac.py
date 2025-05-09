@@ -14,6 +14,9 @@ CODEOWNERS = ["@mrtoy-me"]
 DEPENDENCIES = ["i2c"]
 
 CONF_GAIN = "analog_gain"
+CONF_ENABLE_EQ = "eq_control"
+
+CONF_TAS5805M_ID = "tas5805m_id"
 
 tas5805m_ns = cg.esphome_ns.namespace("tas5805m")
 Tas5805mComponent = tas5805m_ns.class_("Tas5805mComponent", AudioDac, cg.Component, i2c.I2CDevice)
@@ -29,6 +32,7 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_GAIN, default="-15.5dB"): cv.All(
                         cv.decibel, cv.one_of(*ANALOG_GAINS)
                     ),
+            cv.optional(CONF_ENABLE_EQ, default=False): cv.boolean,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -42,3 +46,5 @@ async def to_code(config):
     enable = await cg.gpio_pin_expression(config[CONF_ENABLE_PIN])
     cg.add(var.set_enable_pin(enable))
     cg.add(var.config_analog_gain(config[CONF_GAIN]))
+    cg.add(var.config_enable_eq(config[CONF_ENABLE_EQ]))
+    cg.add_define("USE_TAS5805M_EQ")
