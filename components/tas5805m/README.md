@@ -42,8 +42,9 @@ if the announce pipeline plays and also adjusts the announce pipeline volume, th
 The announce pipeline volume used can be altered through a number template which can be adjusted in Homeassistant.<BR>
 EQ control is setup through Enable Eq Control switch and several number templates.<BR>
 
-To control via Homeassistant, quite a few cards need to be defined. The example dashboard view configuration "HA_dashboard_view_setup.yaml"<BR>
-can be used to setup a dashboard. The following setup assumes you have used "esp32S3_louder_idf_media.yaml" configuration<BR>
+To control via Homeassistant, quite a few cards need to be defined.<BR>
+The example dashboard view configuration "HA_dashboard_view_setup.yaml" can be used to setup a dashboard.<BR>
+The following setup assumes you have used "esp32S3_louder_idf_media.yaml" configuration<BR>
 and Homeassistant version 2025.5.0 is used so entity naming is the same as in "HA_dashboard_view_setup.yaml".<BR>
 
 Undertake the following steps....<BR>
