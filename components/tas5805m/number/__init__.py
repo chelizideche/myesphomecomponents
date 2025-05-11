@@ -37,7 +37,7 @@ async def to_code(config):
     if CONF_EQ in config:
         tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
         n = await number.new_number(
-            gain_20Hz_config, min_value=-15, max_value=15, step=1
+            config.get(CONF_GAIN_20HZ), min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
         cg.add(tas5805m_component.set_gain_20_hz_number(n))
