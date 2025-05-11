@@ -47,4 +47,4 @@ async def to_code(config):
     cg.add(var.set_enable_pin(enable))
     cg.add(var.config_analog_gain(config[CONF_GAIN]))
     cg.add(var.config_enable_eq(config[CONF_ENABLE_EQ]))
-    cg.add_define("USE_TAS5805M_EQ")
+    #cg.add_define("USE_TAS5805M_EQ")
