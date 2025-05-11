@@ -76,7 +76,6 @@ bool Tas5805mComponent::configure_registers() {
 
   if (!this->set_state(CTRL_PLAY)) return false;
   if (!this->set_volume(0.05)) return false;
-  this->gain_20_hz_number_->publish_state(20.0);
   return true;
 }
 
@@ -94,7 +93,6 @@ void Tas5805mComponent::dump_config() {
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
       ESP_LOGD(TAG, "  Volume: %.0f%%", 100.0*this->volume());
-      ESP_LOGD(TAG, "  20Hz Number: %f", this->gain_20_hz_number_);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
