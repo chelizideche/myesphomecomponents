@@ -11,7 +11,7 @@ CONF_GAIN_20HZ = "gain_20Hz"
 
 ICON_VOLUME_SOURCE = "mdi:volume-source"
 
-from .. import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
+from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
 EqGainNumber = tas5805m_ns.class_("EqGainNumber", number.Number)
 
