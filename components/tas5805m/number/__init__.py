@@ -35,4 +35,4 @@ async def to_code(config):
             gain_20Hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_20_hz(n))
+        cg.add(tas5805m_component.set_gain_20_hz_number(n))
