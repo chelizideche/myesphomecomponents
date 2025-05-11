@@ -7,8 +7,7 @@ namespace tas5805m {
 
 void EqGainNumber::control(float value) {
   this->publish_state(value);
-  ESP_LOGD(TAG, " Number Change to: %f", value);
-  this->parent_->set_eq_gain(0, value);
+  this->parent_->set_eq_gain(0, (integer)value);
 }
 
 }  // namespace tas5805m
