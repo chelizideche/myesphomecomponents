@@ -18,7 +18,7 @@ EqGainNumber = tas5805m_ns.class_("EqGainNumber", number.Number)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-        cv.Optional(f"eq_gain"): (
+        cv.Optional(f"eq_gains"): (
             {
                 cv.Required(CONF_GAIN_20HZ): number.number_schema(
                     EqGainNumber,
