@@ -28,7 +28,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
 
   #ifdef USE_NUMBER
-  //void config_eq(bool configured) { this->eq_configured_ = configured; }
   void set_gain_20_hz_number(number::Number *number) { this->gain_20_hz_number_ = number; }
   #endif
 
@@ -99,7 +98,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
 
-   //bool eq_configured_{false};
    bool run_refresh_eq_gains_{false};
 
    float volume_{0};
