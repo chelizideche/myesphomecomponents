@@ -7,7 +7,7 @@ from esphome.const import (
     UNIT_DECIBEL,
 )
 
-CONF_EQ = "config_eq"
+CONF_EQ = "eq_gains"
 CONF_GAIN_20HZ = "20Hz"
 
 ICON_VOLUME_SOURCE = "mdi:volume-source"
@@ -34,11 +34,14 @@ CONFIG_SCHEMA = cv.Schema(
 )
 
 async def to_code(config):
+    tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     if CONF_EQ in config:
-        tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
+        cg.add(tas5805m_component.config_eq(True))
         if gain_20Hz__config := config.get(CONF_GAIN_20HZ):
             n = await number.new_number(
                 gain_20Hz__config, min_value=-15, max_value=15, step=1
             )
             await cg.register_parented(n, tas5805m_component)
             cg.add(tas5805m_component.set_gain_20_hz_number(n))
+    else:
+        cg.add(tas5805m_component.config_eq(False))
