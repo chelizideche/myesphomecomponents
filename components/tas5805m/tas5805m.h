@@ -28,7 +28,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
 
   #ifdef USE_NUMBER
-  void set_set_gain_20_hz_number(number::Number *number) { this->gain_20_hz_number_ = number; }
+  void set_gain_20_hz_number(number::Number *number) { this->gain_20_hz_number_ = number; }
   #endif
 
   float volume() override { return this->volume_; }
