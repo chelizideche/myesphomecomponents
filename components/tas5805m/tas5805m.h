@@ -30,8 +30,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   #ifdef USE_NUMBER
   void set_gain_20hz_band(number::Number *number)   { this->gain_20_hz_band_   = number; }
   void set_gain_31p5hz_band(number::Number *number) { this->gain_31p5_hz_band_ = number; }
-  void set_gain_20hz_band(number::Number *number)   { this->gain_50_hz_band_   = number; }
-  void set_gain_20hz_band(number::Number *number)   { this->gain_80_hz_band_   = number; }
+  void set_gain_50hz_band(number::Number *number)   { this->gain_50_hz_band_   = number; }
+  void set_gain_80hz_band(number::Number *number)   { this->gain_80_hz_band_   = number; }
   #endif
 
   float volume() override { return this->volume_; }
