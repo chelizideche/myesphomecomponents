@@ -29,7 +29,8 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
-        ),
+        )
+        .extend(cv.COMPONENT_SCHEMA),
         cv.Required(CONF_GAIN_31P5HZ): number.number_schema(
             EqGainBand31p5hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
