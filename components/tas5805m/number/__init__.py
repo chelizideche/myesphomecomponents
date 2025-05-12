@@ -16,10 +16,10 @@ ICON_VOLUME_SOURCE = "mdi:volume-source"
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
-EqGainBand20hz   = tas5805m_ns.class_("EqGainBand20hz",   number.Number)
+EqGainBand20hz = tas5805m_ns.class_("EqGainBand20hz", number.Number)
 EqGainBand31p5hz = tas5805m_ns.class_("EqGainBand31p5hz", number.Number)
-EqGainBand50hz   = tas5805m_ns.class_("EqGainBand50hz",   number.Number)
-EqGainBand80hz   = tas5805m_ns.class_("EqGainBand80hz",   number.Number)
+EqGainBand50hz = tas5805m_ns.class_("EqGainBand50hz", number.Number)
+EqGainBand80hz = tas5805m_ns.class_("EqGainBand80hz", number.Number)
 
 CONFIG_SCHEMA = cv.Schema(
     {
