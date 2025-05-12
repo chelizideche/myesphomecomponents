@@ -14,7 +14,7 @@ void EqGainBand80hz::setup() {
 }
 
 void EqGainBand80hz::dump_config() {
-  LOG_NUMBER("", "TEQ Gain Band 80Hz", this);
+  LOG_NUMBER("", "EQ Gain Band 80Hz", this);
 }
 
 void EqGainBand80hz::control(float value) {
