@@ -8,10 +8,6 @@
 #include "tas5805m_cfg.h"
 #include "tas5805m_eq.h"
 
-//#ifdef USE_NUMBER
-//#include "esphome/components/number/number.h"
-//#endif
-
 namespace esphome {
 namespace tas5805m {
 
@@ -26,13 +22,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
   void set_enable_pin(GPIOPin *enable) { this->enable_pin_ = enable; }
   void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
-
-  //#ifdef USE_NUMBER
-  //void set_gain_20hz_band(number::Number *number)   { this->gain_20_hz_band_   = number; }
-  //void set_gain_31p5hz_band(number::Number *number) { this->gain_31p5_hz_band_ = number; }
-  //void set_gain_50hz_band(number::Number *number)   { this->gain_50_hz_band_   = number; }
-  //void set_gain_80hz_band(number::Number *number)   { this->gain_80_hz_band_   = number; }
-  //#endif
 
   float volume() override { return this->volume_; }
   bool set_volume(float value) override;
@@ -52,13 +41,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
  protected:
    GPIOPin *enable_pin_{nullptr};
-
-   //#ifdef USE_NUMBER
-   //number::Number *gain_20_hz_band_{nullptr};
-   //number::Number *gain_31p5_hz_band_{nullptr};
-   //number::Number *gain_50_hz_band_{nullptr};
-   //number::Number *gain_80_hz_band_{nullptr};
-   //#endif
 
    bool configure_registers();
 

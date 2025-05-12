@@ -28,6 +28,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_GAIN_20HZ): number.number_schema(
             EqGainBand20hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
         )
@@ -36,6 +37,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_GAIN_31P5HZ): number.number_schema(
             EqGainBand31p5hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
         )
@@ -44,14 +46,16 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Required(CONF_GAIN_50HZ): number.number_schema(
             EqGainBand50hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_80HZ): number.number_schema(
             EqGainBand80hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
         )
