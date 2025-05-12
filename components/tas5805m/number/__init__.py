@@ -58,25 +58,25 @@ async def to_code(config):
             gain_20hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_20hz_band(n))
+        #cg.add(tas5805m_component.set_gain_20hz_band(n))
 
     if gain_31p5hz_config := config.get(CONF_GAIN_31P5HZ):
         n = await number.new_number(
             gain_31p5hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_31p5hz_band(n))
+        #cg.add(tas5805m_component.set_gain_31p5hz_band(n))
 
     if gain_50hz_config := config.get(CONF_GAIN_50HZ):
         n = await number.new_number(
             gain_50hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_50hz_band(n))
+        #cg.add(tas5805m_component.set_gain_50hz_band(n))
 
     if gain_80hz_config := config.get(CONF_GAIN_80HZ):
         n = await number.new_number(
             gain_80hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_80hz_band(n))
+        #cg.add(tas5805m_component.set_gain_80hz_band(n))
