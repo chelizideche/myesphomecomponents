@@ -24,6 +24,7 @@ EqGainBand80hz = tas5805m_ns.class_("EqGainBand80hz", number.Number, cg.Componen
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+
         cv.Required(CONF_GAIN_20HZ): number.number_schema(
             EqGainBand20hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -31,24 +32,30 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
+
         cv.Required(CONF_GAIN_31P5HZ): number.number_schema(
             EqGainBand31p5hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
-        ),
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+
         cv.Required(CONF_GAIN_50HZ): number.number_schema(
             EqGainBand50hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
-        ),
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
         cv.Required(CONF_GAIN_80HZ): number.number_schema(
             EqGainBand80hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
             icon=ICON_VOLUME_SOURCE,
             unit_of_measurement=UNIT_DECIBEL,
-        ),
+        )
+        .extend(cv.COMPONENT_SCHEMA),
     }
 )
 
@@ -65,19 +72,19 @@ async def to_code(config):
         n = await number.new_number(
             gain_31p5hz_config, min_value=-15, max_value=15, step=1
         )
+        await cg.register_component(n, gain_31p5hz_config)
         await cg.register_parented(n, tas5805m_component)
-        #cg.add(tas5805m_component.set_gain_31p5hz_band(n))
 
     if gain_50hz_config := config.get(CONF_GAIN_50HZ):
         n = await number.new_number(
             gain_50hz_config, min_value=-15, max_value=15, step=1
         )
+        await cg.register_component(n, gain_50hz_config)
         await cg.register_parented(n, tas5805m_component)
-        #cg.add(tas5805m_component.set_gain_50hz_band(n))
 
     if gain_80hz_config := config.get(CONF_GAIN_80HZ):
         n = await number.new_number(
             gain_80hz_config, min_value=-15, max_value=15, step=1
         )
+        await cg.register_component(n, gain_80hz_config)
         await cg.register_parented(n, tas5805m_component)
-        #cg.add(tas5805m_component.set_gain_80hz_band(n))
