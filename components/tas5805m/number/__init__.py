@@ -7,7 +7,7 @@ from esphome.const import (
     UNIT_DECIBEL,
 )
 
-CONF_GAIN_20HZ   = "gain_20Hz_band"
+CONF_GAIN_20HZ   = "eq_gain_band20Hz"
 CONF_GAIN_31P5HZ = "gain_31.5Hz_band"
 CONF_GAIN_50HZ   = "gain_50Hz_band"
 CONF_GAIN_80HZ   = "gain_80Hz_band"
