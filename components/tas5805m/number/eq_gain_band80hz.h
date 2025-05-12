@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esphome/components/number/number.h"
+#include "esphome/core/preferences.h"
 #include "../tas5805m.h"
 
 namespace esphome {
@@ -8,10 +9,15 @@ namespace tas5805m {
 
 class EqGainBand80hz : public number::Number, public Parented<Tas5805mComponent> {
  public:
-  EqGainBand80hz() = default;
+  //EqGainBand80hz() = default;
+
+  void setup() override;
+  void dump_config() override;
+  float get_setup_priority() const override { return setup_priority::HARDWARE; }
 
  protected:
   void control(float value) override;
+
 };
 
 }  // namespace tas5805m
