@@ -7,28 +7,24 @@ from esphome.const import (
     UNIT_DECIBEL,
 )
 
-CONF_GAIN_20HZ = "gain_20Hz"
+CONF_GAIN_20HZ = "gain_20Hz_band"
 
 ICON_VOLUME_SOURCE = "mdi:volume-source"
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
-EqGainNumber = tas5805m_ns.class_("EqGainNumber", number.Number)
+EqGain20hzBand = tas5805m_ns.class_("EqGain20hzBand", number.Number)
 
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-        cv.Optional(f"eq_gains"): (
-            {
-                cv.Required(CONF_GAIN_20HZ): number.number_schema(
-                    EqGainNumber,
-                    device_class=DEVICE_CLASS_SOUND_PRESSURE,
-                    entity_category=ENTITY_CATEGORY_CONFIG,
-                    icon=ICON_VOLUME_SOURCE,
-                    unit_of_measurement=UNIT_DECIBEL,
-                ),
-            }
-        )
+        cv.Required(CONF_GAIN_20HZ): number.number_schema(
+            EqGain20hzBand,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        ),
     }
 )
 
@@ -39,4 +35,4 @@ async def to_code(config):
             gain_20hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
-        cg.add(tas5805m_component.set_gain_20_hz_number(n))
+        cg.add(tas5805m_component.set_gain_20hz_band(n))

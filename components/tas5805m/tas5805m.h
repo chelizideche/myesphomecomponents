@@ -28,7 +28,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
 
   #ifdef USE_NUMBER
-  void set_gain_20_hz_number(number::Number *number) { this->gain_20_hz_number_ = number; }
+  void set_gain_20hz_band(number::Number *number) { this->gain_20_hz_band_ = number; }
   #endif
 
   float volume() override { return this->volume_; }
@@ -51,7 +51,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    GPIOPin *enable_pin_{nullptr};
 
    #ifdef USE_NUMBER
-   number::Number *gain_20_hz_number_{nullptr};
+   number::Number *gain_20_hz_band_{nullptr};
    #endif
 
    bool configure_registers();
@@ -75,7 +75,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_bck_ratio(uint8_t* ratio);
    bool get_power_state(Tas5805mControlState* state);
    bool set_eq(bool enable);
-   //void refresh_gains_for_eq_band();
+
    bool set_book_and_page(uint8_t book, uint8_t page);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
