@@ -54,10 +54,10 @@ CONFIG_SCHEMA = cv.Schema(
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     if gain_20hz_config := config.get(CONF_GAIN_20HZ):
-        await cg.register_component(gain_20hz_config)
-        n = await number.register_number(
+        n = await number.new_number(
             gain_20hz_config, min_value=-15, max_value=15, step=1
         )
+        await cg.register_component(n, gain_20hz_config)
         await cg.register_parented(n, tas5805m_component)
 
     if gain_31p5hz_config := config.get(CONF_GAIN_31P5HZ):
