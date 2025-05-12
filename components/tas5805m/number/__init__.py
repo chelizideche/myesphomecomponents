@@ -2,6 +2,7 @@ import esphome.codegen as cg
 from esphome.components import number
 import esphome.config_validation as cv
 from esphome.const import (
+    CONF_ID,
     DEVICE_CLASS_SOUND_PRESSURE,
     ENTITY_CATEGORY_CONFIG,
     UNIT_DECIBEL,
@@ -21,44 +22,50 @@ EqGainBand31p5hz = tas5805m_ns.class_("EqGainBand31p5hz", number.Number, cg.Comp
 EqGainBand50hz = tas5805m_ns.class_("EqGainBand50hz", number.Number, cg.Component)
 EqGainBand80hz = tas5805m_ns.class_("EqGainBand80hz", number.Number, cg.Component)
 
-CONFIG_SCHEMA = cv.Schema(
-    {
-        cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-        cv.Required(CONF_GAIN_20HZ): number.number_schema(
-            EqGainBand20hz,
-            device_class=DEVICE_CLASS_SOUND_PRESSURE,
-            icon=ICON_VOLUME_SOURCE,
-            unit_of_measurement=UNIT_DECIBEL,
-        ),
-        cv.Required(CONF_GAIN_31P5HZ): number.number_schema(
-            EqGainBand31p5hz,
-            device_class=DEVICE_CLASS_SOUND_PRESSURE,
-            icon=ICON_VOLUME_SOURCE,
-            unit_of_measurement=UNIT_DECIBEL,
-        ),
-        cv.Required(CONF_GAIN_50HZ): number.number_schema(
-            EqGainBand50hz,
-            device_class=DEVICE_CLASS_SOUND_PRESSURE,
-            icon=ICON_VOLUME_SOURCE,
-            unit_of_measurement=UNIT_DECIBEL,
-        ),
-        cv.Required(CONF_GAIN_80HZ): number.number_schema(
-            EqGainBand80hz,
-            device_class=DEVICE_CLASS_SOUND_PRESSURE,
-            icon=ICON_VOLUME_SOURCE,
-            unit_of_measurement=UNIT_DECIBEL,
-        ),
-    }
+CONFIG_SCHEMA = (
+    cv.Schema(
+        {
+            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+            cv.Required(CONF_GAIN_20HZ): number.number_schema(
+                EqGainBand20hz,
+                device_class=DEVICE_CLASS_SOUND_PRESSURE,
+                icon=ICON_VOLUME_SOURCE,
+                unit_of_measurement=UNIT_DECIBEL,
+            )
+            .extend(cv.COMPONENT_SCHEMA),
+            cv.Required(CONF_GAIN_31P5HZ): number.number_schema(
+                EqGainBand31p5hz,
+                device_class=DEVICE_CLASS_SOUND_PRESSURE,
+                icon=ICON_VOLUME_SOURCE,
+                unit_of_measurement=UNIT_DECIBEL,
+            ),
+            cv.Required(CONF_GAIN_50HZ): number.number_schema(
+                EqGainBand50hz,
+                device_class=DEVICE_CLASS_SOUND_PRESSURE,
+                icon=ICON_VOLUME_SOURCE,
+                unit_of_measurement=UNIT_DECIBEL,
+            ),
+            cv.Required(CONF_GAIN_80HZ): number.number_schema(
+                EqGainBand80hz,
+                device_class=DEVICE_CLASS_SOUND_PRESSURE,
+                icon=ICON_VOLUME_SOURCE,
+                unit_of_measurement=UNIT_DECIBEL,
+            ),
+        }
+    )
 )
 
 async def to_code(config):
-    tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     if gain_20hz_config := config.get(CONF_GAIN_20HZ):
-        await cg.register_component(gain_20hz_config)
-        n = await number.register_number(
-            gain_20hz_config, min_value=-15, max_value=15, step=1
+        var = cg.new_Pvariable(gain_20hz_config)
+        await cg.register_component(var, gain_20hz_config)
+        await cg.number.register_number(
+            var,
+            gain_20hz_config,
+            min_value=-15, max_value=15, step=1,
         )
-        await cg.register_parented(n, tas5805m_component)
+        parent = await cg.get_variable(config[CONF_TAS5805M_ID])
+        cg.add(var.set_20hz_parent(parent))
 
     if gain_31p5hz_config := config.get(CONF_GAIN_31P5HZ):
         n = await number.new_number(
