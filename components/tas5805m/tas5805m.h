@@ -55,7 +55,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    #ifdef USE_NUMBER
    number::Number *gain_20_hz_band_{nullptr};
-   number::Number *gain_31p5_hz_band{nullptr};
+   number::Number *gain_31p5_hz_band_{nullptr};
    number::Number *gain_50_hz_band_{nullptr};
    number::Number *gain_80_hz_band_{nullptr};
    #endif
