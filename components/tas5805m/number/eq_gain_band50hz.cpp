@@ -3,6 +3,8 @@
 namespace esphome {
 namespace tas5805m {
 
+static const char *const TAG = "Tas5805m.number";
+
 void EqGainBand50hz::setup() {
   float value;
   this->pref_ = global_preferences->make_preference<float>(this->get_object_id_hash());
@@ -11,7 +13,7 @@ void EqGainBand50hz::setup() {
 }
 
 void EqGainBand50hz::dump_config() {
-  LOG_NUMBER("", "Tas5805m EQ Gain Band 50Hz", this);
+  LOG_NUMBER("", "EQ Gain Band 50Hz", this);
 }
 void EqGainBand50hz::control(float value) {
   this->publish_state(value);

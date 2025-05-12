@@ -18,6 +18,8 @@ class EqGainBand31p5hz : public number::Number, public Component, public Parente
 
  protected:
   void control(float value) override;
+
+  ESPPreferenceObject pref_;
 };
 
 }  // namespace tas5805m

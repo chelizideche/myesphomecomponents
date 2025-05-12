@@ -18,6 +18,8 @@ class EqGainBand20hz : public number::Number, public Component, public Parented<
 
  protected:
   void control(float value) override;
+
+  ESPPreferenceObject pref_;
 };
 
 }  // namespace tas5805m
