@@ -15,12 +15,9 @@ class EqGainBand20hz : public number::Number, public Component, public Parented<
   void setup() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::HARDWARE; }
-  void set_20hz_parent(Tas5805mComponent *parent) { this->parent_ = parent; }
 
  protected:
   void control(float value) override;
-
-  Tas5805mComponent *parent_;
 
   ESPPreferenceObject pref_;
 };
