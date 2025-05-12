@@ -80,7 +80,7 @@ async def to_code(config):
 
     if gain_80hz_config := config.get(CONF_GAIN_80HZ):
         n = await number.new_number(
-            gain_20hz_config, min_value=-15, max_value=15, step=1
+            gain_80hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_parented(n, tas5805m_component)
         cg.add(tas5805m_component.set_gain_80hz_band(n))
