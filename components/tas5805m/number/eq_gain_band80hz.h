@@ -1,13 +1,14 @@
 #pragma once
 
 #include "esphome/components/number/number.h"
+#include "esphome/core/component.h"
 #include "esphome/core/preferences.h"
 #include "../tas5805m.h"
 
 namespace esphome {
 namespace tas5805m {
 
-class EqGainBand80hz : public number::Number, public Parented<Tas5805mComponent> {
+class EqGainBand80hz : public number::Number, public Component, public Parented<Tas5805mComponent> {
  public:
   //EqGainBand80hz() = default;
 
