@@ -14,7 +14,7 @@ void EqGainBand20hz::setup() {
 }
 
 void EqGainBand20hz::dump_config() {
-  ESP_LOGCONFIG(TAG, "%s '%s'", "Number Gain: EQ Band", this->get_name().c_str());
+  ESP_LOGCONFIG(TAG, "%s '%s'", "Gain Number for EQ Band", this->get_name().c_str());
 }
 
 void EqGainBand20hz::control(float value) {

@@ -14,7 +14,7 @@ void EqGainBand31p5hz::setup() {
 }
 
 void EqGainBand31p5hz::dump_config() {
-  LOG_NUMBER("", "EQ Gain Band 31.5Hz", this);
+  ESP_LOGCONFIG(TAG, "%s '%s'", "Gain Number for EQ Band", this->get_name().c_str());
 }
 
 void EqGainBand31p5hz::control(float value) {
