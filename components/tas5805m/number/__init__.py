@@ -8,9 +8,9 @@ from esphome.const import (
 )
 
 CONF_GAIN_20HZ   = "eq_gain_band20Hz"
-CONF_GAIN_31P5HZ = "gain_31.5Hz_band"
-CONF_GAIN_50HZ   = "gain_50Hz_band"
-CONF_GAIN_80HZ   = "gain_80Hz_band"
+CONF_GAIN_31P5HZ = "eq_gain_band31.5Hz"
+CONF_GAIN_50HZ   = "eq_gain_band50Hz"
+CONF_GAIN_80HZ   = "eq_gain_band80Hz"
 
 ICON_VOLUME_SOURCE = "mdi:volume-source"
 

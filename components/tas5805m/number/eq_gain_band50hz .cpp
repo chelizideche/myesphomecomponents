@@ -1,4 +1,4 @@
-#include "eq_gain20hz_band.h"
+#include "eq_gain_band50hz.h"
 
 namespace esphome {
 namespace tas5805m {
