@@ -1,3 +1,4 @@
+#include "esphome/core/log.h"
 #include "eq_gain_band50hz.h"
 
 namespace esphome {
