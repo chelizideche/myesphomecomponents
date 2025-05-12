@@ -1,4 +1,4 @@
-#include "eq_gain_band31p5hz_band.h"
+#include "eq_gain_band31p5hz.h"
 
 namespace esphome {
 namespace tas5805m {
