@@ -263,7 +263,7 @@ async def to_code(config):
         await cg.register_component(n, gain_2000hz_config)
         await cg.register_parented(n, tas5805m_component)
         
-    if gain_3150hz_config := config.get(CONF_GAIN_80HZ):
+    if gain_3150hz_config := config.get(CONF_GAIN_3150HZ):
         n = await number.new_number(
             gain_3150hz_config, min_value=-15, max_value=15, step=1
         )
