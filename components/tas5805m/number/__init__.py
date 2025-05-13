@@ -20,6 +20,17 @@ EqGainBand20hz = tas5805m_ns.class_("EqGainBand20hz", number.Number, cg.Componen
 EqGainBand31p5hz = tas5805m_ns.class_("EqGainBand31p5hz", number.Number, cg.Component)
 EqGainBand50hz = tas5805m_ns.class_("EqGainBand50hz", number.Number, cg.Component)
 EqGainBand80hz = tas5805m_ns.class_("EqGainBand80hz", number.Number, cg.Component)
+EqGainBand125hz = tas5805m_ns.class_("EqGainBand1256hz", number.Number, cg.Component)
+EqGainBand200hz = tas5805m_ns.class_("EqGainBand200hz", number.Number, cg.Component)
+EqGainBand315hz = tas5805m_ns.class_("EqGainBand315hz", number.Number, cg.Component)
+EqGainBand500hz = tas5805m_ns.class_("EqGainBand500hz", number.Number, cg.Component)
+EqGainBand800hz = tas5805m_ns.class_("EqGainBand800hz", number.Number, cg.Component)
+EqGainBand1250hz = tas5805m_ns.class_("EqGainBand1250hz", number.Number, cg.Component)
+EqGainBand2000hz = tas5805m_ns.class_("EqGainBand2000hz", number.Number, cg.Component)
+EqGainBand3150hz = tas5805m_ns.class_("EqGainBand3150hz", number.Number, cg.Component)
+EqGainBand5000hz = tas5805m_ns.class_("EqGainBand5000hz", number.Number, cg.Component)
+EqGainBand8000hz = tas5805m_ns.class_("EqGainBand8000hz", number.Number, cg.Component)
+EqGainBand16000hz = tas5805m_ns.class_("EqGainBand16000hz", number.Number, cg.Component)
 
 CONFIG_SCHEMA = cv.Schema(
     {
