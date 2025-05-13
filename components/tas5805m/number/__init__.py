@@ -20,7 +20,7 @@ EqGainBand20hz = tas5805m_ns.class_("EqGainBand20hz", number.Number, cg.Componen
 EqGainBand31p5hz = tas5805m_ns.class_("EqGainBand31p5hz", number.Number, cg.Component)
 EqGainBand50hz = tas5805m_ns.class_("EqGainBand50hz", number.Number, cg.Component)
 EqGainBand80hz = tas5805m_ns.class_("EqGainBand80hz", number.Number, cg.Component)
-EqGainBand125hz = tas5805m_ns.class_("EqGainBand1256hz", number.Number, cg.Component)
+EqGainBand125hz = tas5805m_ns.class_("EqGainBand125hz", number.Number, cg.Component)
 EqGainBand200hz = tas5805m_ns.class_("EqGainBand200hz", number.Number, cg.Component)
 EqGainBand315hz = tas5805m_ns.class_("EqGainBand315hz", number.Number, cg.Component)
 EqGainBand500hz = tas5805m_ns.class_("EqGainBand500hz", number.Number, cg.Component)
@@ -71,6 +71,44 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_125HZ): number.number_schema(
+            EqGainBand125hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_200HZ): number.number_schema(
+            EqGainBand200hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_315HZ): number.number_schema(
+            EqGainBand315hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_500HZ): number.number_schema(
+            EqGainBand500hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        
     }
 )
 
