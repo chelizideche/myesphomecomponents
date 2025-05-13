@@ -234,35 +234,41 @@ async def to_code(config):
         )
         await cg.register_component(n, gain_315hz_config)
         await cg.register_parented(n, tas5805m_component)
-    if gain_80hz_config := config.get(CONF_GAIN_80HZ):
+        
+    if gain_500hz_config := config.get(CONF_GAIN_500HZ):
         n = await number.new_number(
-            gain_80hz_config, min_value=-15, max_value=15, step=1
+            gain_500hz_config, min_value=-15, max_value=15, step=1
         )
-        await cg.register_component(n, gain_80hz_config)
+        await cg.register_component(n, gain_500hz_config)
         await cg.register_parented(n, tas5805m_component)
-    if gain_80hz_config := config.get(CONF_GAIN_80HZ):
+        
+    if gain_800hz_config := config.get(CONF_GAIN_800HZ):
         n = await number.new_number(
-            gain_80hz_config, min_value=-15, max_value=15, step=1
+            gain_800hz_config, min_value=-15, max_value=15, step=1
         )
-        await cg.register_component(n, gain_80hz_config)
+        await cg.register_component(n, gain_800hz_config)
         await cg.register_parented(n, tas5805m_component)
-    if gain_80hz_config := config.get(CONF_GAIN_80HZ):
+        
+    if gain_1250hz_config := config.get(CONF_GAIN_1250HZ):
         n = await number.new_number(
-            gain_80hz_config, min_value=-15, max_value=15, step=1
+            gain_1250hz_config, min_value=-15, max_value=15, step=1
         )
-        await cg.register_component(n, gain_80hz_config)
+        await cg.register_component(n, gain_1250hz_config)
         await cg.register_parented(n, tas5805m_component)
-    if gain_80hz_config := config.get(CONF_GAIN_80HZ):
+        
+    if gain_2000hz_config := config.get(CONF_GAIN_2000HZ):
         n = await number.new_number(
-            gain_80hz_config, min_value=-15, max_value=15, step=1
+            gain_2000hz_config, min_value=-15, max_value=15, step=1
         )
-        await cg.register_component(n, gain_80hz_config)
+        await cg.register_component(n, gain_2000hz_config)
         await cg.register_parented(n, tas5805m_component)
-    if gain_80hz_config := config.get(CONF_GAIN_80HZ):
+        
+    if gain_3150hz_config := config.get(CONF_GAIN_80HZ):
         n = await number.new_number(
-            gain_80hz_config, min_value=-15, max_value=15, step=1
+            gain_3150hz_config, min_value=-15, max_value=15, step=1
         )
-        await cg.register_component(n, gain_80hz_config)
+        await cg.register_component(n, gain_3150hz_config)
         await cg.register_parented(n, tas5805m_component)
+        
     
         
