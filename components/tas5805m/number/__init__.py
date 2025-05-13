@@ -119,7 +119,68 @@ CONFIG_SCHEMA = cv.Schema(
         )
         .extend(cv.COMPONENT_SCHEMA),
         
+        cv.Required(CONF_GAIN_800HZ): number.number_schema(
+            EqGainBand800hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
         
+        cv.Required(CONF_GAIN_1250HZ): number.number_schema(
+            EqGainBand1250hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_2000HZ): number.number_schema(
+            EqGainBand2000hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_3150HZ): number.number_schema(
+            EqGainBand3150hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_5000HZ): number.number_schema(
+            EqGainBand5000hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_8000HZ): number.number_schema(
+            EqGainBand8000hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
+        
+        cv.Required(CONF_GAIN_16000HZ): number.number_schema(
+            EqGainBand16000hz,
+            device_class=DEVICE_CLASS_SOUND_PRESSURE,
+            entity_category=ENTITY_CATEGORY_CONFIG,
+            icon=ICON_VOLUME_SOURCE,
+            unit_of_measurement=UNIT_DECIBEL,
+        )
+        .extend(cv.COMPONENT_SCHEMA),
     }
 )
 
