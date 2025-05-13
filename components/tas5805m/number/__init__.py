@@ -7,6 +7,18 @@ from esphome.const import (
     UNIT_DECIBEL,
 )
 
+CONF_GAIN_20HZ = "eq_gain_band20Hz"
+CONF_GAIN_31P5HZ = "eq_gain_band31.5Hz"
+CONF_GAIN_50HZ = "eq_gain_band50Hz"
+CONF_GAIN_80HZ = "eq_gain_band80Hz"
+CONF_GAIN_125HZ = "eq_gain_band125Hz"
+CONF_GAIN_200HZ = "eq_gain_band200Hz"
+CONF_GAIN_315HZ   = "eq_gain_band315Hz"
+CONF_GAIN_500HZ   = "eq_gain_band500Hz"
+CONF_GAIN_1250HZ   = "eq_gain_band1250Hz"
+CONF_GAIN_2000HZ = "eq_gain_band2000Hz"
+CONF_GAIN_50HZ   = "eq_gain_band50Hz"
+CONF_GAIN_80HZ   = "eq_gain_band80Hz"
 CONF_GAIN_20HZ   = "eq_gain_band20Hz"
 CONF_GAIN_31P5HZ = "eq_gain_band31.5Hz"
 CONF_GAIN_50HZ   = "eq_gain_band50Hz"
