@@ -19,7 +19,7 @@ void EqGainBand31p5hz::dump_config() {
 
 void EqGainBand31p5hz::control(float value) {
   this->publish_state(value);
-  this->parent_->set_eq_gain(1, static_cast<int>(value));
+  this->parent_->set_eq_gain(BAND_31_5HZ, static_cast<int>(value));
   this->pref_.save(&value);
 }
 

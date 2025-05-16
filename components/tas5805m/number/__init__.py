@@ -82,7 +82,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_125HZ): number.number_schema(
             EqGainBand125hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -91,7 +91,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_200HZ): number.number_schema(
             EqGainBand200hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -100,7 +100,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_315HZ): number.number_schema(
             EqGainBand315hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -109,7 +109,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_500HZ): number.number_schema(
             EqGainBand500hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -118,7 +118,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_800HZ): number.number_schema(
             EqGainBand800hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -127,7 +127,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_1250HZ): number.number_schema(
             EqGainBand1250hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -136,7 +136,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_2000HZ): number.number_schema(
             EqGainBand2000hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -145,7 +145,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_3150HZ): number.number_schema(
             EqGainBand3150hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -154,7 +154,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_5000HZ): number.number_schema(
             EqGainBand5000hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -163,7 +163,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_8000HZ): number.number_schema(
             EqGainBand8000hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -172,7 +172,7 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_DECIBEL,
         )
         .extend(cv.COMPONENT_SCHEMA),
-        
+
         cv.Required(CONF_GAIN_16000HZ): number.number_schema(
             EqGainBand16000hz,
             device_class=DEVICE_CLASS_SOUND_PRESSURE,
@@ -186,12 +186,12 @@ CONFIG_SCHEMA = cv.Schema(
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    if gain_20hz_config := config.get(CONF_GAIN_20HZ):
-        n = await number.new_number(
-            gain_20hz_config, min_value=-15, max_value=15, step=1
-        )
-        await cg.register_component(n, gain_20hz_config)
-        await cg.register_parented(n, tas5805m_component)
+    gain_20hz_config = config.get(CONF_GAIN_20HZ)
+    n = await number.new_number(
+        gain_20hz_config, min_value=-15, max_value=15, step=1
+    )
+    await cg.register_component(n, gain_20hz_config)
+    await cg.register_parented(n, tas5805m_component)
 
     if gain_31p5hz_config := config.get(CONF_GAIN_31P5HZ):
         n = await number.new_number(
@@ -213,85 +213,81 @@ async def to_code(config):
         )
         await cg.register_component(n, gain_80hz_config)
         await cg.register_parented(n, tas5805m_component)
-     
+
     if gain_125hz_config := config.get(CONF_GAIN_125HZ):
         n = await number.new_number(
             gain_125hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_125hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_200hz_config := config.get(CONF_GAIN_200HZ):
         n = await number.new_number(
             gain_200hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_200hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_315hz_config := config.get(CONF_GAIN_315HZ):
         n = await number.new_number(
             gain_315hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_315hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_500hz_config := config.get(CONF_GAIN_500HZ):
         n = await number.new_number(
             gain_500hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_500hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_800hz_config := config.get(CONF_GAIN_800HZ):
         n = await number.new_number(
             gain_800hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_800hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_1250hz_config := config.get(CONF_GAIN_1250HZ):
         n = await number.new_number(
             gain_1250hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_1250hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_2000hz_config := config.get(CONF_GAIN_2000HZ):
         n = await number.new_number(
             gain_2000hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_2000hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_3150hz_config := config.get(CONF_GAIN_3150HZ):
         n = await number.new_number(
             gain_3150hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_3150hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_5000hz_config := config.get(CONF_GAIN_5000HZ):
         n = await number.new_number(
             gain_5000hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_5000hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
-        
+
+
     if gain_8000hz_config := config.get(CONF_GAIN_8000HZ):
         n = await number.new_number(
             gain_8000hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_8000hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
+
     if gain_16000hz_config := config.get(CONF_GAIN_16000HZ):
         n = await number.new_number(
             gain_16000hz_config, min_value=-15, max_value=15, step=1
         )
         await cg.register_component(n, gain_16000hz_config)
         await cg.register_parented(n, tas5805m_component)
-        
-        
-    
-        

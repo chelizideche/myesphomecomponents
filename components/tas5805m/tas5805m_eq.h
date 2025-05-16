@@ -3,6 +3,23 @@
 namespace esphome {
 namespace tas5805m {
 
+  enum EqBandIndices : uint8_t {
+    BAND_20HZ   = 0,
+    BAND_31_5HZ = 1,
+		BAND_50HZ   = 2,
+		BAND_80HZ   = 3,
+		BAND_125HZ  = 4,
+		BAND_200HZ  = 5,
+		BAND_315HZ  = 6,
+		BAND_500HZ  = 7,
+		BAND_800HZ  = 8,
+		BAND_1250HZ = 9,
+		BAND_2000HZ = 10,
+		BAND_3150HZ = 11,
+		BAND_5000HZ = 12,
+		BAND_8000HZ = 13,
+		BAND_16000HZ= 14,
+  };
 
 	struct RegisterSequenceEq {
 			uint8_t page;
