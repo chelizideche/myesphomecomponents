@@ -1,5 +1,5 @@
 #include "esphome/core/log.h"
-#include "eq_gain_band80hz.h"
+#include "eq_gain_band500hz.h"
 
 namespace esphome {
 namespace tas5805m {

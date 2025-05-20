@@ -8,7 +8,7 @@
 namespace esphome {
 namespace tas5805m {
 
-class EqGainBand80hz : public number::Number, public Component, public Parented<Tas5805mComponent> {
+class EqGainBand16000hz : public number::Number, public Component, public Parented<Tas5805mComponent> {
  public:
   void setup() override;
   void dump_config() override;
