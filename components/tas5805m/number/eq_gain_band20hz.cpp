@@ -11,6 +11,7 @@ void EqGainBand20hz::setup() {
   this->pref_ = global_preferences->make_preference<float>(this->get_object_id_hash());
   if (!this->pref_.load(&value)) value= 0.0;
   this->publish_state(value);
+  this->parent_->set_eq_gain(BAND_20HZ, static_cast<int>(value));
 }
 
 void EqGainBand20hz::dump_config() {

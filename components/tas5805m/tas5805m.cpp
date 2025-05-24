@@ -23,14 +23,11 @@ void Tas5805mComponent::setup() {
     delay(10);
     this->enable_pin_->digital_write(true);
   }
-  ESP_LOGD(TAG, "  TAS5805m now Enabled");
-  //this->set_timeout(100, [this]() {
-      if (!configure_registers()) {
-        this->error_code_ = CONFIGURATION_FAILED;
-        this->mark_failed();
-      }
-  //});
-  ESP_LOGD(TAG, "  TAS5805m now Configured");
+
+  if (!configure_registers()) {
+    this->error_code_ = CONFIGURATION_FAILED;
+    this->mark_failed();
+  }
 }
 
 void Tas5805mComponent::loop() {
@@ -74,9 +71,7 @@ bool Tas5805mComponent::configure_registers() {
   this->number_registers_configured_ = counter;
 
   if (!this->set_analog_gain(this->analog_gain_)) return false;
-
   if (!this->set_state(CTRL_PLAY)) return false;
-  //if (!this->set_volume(0.05)) return false;
   return true;
 }
 
@@ -174,7 +169,6 @@ bool Tas5805mComponent::set_state(Tas5805mControlState state) {
 bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
   uint8_t current = 254; // lowest volume
   if(!this->tas5805m_read_byte(TAS5805M_DIG_VOL_CTRL, &current)) return false;
-  ESP_LOGD(TAG, "  Get Tas5805m Digital Volume: %i", current);
   *raw_volume = current;
   return true;
 }
@@ -191,7 +185,6 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 bool Tas5805mComponent::set_digital_volume(uint8_t raw_volume) {
   if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, raw_volume)) return false;
   this->digital_volume_ = raw_volume;
-  ESP_LOGD(TAG, "  Set Tas5805m Digital Volume: %i", raw_volume);
   return true;
 }
 
@@ -320,14 +313,7 @@ void Tas5805mComponent::refresh_eq_gains() {
   bool eq_enabled;
   this->get_eq(&eq_enabled);
   if (eq_enabled) {
-    ESP_LOGE(TAG, "Start an EQ Refresh");
     this->run_refresh_eq_gains_ = true;
-  }
-  if (this->refresh_volume_) {
-    float current = this->volume();
-    ESP_LOGE(TAG, "Refreshing Volume to %f", current);
-    this->set_volume(current);
-    this->refresh_volume_ = false;
   }
 }
 
