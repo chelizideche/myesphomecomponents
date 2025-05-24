@@ -23,13 +23,14 @@ void Tas5805mComponent::setup() {
     delay(10);
     this->enable_pin_->digital_write(true);
   }
-
-  this->set_timeout(100, [this]() {
+  ESP_LOGD(TAG, "  TAS5805m now Enabled");
+  //this->set_timeout(100, [this]() {
       if (!configure_registers()) {
         this->error_code_ = CONFIGURATION_FAILED;
         this->mark_failed();
       }
-  });
+  //});
+  ESP_LOGD(TAG, "  TAS5805m now Configured");
 }
 
 void Tas5805mComponent::loop() {
