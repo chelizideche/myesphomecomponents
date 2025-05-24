@@ -167,7 +167,7 @@ bool Tas5805mComponent::set_state(Tas5805mControlState state) {
 }
 
 bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
-  uint8_t current = 254; // lowest volume
+  uint8_t current = 254; // lowest raw volume
   if(!this->tas5805m_read_byte(TAS5805M_DIG_VOL_CTRL, &current)) return false;
   *raw_volume = current;
   return true;

@@ -11,10 +11,11 @@ void EqGainBand3150hz::setup() {
   this->pref_ = global_preferences->make_preference<float>(this->get_object_id_hash());
   if (!this->pref_.load(&value)) value= 0.0;
   this->publish_state(value);
+  this->parent_->set_eq_gain(BAND_3150HZ, static_cast<int>(value));
 }
 
 void EqGainBand3150hz::dump_config() {
-  ESP_LOGCONFIG(TAG, "%s '%s'", "Gain Number for EQ Band", this->get_name().c_str());
+  ESP_LOGCONFIG(TAG, "EQ Gain 3150Hz Band: '%s'", this->get_name().c_str());
 }
 
 void EqGainBand3150hz::control(float value) {
