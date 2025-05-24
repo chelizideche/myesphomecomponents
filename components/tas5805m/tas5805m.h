@@ -99,7 +99,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    #endif
 
    //float volume_{0};
-
+   bool refresh_volume_{true};
    float analog_gain_{0};
 
    uint8_t i2c_error_{0};

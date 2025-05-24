@@ -316,7 +316,18 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 }
 
 void Tas5805mComponent::refresh_eq_gains() {
-  this->run_refresh_eq_gains_ = true;
+  bool eq_enabled;
+  this->get_eq(&eq_enabled);
+  if (eq_enabled) {
+    ESP_LOGE(TAG, "Start an EQ Refresh");
+    this->run_refresh_eq_gains_ = true;
+  }
+  if (this->refresh_volume_) {
+    float current = this->volume();
+    ESP_LOGE(TAG, "Refreshing Volume to %f", current);
+    this->set_volume(current);
+    this->refresh_volume_ = false;
+  }
 }
 
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
