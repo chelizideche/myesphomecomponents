@@ -25,7 +25,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void set_enable_pin(GPIOPin *enable) { this->enable_pin_ = enable; }
   void config_analog_gain(float analog_gain) { this->analog_gain_ = analog_gain; }
 
-  float volume() override { return this->volume_; }
+  float volume() override;
   bool set_volume(float value) override;
 
   bool set_mute_off() override;
@@ -98,7 +98,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    uint8_t refresh_band_{0};
    #endif
 
-   float volume_{0};
+   //float volume_{0};
 
    float analog_gain_{0};
 

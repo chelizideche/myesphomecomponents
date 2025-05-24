@@ -92,7 +92,7 @@ void Tas5805mComponent::dump_config() {
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
-      ESP_LOGD(TAG, "  Volume: %.0f%%", 100.0*this->volume());
+      ESP_LOGD(TAG, "  Volume: %.0f%%", 100*this->volume());
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -100,12 +100,18 @@ void Tas5805mComponent::dump_config() {
 }
 
 bool Tas5805mComponent::set_volume(float volume) {
-  float new_volume = clamp<float>(volume, 0.0, 1.0);
+  float new_volume = clamp(volume, 0.0f, 1.0f);
   uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 254, 0);
   if (!this->set_digital_volume(raw_volume)) return false;
   this->volume_ = new_volume;
   ESP_LOGD(TAG, "  Volume changed to: %2.0f%%", new_volume*100);
   return true;
+}
+
+float Tas5805mComponent::volume() {
+  uint8_t raw_volume;
+  get_digital_volume(&raw_volume);
+  return remap<float, uint8_t>(raw_volume, 254, 0, 0.0f, 1.0f);
 }
 
 bool Tas5805mComponent::set_mute_off() {
@@ -165,8 +171,9 @@ bool Tas5805mComponent::set_state(Tas5805mControlState state) {
 }
 
 bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
-  uint8_t current;
+  uint8_t current = 254; // lowest volume
   if(!this->tas5805m_read_byte(TAS5805M_DIG_VOL_CTRL, &current)) return false;
+  ESP_LOGD(TAG, "  Get Tas5805m Digital Volume: %i", current);
   *raw_volume = current;
   return true;
 }
@@ -183,7 +190,7 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 bool Tas5805mComponent::set_digital_volume(uint8_t raw_volume) {
   if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, raw_volume)) return false;
   this->digital_volume_ = raw_volume;
-  ESP_LOGD(TAG, "  Tas5805m Digital Volume: %i", raw_volume);
+  ESP_LOGD(TAG, "  Set Tas5805m Digital Volume: %i", raw_volume);
   return true;
 }
 
