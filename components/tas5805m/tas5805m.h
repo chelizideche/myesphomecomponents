@@ -39,6 +39,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
+  void set_enable(bool enable);
 
   #ifdef USE_NUMBER
   bool set_eq_on();
@@ -82,8 +83,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool set_eq(bool enable);
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
-
-   void set_enable(bool enable);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
