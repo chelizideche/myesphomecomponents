@@ -153,6 +153,10 @@ bool Tas5805mComponent::set_deep_sleep_off() {
   return true;
 }
 
+void Tas5805mComponent::set_enable(bool enable) {
+  enable ? set_deep_sleep_off() : set_deep_sleep_on();
+}
+
 bool Tas5805mComponent::get_state(Tas5805mControlState* state) {
   *state = this->tas5805m_state_.state;
   return true;
