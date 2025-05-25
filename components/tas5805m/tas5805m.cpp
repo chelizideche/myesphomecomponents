@@ -31,6 +31,7 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::loop() {
+  #ifdef USE_NUMBER
   // do a re-write of gains for all eq bands when triggered by boolean
   // write gains for one band per loop so component does not take too long
 
@@ -47,7 +48,7 @@ void Tas5805mComponent::loop() {
   // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
-  return;
+  #endif
 }
 
 bool Tas5805mComponent::configure_registers() {
@@ -88,7 +89,6 @@ void Tas5805mComponent::dump_config() {
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
-      ESP_LOGD(TAG, "  Volume: %.0f%%", 100*this->volume());
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -153,8 +153,8 @@ bool Tas5805mComponent::set_deep_sleep_off() {
   return true;
 }
 
-void Tas5805mComponent::set_enable(bool enable) {
-  enable ? set_deep_sleep_off() : set_deep_sleep_on();
+void Tas5805mComponent:: enable_dac(bool state) {
+  state ? set_deep_sleep_off() : set_deep_sleep_on();
 }
 
 bool Tas5805mComponent::get_state(Tas5805mControlState* state) {
@@ -223,17 +223,18 @@ bool Tas5805mComponent::get_analog_gain(uint8_t* raw_gain) {
   return true;
 }
 
-bool Tas5805mComponent::get_dac_mode(Tas5805mDacMode* mode) {
-    uint8_t current_value;
-    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
-    if (current_value & (1 << 2)) {
-        *mode = DAC_MODE_PBTL;
-    } else {
-        *mode = DAC_MODE_BTL;
-    }
-    return true;
-}
+// bool Tas5805mComponent::get_dac_mode(Tas5805mDacMode* mode) {
+//     uint8_t current_value;
+//     if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
+//     if (current_value & (1 << 2)) {
+//         *mode = DAC_MODE_PBTL;
+//     } else {
+//         *mode = DAC_MODE_BTL;
+//     }
+//     return true;
+// }
 
+#ifdef USE_NUMBER
 bool Tas5805mComponent::get_eq(bool* enabled) {
   uint8_t current_value;
   if (!this->tas5805m_read_byte(TAS5805M_DSP_MISC, &current_value)) return false;
@@ -256,12 +257,17 @@ bool Tas5805mComponent::set_eq_off() {
   ESP_LOGD(TAG, "  Tas5805m EQ control Off");
   return true;
 }
+#endif
 
-bool Tas5805mComponent::set_eq(bool enable) {
-  ESP_LOGD(TAG, "Setting EQ to %d", enable);
-  return this->tas5805m_write_byte(TAS5805M_DSP_MISC, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
+void Tas5805mComponent::enable_eq(bool state) {
+  #ifdef USE_NUMBER
+  state ? set_eq_on() : set_eq_off();
+  #else
+  return;
+  #endif
 }
 
+#ifdef USE_NUMBER
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
@@ -312,15 +318,21 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   this->tas5805m_state_.eq_gain_set[band] = true;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
+#endif
 
 void Tas5805mComponent::refresh_eq_gains() {
+  #ifndef USE_NUMBER
+  return;
+  #endif
+
+  #ifdef USE_NUMBER
   bool eq_enabled;
   this->get_eq(&eq_enabled);
-  if (eq_enabled) {
-    this->run_refresh_eq_gains_ = true;
-  }
+  this->run_refresh_eq_gains_ = eq_enabled;
+  #endif
 }
 
+#ifdef USE_NUMBER
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
@@ -328,44 +340,45 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   }
   return this->tas5805m_state_.eq_gain[band];
 }
+#endif
 
-bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
-  uint8_t device_ctrl1_value;
-  if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;
-  // Read the BD frequency
-  uint8_t ana_ctrl_value;
-  if (!this->tas5805m_read_byte(TAS5805M_ANA_CTRL, &ana_ctrl_value)) return false;
+// bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
+//   uint8_t device_ctrl1_value;
+//   if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;
+//   // Read the BD frequency
+//   uint8_t ana_ctrl_value;
+//   if (!this->tas5805m_read_byte(TAS5805M_ANA_CTRL, &ana_ctrl_value)) return false;
 
-  // Extract DAMP_MOD bits 0-1
-  *mode = static_cast<Tas5805mModMode>(device_ctrl1_value & 0x02);
-  // Extract FSW_SEL bits 4-6
-  *freq = static_cast<Tas5805mSwFreq>(device_ctrl1_value & 0x70);
+//   // Extract DAMP_MOD bits 0-1
+//   *mode = static_cast<Tas5805mModMode>(device_ctrl1_value & 0x02);
+//   // Extract FSW_SEL bits 4-6
+//   *freq = static_cast<Tas5805mSwFreq>(device_ctrl1_value & 0x70);
 
-   // Extract ANA_CTRL bits 5-6 (class D bandwidth control)
-  *bd_freq = static_cast<Tas5805mBdFreq>(ana_ctrl_value & 0x60);
-  return true;
-}
+//    // Extract ANA_CTRL bits 5-6 (class D bandwidth control)
+//   *bd_freq = static_cast<Tas5805mBdFreq>(ana_ctrl_value & 0x60);
+//   return true;
+// }
 
-bool Tas5805mComponent::get_fs_freq(Tas5805mFsFreq* freq) {
-  uint8_t current_value;
-  if (!this->tas5805m_read_byte(TAS5805M_FS_MON, &current_value)) return false;
-  *freq = static_cast<Tas5805mFsFreq>(current_value);
-  return true;
-}
+// bool Tas5805mComponent::get_fs_freq(Tas5805mFsFreq* freq) {
+//   uint8_t current_value;
+//   if (!this->tas5805m_read_byte(TAS5805M_FS_MON, &current_value)) return false;
+//   *freq = static_cast<Tas5805mFsFreq>(current_value);
+//   return true;
+// }
 
-bool Tas5805mComponent::get_bck_ratio(uint8_t *ratio) {
-  uint8_t current_value;
-  if (!this->tas5805m_read_byte(TAS5805M_BCK_MON, &current_value)) return false;
-  *ratio = current_value;
-  return true;
-}
+// bool Tas5805mComponent::get_bck_ratio(uint8_t *ratio) {
+//   uint8_t current_value;
+//   if (!this->tas5805m_read_byte(TAS5805M_BCK_MON, &current_value)) return false;
+//   *ratio = current_value;
+//   return true;
+// }
 
-bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
-  uint8_t current_value;
-  if (!this->tas5805m_read_byte(TAS5805M_POWER_STATE, &current_value)) return false;
-  *state = static_cast<Tas5805mControlState>(current_value);
-  return true;
-}
+// bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
+//   uint8_t current_value;
+//   if (!this->tas5805m_read_byte(TAS5805M_POWER_STATE, &current_value)) return false;
+//   *state = static_cast<Tas5805mControlState>(current_value);
+//   return true;
+// }
 
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
