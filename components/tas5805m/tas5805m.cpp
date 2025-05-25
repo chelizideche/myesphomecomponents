@@ -75,6 +75,12 @@ bool Tas5805mComponent::configure_registers() {
 
   if (!this->set_analog_gain(this->analog_gain_)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
+
+  if (!this->enable_dac(true)) return false;
+  #ifdef USE_NUMBER
+  if (!this->enable_eq(true)) return false;
+  #endif
+
   return true;
 }
 
