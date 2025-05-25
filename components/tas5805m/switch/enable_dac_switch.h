@@ -6,7 +6,7 @@
 namespace esphome {
 namespace tas5805m {
 
-class EnableDacSwitch : public switch_::Switch, public Parented<Tas5805mComponent> {
+class EnableSwitch : public switch_::Switch, public Parented<Tas5805mComponent> {
  protected:
   void write_state(bool state) override;
 };

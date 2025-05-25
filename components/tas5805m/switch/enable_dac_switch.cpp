@@ -3,7 +3,7 @@
 namespace esphome {
 namespace tas5805m {
 
-void EnableDacSwitch::write_state(bool state) {
+void EnableSwitch::write_state(bool state) {
   this->publish_state(state);
   this->parent_->enable_dac(state);
 }

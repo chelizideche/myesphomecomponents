@@ -20,7 +20,8 @@ EnableEqSwitch = tas5805m_ns.class_("EnableEqSwitch", switch.Switch)
 #         }
 #     )
 # )
-CONFIG_SCHEMA = cv.Schema {
+CONFIG_SCHEMA = cv.Schema(
+    {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
 
         cv.Optional(CONF_ENABLE_DAC): switch.switch_schema(
@@ -32,8 +33,8 @@ CONFIG_SCHEMA = cv.Schema {
             EnableEqSwitch,
             device_class=DEVICE_CLASS_SWITCH,
         ),
-}
-
+    }
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
