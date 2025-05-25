@@ -1,11 +1,11 @@
-#include "enable_eq_switch.h"
+#include "enable_switch.h"
 
 namespace esphome {
 namespace tas5805m {
 
-void EnableEqSwitch::write_state(bool state) {
+void EnableSwitch::write_state(bool state) {
   this->publish_state(state);
-  this->parent_->enable_eq(state);
+  this->parent_->set_enable(state);
 }
 
 }  // namespace tas5805m
