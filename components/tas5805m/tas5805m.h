@@ -114,13 +114,11 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     //Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
 
-   bool setup_successful_{false};
-
    #ifdef USE_NUMBER
    bool run_refresh_eq_gains_{false};
    uint8_t refresh_band_{0};
    #endif
-
+   
    float analog_gain_{0};
 
    uint8_t i2c_error_{0};

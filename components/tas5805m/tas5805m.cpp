@@ -28,8 +28,6 @@ void Tas5805mComponent::setup() {
     this->error_code_ = CONFIGURATION_FAILED;
     this->mark_failed();
   }
-
-  this->setup_successful_ = true;
 }
 
 void Tas5805mComponent::loop() {
@@ -163,7 +161,6 @@ bool Tas5805mComponent::set_deep_sleep_off() {
 }
 
 void Tas5805mComponent:: enable_dac(bool state) {
-  if (!this->setup_successful_) return;
   state ? set_deep_sleep_off() : set_deep_sleep_on();
 }
 
@@ -271,7 +268,6 @@ bool Tas5805mComponent::set_eq_off() {
 
 void Tas5805mComponent::enable_eq(bool state) {
   #ifdef USE_NUMBER
-  if (!this->setup_successful_) return;
   state ? set_eq_on() : set_eq_off();
   #else
   return;
