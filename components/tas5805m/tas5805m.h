@@ -41,6 +41,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void refresh_eq_gains();
 
   #ifdef USE_NUMBER
+  bool set_eq_on();
+  bool set_eq_off();
   bool set_eq_gain(uint8_t band, int8_t gain);
   #endif
 
@@ -79,8 +81,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    #ifdef USE_NUMBER
    bool get_eq(bool* enabled);
-   bool set_eq_on();
-   bool set_eq_off();
    int8_t eq_gain(uint8_t band);
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
