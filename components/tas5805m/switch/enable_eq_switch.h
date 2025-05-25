@@ -8,7 +8,7 @@ namespace esphome {
 namespace tas5805m {
 
 class EnableEqSwitch : public switch_::Switch, public Component, public Parented<Tas5805mComponent> {
-public:
+public:se
   float get_setup_priority() const override { return setup_priority::BEFORE_CONNECTION;; }
 
  protected:
