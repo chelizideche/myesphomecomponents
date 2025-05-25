@@ -74,10 +74,11 @@ bool Tas5805mComponent::configure_registers() {
   this->number_registers_configured_ = counter;
 
   if (!this->set_analog_gain(this->analog_gain_)) return false;
+  if (!this->set_state(CTRL_PLAY)) return false;
 
-  if (!this->set_state(CTRL_PLAY)) return false; // enable_dac
+  if (!this->enable_dac(true)) return false;
   #ifdef USE_NUMBER
-  if (!this->set_eq_on()) return false;
+  if (!this->enable_eq(true)) return false;
   #endif
 
   return true;
