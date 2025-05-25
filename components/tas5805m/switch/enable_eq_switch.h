@@ -7,6 +7,9 @@ namespace esphome {
 namespace tas5805m {
 
 class EnableEqSwitch : public switch_::Switch, public Parented<Tas5805mComponent> {
+public:
+  float get_setup_priority() const override { return setup_priority::PROCESSOR; }
+
  protected:
   void write_state(bool state) override;
 };
