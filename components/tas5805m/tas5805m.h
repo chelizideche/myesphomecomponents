@@ -51,7 +51,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
   #ifdef USE_SWITCH
   void set_enable_switch(switch_::Switch *s) {
-    //this->enable_switch_ = s;
+    this->enable_switch_ = s;
     s->turn_on();
   }
   #endif
@@ -111,9 +111,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    uint8_t refresh_band_{0};
    #endif
 
-   //#ifdef USE_SWITCH
-   //switch_::Switch *enable_switch_{nullptr};
-   //#endif
+   #ifdef USE_SWITCH
+   switch_::Switch *enable_switch_{nullptr};
+   #endif
 
    float analog_gain_{0};
 
