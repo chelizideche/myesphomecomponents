@@ -118,7 +118,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool run_refresh_eq_gains_{false};
    uint8_t refresh_band_{0};
    #endif
-   
+
    float analog_gain_{0};
 
    uint8_t i2c_error_{0};
