@@ -15,7 +15,6 @@ namespace tas5805m {
 
 class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i2c::I2CDevice {
  public:
-
   void config_analog_gain(int8_t analog_gain) { analog_gain_ = analog_gain; }
 
   void setup() override;
@@ -42,13 +41,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_eq_gain(uint8_t band, int8_t gain);
   int8_t eq_gain(uint8_t band);
   void refresh_eq_gains();
-  #endif
-
-  #ifdef USE_SWITCH
-  void set_enable_switch(switch_::Switch *s) {
-    this->enable_switch_ = s;
-    s->turn_on();
-  }
   #endif
 
  protected:
@@ -79,8 +71,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
 
-   void set_enable(bool enable);
-
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
    bool tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len);
@@ -106,10 +96,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    #ifdef USE_NUMBER
    bool run_refresh_eq_gains_{false};
    uint8_t refresh_band_{0};
-   #endif
-
-   #ifdef USE_SWITCH
-   switch_::Switch *enable_switch_{nullptr};
    #endif
 
    float analog_gain_{0};
