@@ -3,7 +3,7 @@ from esphome.components import switch
 import esphome.config_validation as cv
 from esphome.const import DEVICE_CLASS_SWITCH
 
-from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
+from .. audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
 DEPENDENCIES = ["tas5805m"]
 
