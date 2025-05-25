@@ -5,6 +5,8 @@ from esphome.const import DEVICE_CLASS_SWITCH
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
+DEPENDENCIES = ["tas5805m"]
+
 EnableSwitch = tas5805m_ns.class_("EnableSwitch", switch.Switch)
 
 CONFIG_SCHEMA = switch.switch_schema(
