@@ -49,7 +49,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     if (s != nullptr) {
       s->turn_on();
       this->enable_dac(true);
-    }
   }
   void set_enable_eq_switch(switch_::Switch *s) {
     if (s != nullptr) {
