@@ -5,10 +5,6 @@
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/hal.h"
 
-#ifdef USE_SWITCH
-#include "esphome/components/switch/switch.h"
-#endif
-
 #ifdef USE_NUMBER
 #include "tas5805m_cfg.h"
 #include "tas5805m_eq.h"
