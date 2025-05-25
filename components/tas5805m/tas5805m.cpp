@@ -48,8 +48,6 @@ void Tas5805mComponent::loop() {
   // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
-  #else
-  return;
   #endif
 }
 
@@ -323,13 +321,14 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 #endif
 
 void Tas5805mComponent::refresh_eq_gains() {
+  #ifndef USE_NUMBER
+  return;
+  #endif
+
   #ifdef USE_NUMBER
   bool eq_enabled;
   this->get_eq(&eq_enabled);
   this->run_refresh_eq_gains_ = eq_enabled;
-  ESP_LOGE(TAG, "Setting refresh gain to %s", this->run_refresh_eq_gains_ ? "TRUE" : "FALSE");
-  #else
-  return;
   #endif
 }
 
