@@ -1,15 +1,9 @@
 esphome:
   name: louder-s3
   friendly_name: Louder-S3
-  min_version: 2025.2.0
+  min_version: 2025.5.0
   platformio_options:
     board_build.flash_mode: dio
-  on_boot:
-    priority: -100
-    then:
-    - media_player.volume_set:
-        id: louder_mediaplayer
-        volume: 5%
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -65,9 +59,10 @@ psram:
   speed: 80MHz
 
 external_components:
-  #- source:
-  #    type: local
-  #    path: components
+  - source: github://pr#8898
+    components: [ speaker, speaker/media_player ]
+    refresh: 0s
+
   - source: github://mrtoy-me/esphome-components-test@eq_dev
     components: [ tas5805m ]
     refresh: 0s
@@ -123,6 +118,7 @@ media_player:
     name: Mediaplayer
     id: louder_mediaplayer
     task_stack_in_psram: true
+    volume_first_boot: 10%
     volume_increment: 0.1%
     volume_min: 45%
     volume_max: 80%
@@ -167,7 +163,7 @@ media_player:
             duration: 0.25s
       - wait_until:
             media_player.is_announcing:
-      - delay: 0.75s
+      - delay: 0.5s
       - if:
           condition:
             and:
@@ -178,6 +174,7 @@ media_player:
                 id(tas5805m_dac).refresh_eq_gains();
                 id(eq_gain_refreshed) = true;
       - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
+
       - wait_until:
           not:
             media_player.is_announcing:
@@ -199,223 +196,38 @@ number:
     restore_value: true
     initial_value: 50
     optimistic: true
+
   - platform: tas5805m
-    gain_20Hz:
-      name: Gain 20 Hz
-    gain_31.5Hz:
-      name: Gain 31.5 Hz
-
-  # - platform: template
-  #   name: Gain 20 Hz
-  #   id: eq_band_0_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda:
-  #       id(tas5805m_dac).set_eq_gain(0, id(eq_band_0_gain).state);
-
-  # - platform: template
-  #   name: Gain 31.5 Hz
-  #   id: eq_band_1_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda:
-  #       id(tas5805m_dac).set_eq_gain(1, id(eq_band_1_gain).state);
-
-  # - platform: template
-  #   name: Gain 50 Hz
-  #   id: eq_band_2_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(2, id(eq_band_2_gain).state);
-
-  # - platform: template
-  #   name: Gain 80 Hz
-  #   id: eq_band_3_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(3, id(eq_band_3_gain).state);
-
-  # - platform: template
-  #   name: Gain 125 Hz
-  #   id: eq_band_4_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(4, id(eq_band_4_gain).state);
-
-  # - platform: template
-  #   name: Gain 200 Hz
-  #   id: eq_band_5_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(5, id(eq_band_5_gain).state);
-
-  # - platform: template
-  #   name: Gain 315 Hz
-  #   id: eq_band_6_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(6, id(eq_band_6_gain).state);
-
-  # - platform: template
-  #   name: Gain 500 Hz
-  #   id: eq_band_7_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(7, id(eq_band_7_gain).state);
-
-  # - platform: template
-  #   name: Gain 800 Hz
-  #   id: eq_band_8_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(8, id(eq_band_8_gain).state);
-
-  # - platform: template
-  #   name: Gain 1250 Hz
-  #   id: eq_band_9_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(9, id(eq_band_9_gain).state);
-
-  # - platform: template
-  #   name: Gain 2000 Hz
-  #   id: eq_band_10_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(10, id(eq_band_10_gain).state);
-
-  # - platform: template
-  #   name: Gain 3150 Hz
-  #   id: eq_band_11_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(11, id(eq_band_11_gain).state);
-
-  # - platform: template
-  #   name: Gain 5000 Hz
-  #   id: eq_band_12_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(12, id(eq_band_12_gain).state);
-
-  # - platform: template
-  #   name: Gain 8000 Hz
-  #   id: eq_band_13_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(13, id(eq_band_13_gain).state);
-
-  # - platform: template
-  #   name: Gain 16000 Hz
-  #   id: eq_band_14_gain
-  #   icon: mdi:volume-source
-  #   unit_of_measurement: "dB"
-  #   min_value: -15
-  #   max_value: 15
-  #   step: 1
-  #   restore_value: true
-  #   initial_value: 0
-  #   optimistic: true
-  #   on_value:
-  #     lambda: id(tas5805m_dac).set_eq_gain(14, id(eq_band_14_gain).state);
+    eq_gain_band20Hz:
+      name: Gain ---20Hz
+    eq_gain_band31.5Hz:
+      name: Gain ---31.5Hz
+    eq_gain_band50Hz:
+      name: Gain ---50Hz
+    eq_gain_band80Hz:
+      name: Gain ---80Hz
+    eq_gain_band125Hz:
+      name: Gain --125Hz
+    eq_gain_band200Hz:
+      name: Gain --200Hz
+    eq_gain_band315Hz:
+      name: Gain --315Hz
+    eq_gain_band500Hz:
+      name: Gain --500Hz
+    eq_gain_band800Hz:
+      name: Gain --800Hz
+    eq_gain_band1250Hz:
+      name: Gain -1250Hz
+    eq_gain_band2000Hz:
+      name: Gain -2000Hz
+    eq_gain_band3150Hz:
+      name: Gain -3150Hz
+    eq_gain_band5000Hz:
+      name: Gain -5000Hz
+    eq_gain_band8000Hz:
+      name: Gain -8000Hz
+    eq_gain_band16000Hz:
+      name: Gain 16000Hz
 
 switch:
   - platform: template
@@ -432,7 +244,7 @@ switch:
     name: Enable EQ Control
     id: enable_eq_control
     optimistic: true
-    restore_mode: ALWAYS_OFF
+    restore_mode: RESTORE_DEFAULT_ON
     turn_on_action:
       - lambda: id(tas5805m_dac).set_eq_on();
       - if:
