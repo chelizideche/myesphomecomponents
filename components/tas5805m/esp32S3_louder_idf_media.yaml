@@ -118,7 +118,7 @@ media_player:
     name: Mediaplayer
     id: louder_mediaplayer
     task_stack_in_psram: true
-    volume_first_boot: 10%
+    volume_initial: 10%
     volume_increment: 0.1%
     volume_min: 45%
     volume_max: 80%
