@@ -118,8 +118,8 @@ media_player:
     name: Mediaplayer
     id: louder_mediaplayer
     task_stack_in_psram: true
-    volume_initial: 10%
     volume_increment: 0.1%
+    volume_initial: 10%
     volume_min: 45%
     volume_max: 80%
     media_pipeline:
@@ -137,13 +137,13 @@ media_player:
             switch.turn_on: enable_louder
       - wait_until:
                 media_player.is_playing:
-      - delay: 0.5s
       - if:
           condition:
             and:
               - switch.is_on: enable_eq_control
               - lambda: return (!id(eq_gain_refreshed));
           then:
+            - delay: 0.75s
             - lambda: |-
                 id(tas5805m_dac).refresh_eq_gains();
                 id(eq_gain_refreshed) = true;
@@ -252,6 +252,7 @@ switch:
               - media_player.is_playing:
               - lambda: return (!id(eq_gain_refreshed));
           then:
+            - delay: 0.75s
             - lambda: |-
                 id(tas5805m_dac).refresh_eq_gains();
                 id(eq_gain_refreshed) = true;
