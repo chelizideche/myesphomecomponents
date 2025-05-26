@@ -1,25 +1,17 @@
 esphome:
-  name: louder-s3
-  friendly_name: Louder-S3
-  min_version: 2025.2.0
+  name: louder-rover
+  friendly_name: Louder Rover
+  min_version: 2025.5.0
   platformio_options:
     board_build.flash_mode: dio
 
 esp32:
-  board: esp32-s3-devkitc-1
-  variant: ESP32S3
-  flash_size: 16MB
+  board: mhetesp32minikit
+  flash_size: 8MB
   framework:
     type: esp-idf
     version: recommended
     sdkconfig_options:
-      CONFIG_ESP32S3_DEFAULT_CPU_FREQ_240: "y"
-      CONFIG_ESP32S3_DATA_CACHE_64KB: "y"
-      CONFIG_ESP32S3_DATA_CACHE_LINE_64B: "y"
-      CONFIG_ESP32S3_INSTRUCTION_CACHE_32KB: "y"
-
-      CONFIG_ESP32_S3_BOX_BOARD: "y"
-
       CONFIG_BT_ALLOCATION_FROM_SPIRAM_FIRST: "y"
       CONFIG_BT_BLE_DYNAMIC_ENV_MEMORY: "y"
 
@@ -33,30 +25,23 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "xxxx"
+    key: "xxx"
 
 ota:
   - platform: esphome
-    password: "xxxx"
+    password: "xxx"
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  manual_ip:
-   static_ip: 192.168.2.65
+   manual_ip:
+   static_ip: 192.168.2.67
    gateway: 192.168.2.1
    subnet: 255.255.255.0
 
-globals:
-  - id: current_volume
-    type: float
-  - id: eq_gain_refreshed
-    type: bool
-    initial_value: "false"
-
 psram:
-  mode: octal
-  speed: 80MHz
+  mode: quad
+  speed: 40MHz
 
 external_components:
   - source: github://pr#8898
@@ -67,35 +52,41 @@ external_components:
     components: [ tas5805m ]
     refresh: 0s
 
+globals:
+  - id: current_volume
+    type: float
+  - id: eq_gain_refreshed
+    type: bool
+    initial_value: "false"
+
 i2c:
-  sda: GPIO8
-  scl: GPIO9
+  sda: GPIO21
+  scl: GPIO27
   frequency: 400kHz
   scan: True
 
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
-    enable_pin: GPIO17
+    enable_pin: GPIO33
     analog_gain: -15.5db
 
 i2s_audio:
-  i2s_lrclk_pin: GPIO15
-  i2s_bclk_pin: GPIO14
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO26
 
 speaker:
   - platform: i2s_audio
     id: speaker_id
     dac_type: external
-    i2s_dout_pin: GPIO16
+    i2s_dout_pin: GPIO22
     audio_dac: tas5805m_dac
-    channel: stereo
-    sample_rate: 48000
+    channel: mono
+    sample_rate: 44100
     timeout: never
 
   - platform: mixer
     id: mixer_speaker_id
-    task_stack_in_psram: true
     output_speaker: speaker_id
     source_speakers:
       - id: announcement_spk_mixer_input
@@ -105,26 +96,24 @@ speaker:
 
   - platform: resampler
     id: media_spk_resampling_input
-    task_stack_in_psram: true
     output_speaker: media_spk_mixer_input
 
   - platform: resampler
     id: announcement_spk_resampling_input
-    task_stack_in_psram: true
     output_speaker: announcement_spk_mixer_input
 
 media_player:
   - platform: speaker
     name: Mediaplayer
     id: louder_mediaplayer
-    task_stack_in_psram: true
+    task_stack_in_psram: false
     volume_increment: 0.1%
     volume_initial: 10%
     volume_min: 45%
     volume_max: 80%
     media_pipeline:
       speaker: media_spk_resampling_input
-      num_channels: 2
+      num_channels: 1
     announcement_pipeline:
        speaker: announcement_spk_resampling_input
        num_channels: 1
