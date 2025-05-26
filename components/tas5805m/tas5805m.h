@@ -4,9 +4,9 @@
 #include "esphome/core/component.h"
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/hal.h"
+#include "tas5805m_cfg.h"
 
 #ifdef USE_NUMBER
-#include "tas5805m_cfg.h"
 #include "tas5805m_eq.h"
 #endif
 
@@ -61,15 +61,16 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_analog_gain(uint8_t* raw_gain);
 
    #ifdef USE_NUMBER
-   bool get_dac_mode(Tas5805mDacMode* mode);
    bool get_eq(bool* enabled);
-   bool get_modulation_mode(Tas5805mModMode* mode, Tas5805mSwFreq* freq, Tas5805mBdFreq* bd_freq);
-   bool get_fs_freq(Tas5805mFsFreq* freq);
-   bool get_bck_ratio(uint8_t* ratio);
-   bool get_power_state(Tas5805mControlState* state);
    bool set_eq(bool enable);
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
+
+  //  bool get_dac_mode(Tas5805mDacMode* mode);
+  //  bool get_modulation_mode(Tas5805mModMode* mode, Tas5805mSwFreq* freq, Tas5805mBdFreq* bd_freq);
+  //  bool get_fs_freq(Tas5805mFsFreq* freq);
+  //  bool get_bck_ratio(uint8_t* ratio);
+  //  bool get_power_state(Tas5805mControlState* state);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
@@ -82,15 +83,15 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    } error_code_{NONE};
 
    struct Tas5805mState {
-    //bool                 is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
-    bool                   is_powered;
+    //bool                   is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
+    //bool                   is_powered;
     Tas5805mControlState   state;
     #ifdef USE_NUMBER
     bool                   eq_enabled{false};
     int8_t                 eq_gain[TAS5805M_EQ_BANDS]{0};
     bool                   eq_gain_set[TAS5805M_EQ_BANDS]{false};
-    Tas5805mMixerMode      mixer_mode;
     #endif
+    //Tas5805mMixerMode      mixer_mode;
    } tas5805m_state_;
 
    #ifdef USE_NUMBER

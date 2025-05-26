@@ -15,7 +15,7 @@ void EqGainBand50hz::setup() {
 }
 
 void EqGainBand50hz::dump_config() {
-  ESP_LOGCONFIG(TAG, "EQ Gain 50Hz Band: '%s'", this->get_name().c_str());
+  ESP_LOGCONFIG(TAG, "Tas5805m EQ Gain 50Hz Band '%s'", this->get_name().c_str());
 }
 void EqGainBand50hz::control(float value) {
   this->publish_state(value);
