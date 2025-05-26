@@ -163,7 +163,7 @@ media_player:
             duration: 0.25s
       - wait_until:
             media_player.is_announcing:
-      - delay: 0.5s
+      - delay: 0.75s
       - if:
           condition:
             and:
