@@ -15,8 +15,6 @@ namespace tas5805m {
 
 class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i2c::I2CDevice {
  public:
-  void config_analog_gain(int8_t analog_gain) { analog_gain_ = analog_gain; }
-
   void setup() override;
   void loop() override;
   void dump_config() override;
@@ -90,8 +88,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    struct Tas5805mState {
     //bool               is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
     //bool               is_powered;
-    float             analog_gain{0};
-    DacMode           dac_mode{0};
+    float             analog_gain;
+    DacMode           dac_mode;
     ControlState      state;
     uint8_t           digital_volume{0};
     #ifdef USE_NUMBER
