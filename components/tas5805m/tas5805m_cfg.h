@@ -10,7 +10,7 @@ namespace tas5805m {
     CTRL_PLAY       = 0x03, // Play
    };
 
-  enum DacMode: {
+  enum DacMode {
     BTL  = 0, // Bridge tied load
     PBTL = 1, // Parallel load
   };
