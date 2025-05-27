@@ -86,8 +86,8 @@ void Tas5805mComponent::dump_config() {
       break;
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
-      ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->tas5805m_state_.analog_gain);
       ESP_LOGD(TAG, "  DAC mode: %s", this->tas5805m_state_.dac_mode ? "BTL", "PBTL");
+      ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->tas5805m_state_.analog_gain);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
