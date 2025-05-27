@@ -3,39 +3,39 @@
 namespace esphome {
 namespace tas5805m {
 
-  enum Tas5805mControlState : uint8_t {
+  enum ControlState : uint8_t {
     CTRL_DEEP_SLEEP = 0x00, // Deep Sleep
     CTRL_SLEEP      = 0x01, // Sleep
     CTRL_HI_Z       = 0x02, // Hi-Z
     CTRL_PLAY       = 0x03, // Play
    };
 
-  // enum Tas5805mDacMode: uint8_t  {
-  //   DAC_MODE_BTL  = 0x00, // Bridge tied load
-  //   DAC_MODE_PBTL = 0x01, // Parallel load
-  // };
+  enum DacMode: {
+    BTL  = 0, // Bridge tied load
+    PBTL = 1, // Parallel load
+  };
 
-  // enum Tas5805mSwFreq : uint8_t {
+  // enum SwFreq : uint8_t {
   //   SW_FREQ_768K = (0x00 << 4),
   //   SW_FREQ_384K = (0x01 << 4),
   //   SW_FREQ_480K = (0x03 << 4),
   //   SW_FREQ_576K = (0x04 << 4),
   // };
 
-  // enum Tas5805mBdFreq : uint8_t {
+  // enum BdFreq : uint8_t {
   //   bd_FREQ_80K  = (0x00 << 5),
   //   bd_FREQ_100K = (0x01 << 5),
   //   bd_FREQ_120K = (0x02 << 5),
   //   bd_FREQ_175K = (0x03 << 5),
   // };
 
-  // enum Tas5805mModMode : uint8_t {
+  // enum ModMode : uint8_t {
   //   MOD_MODE_BD     = 0x00,
   //   MOD_MODE_1SPW   = 0x01,
   //   MOD_MODE_HYBRID = 0x02,
   // };
 
-  // enum Tas5805mMixerMode : uint8_t {
+  // enum MixerMode : uint8_t {
   //   MIXER_UNKNOWN = 0,
   //   MIXER_STEREO,
   //   MIXER_STEREO_INVERSE,
@@ -44,7 +44,7 @@ namespace tas5805m {
   //   MIXER_LEFT,
   // };
 
-  // enum Tas5805mFsFreq : uint8_t {
+  // enum FsFreq : uint8_t {
   //   FS_FREQ_ERROR     = 0b0000,
   //   FS_FREQ_8K        = 0b0010,
   //   FS_FREQ_16K       = 0b0100,

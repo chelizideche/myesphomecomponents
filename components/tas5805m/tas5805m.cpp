@@ -68,7 +68,8 @@ bool Tas5805mComponent::configure_registers() {
   }
   this->number_registers_configured_ = counter;
 
-  if (!this->set_analog_gain(this->analog_gain_)) return false;
+  //if (!this->set_dac_mode(tas5805m_state_.dac_mode)) return false;
+  if (!this->set_analog_gain(this->tas5805m_state_.analog_gain)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
   return true;
 }
@@ -85,7 +86,8 @@ void Tas5805mComponent::dump_config() {
       break;
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
-      ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->analog_gain_);
+      ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->tas5805m_state_.analog_gain);
+      ESP_LOGD(TAG, "  DAC mode: %s", this->tas5805m_state_.dac_mode ? "BTL", "PBTL");
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
       break;
@@ -96,7 +98,6 @@ bool Tas5805mComponent::set_volume(float volume) {
   float new_volume = clamp(volume, 0.0f, 1.0f);
   uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, 254, 0);
   if (!this->set_digital_volume(raw_volume)) return false;
-  //this->volume_ = new_volume;
   ESP_LOGD(TAG, "  Volume changed to: %2.0f%%", new_volume*100);
   return true;
 }
@@ -109,7 +110,7 @@ float Tas5805mComponent::volume() {
 
 bool Tas5805mComponent::set_mute_off() {
   if (!this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.state)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.control_state)) return false;
   this->is_muted_ = false;
   ESP_LOGD(TAG, "  Tas5805m Mute Off");
   return true;
@@ -119,46 +120,46 @@ bool Tas5805mComponent::set_mute_off() {
 // ensures get_state = get_power_state
 bool Tas5805mComponent::set_mute_on() {
   if (this->is_muted_) return true;
-  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.state + TAS5805M_MUTE_CONTROL)) return false;
+  if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, this->tas5805m_state_.control_state + TAS5805M_MUTE_CONTROL)) return false;
   this->is_muted_ = true;
   ESP_LOGD(TAG, "  Tas5805m Mute On");
   return true;
 }
 
 bool Tas5805mComponent::set_deep_sleep_on() {
-  if (this->tas5805m_state_.state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
+  if (this->tas5805m_state_.control_state == CTRL_DEEP_SLEEP) return true; // already in deep sleep
 
   // preserve mute state
   uint8_t new_value = (this->is_muted_) ? (CTRL_DEEP_SLEEP + TAS5805M_MUTE_CONTROL) : CTRL_DEEP_SLEEP;
   if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, new_value)) return false;
 
-  this->tas5805m_state_.state = CTRL_DEEP_SLEEP;                   // set Control State to deep sleep
+  this->tas5805m_state_.control_state = CTRL_DEEP_SLEEP;                   // set Control State to deep sleep
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep On");
   if (this->is_muted_) ESP_LOGD(TAG, "  Tas5805m Mute On preserved");
   return true;
 }
 
 bool Tas5805mComponent::set_deep_sleep_off() {
-  if (this->tas5805m_state_.state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
+  if (this->tas5805m_state_.control_state != CTRL_DEEP_SLEEP) return true; // already not in deep sleep
   // preserve mute state
   uint8_t new_value = (this->is_muted_) ? (CTRL_PLAY + TAS5805M_MUTE_CONTROL) : CTRL_PLAY;
   if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, new_value)) return false;
 
-  this->tas5805m_state_.state = CTRL_PLAY;                        // set Control State to play
+  this->tas5805m_state_.control_state = CTRL_PLAY;                        // set Control State to play
   ESP_LOGD(TAG, "  Tas5805m Deep Sleep Off");
   if (this->is_muted_) ESP_LOGD(TAG, "  Tas5805m Mute On preserved");
   return true;
 }
 
-bool Tas5805mComponent::get_state(Tas5805mControlState* state) {
-  *state = this->tas5805m_state_.state;
+bool Tas5805mComponent::get_state(ControlState* state) {
+  *state = this->tas5805m_state_.control_state;
   return true;
 }
 
-bool Tas5805mComponent::set_state(Tas5805mControlState state) {
-  if (this->tas5805m_state_.state == state) return true;
+bool Tas5805mComponent::set_state(ControlState state) {
+  if (this->tas5805m_state_.control_state == state) return true;
   if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_2, state)) return false;
-  this->tas5805m_state_.state = state;
+  this->tas5805m_state_.control_state = state;
   ESP_LOGD(TAG, "  Tas5805m state set to: 0x%02X", state);
   return true;
 }
@@ -181,7 +182,7 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 // 11111111: Mute
 bool Tas5805mComponent::set_digital_volume(uint8_t raw_volume) {
   if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, raw_volume)) return false;
-  this->digital_volume_ = raw_volume;
+  this->tas5805m_state_.digital_volume_ = raw_volume;
   return true;
 }
 
@@ -313,16 +314,32 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
 }
 #endif
 
-// bool Tas5805mComponent::get_dac_mode(Tas5805mDacMode* mode) {
-//     uint8_t current_value;
-//     if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
-//     if (current_value & (1 << 2)) {
-//         *mode = DAC_MODE_PBTL;
-//     } else {
-//         *mode = DAC_MODE_BTL;
-//     }
-//     return true;
-// }
+bool Tas5805mComponent::get_dac_mode(DacMode* mode) {
+    uint8_t current_value;
+    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
+    if (current_value & (1 << 2)) {
+        *mode = PBTL;
+    } else {
+        *mode = BTL;
+    }
+    return true;
+}
+
+bool Tas5805mComponent::set_dac_mode(DacMode mode) {
+    uint8_t current_value;
+    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
+
+    // Update bit 2 based on the mode
+    if (mode == PBTL) {
+        current_value |= (1 << 2);  // Set bit 2 to 1 (PBTL mode)
+    } else {
+        current_value &= ~(1 << 2); // Clear bit 2 to 0 (BTL mode)
+    }
+    if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_1, current_value)) return false;
+    return true;
+}
+
+
 // bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
 //   uint8_t device_ctrl1_value;
 //   if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;
@@ -354,10 +371,10 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
 //   return true;
 // }
 
-// bool Tas5805mComponent::get_power_state(Tas5805mControlState* state) {
+// bool Tas5805mComponent::get_power_state(ControlState* state) {
 //   uint8_t current_value;
 //   if (!this->tas5805m_read_byte(TAS5805M_POWER_STATE, &current_value)) return false;
-//   *state = static_cast<Tas5805mControlState>(current_value);
+//   *state = static_cast<ControlState>(current_value);
 //   return true;
 // }
 
