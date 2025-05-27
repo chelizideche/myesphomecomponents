@@ -86,7 +86,7 @@ void Tas5805mComponent::dump_config() {
       break;
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
-      ESP_LOGD(TAG, "  DAC mode: %s", this->tas5805m_state_.dac_mode ? "BTL" : "PBTL");
+      ESP_LOGD(TAG, "  DAC mode: %s", this->tas5805m_state_.dac_mode ? "PBTL" : "BTL");
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->tas5805m_state_.analog_gain);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
@@ -215,6 +215,30 @@ bool Tas5805mComponent::get_analog_gain(uint8_t* raw_gain) {
   return true;
 }
 
+bool Tas5805mComponent::get_dac_mode(DacMode* mode) {
+    uint8_t current_value;
+    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
+    if (current_value & (1 << 2)) {
+        *mode = PBTL;
+    } else {
+        *mode = BTL;
+    }
+    return true;
+}
+
+bool Tas5805mComponent::set_dac_mode(DacMode mode) {
+    uint8_t current_value;
+    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
+
+    // Update bit 2 based on the mode
+    if (mode == PBTL) {
+        current_value |= (1 << 2);  // Set bit 2 to 1 (PBTL mode)
+    } else {
+        current_value &= ~(1 << 2); // Clear bit 2 to 0 (BTL mode)
+    }
+    if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_1, current_value)) return false;
+    return true;
+}
 
 #ifdef USE_NUMBER
 bool Tas5805mComponent::get_eq(bool* enabled) {
@@ -311,32 +335,6 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   return this->tas5805m_state_.eq_gain[band];
 }
 #endif
-
-bool Tas5805mComponent::get_dac_mode(DacMode* mode) {
-    uint8_t current_value;
-    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
-    if (current_value & (1 << 2)) {
-        *mode = PBTL;
-    } else {
-        *mode = BTL;
-    }
-    return true;
-}
-
-bool Tas5805mComponent::set_dac_mode(DacMode mode) {
-    uint8_t current_value;
-    if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &current_value)) return false;
-
-    // Update bit 2 based on the mode
-    if (mode == PBTL) {
-        current_value |= (1 << 2);  // Set bit 2 to 1 (PBTL mode)
-    } else {
-        current_value &= ~(1 << 2); // Clear bit 2 to 0 (BTL mode)
-    }
-    if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_1, current_value)) return false;
-    return true;
-}
-
 
 // bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
 //   uint8_t device_ctrl1_value;
