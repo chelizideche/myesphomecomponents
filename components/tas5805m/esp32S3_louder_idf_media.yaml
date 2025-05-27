@@ -126,8 +126,8 @@ media_player:
       speaker: media_spk_resampling_input
       num_channels: 2
     announcement_pipeline:
-       speaker: announcement_spk_resampling_input
-       num_channels: 1
+      speaker: announcement_spk_resampling_input
+      num_channels: 1
 
     on_play:
       - if:
@@ -244,6 +244,7 @@ switch:
     name: Enable EQ Control
     id: enable_eq_control
     optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
     turn_on_action:
       - lambda: id(tas5805m_dac).set_eq_on();
       - if:
