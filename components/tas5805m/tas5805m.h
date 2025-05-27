@@ -91,7 +91,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     float             analog_gain;
     DacMode           dac_mode;
     ControlState      state;
-    uint8_t           digital_volume{0};
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};

@@ -182,7 +182,6 @@ bool Tas5805mComponent::get_digital_volume(uint8_t* raw_volume) {
 // 11111111: Mute
 bool Tas5805mComponent::set_digital_volume(uint8_t raw_volume) {
   if (!this->tas5805m_write_byte(TAS5805M_DIG_VOL_CTRL, raw_volume)) return false;
-  this->tas5805m_state_.digital_volume_ = raw_volume;
   return true;
 }
 
@@ -204,7 +203,6 @@ bool Tas5805mComponent::set_analog_gain(float gain_db) {
   new_again = (current_again & 0xE0) | new_again;
   if (!this->tas5805m_write_byte(TAS5805M_AGAIN, new_again)) return false;
 
-  this->analog_gain_ = gain_db;
   ESP_LOGD(TAG, "  Tas5805m Analog Gain: %fdB (0x%02X)", gain_db, new_again);
   return true;
 }
