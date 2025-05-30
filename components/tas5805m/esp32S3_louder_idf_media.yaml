@@ -161,7 +161,7 @@ media_player:
             duration: 0.0s
       - wait_until:
             media_player.is_announcing:
-      - delay: 0.7s
+      - delay: 0.75s
       - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
 
       - wait_until:
