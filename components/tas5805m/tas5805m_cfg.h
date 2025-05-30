@@ -23,6 +23,8 @@ namespace tas5805m {
     LEFT,
   };
 
+  static const char* MIXER_MODE_CHARS[] = {"STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"};
+
   // enum SwFreq : uint8_t {
   //   SW_FREQ_768K = (0x00 << 4),
   //   SW_FREQ_384K = (0x01 << 4),
