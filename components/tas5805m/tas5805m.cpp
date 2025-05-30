@@ -310,22 +310,22 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
     return false;
   }
 
-  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_LEFT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_l_to_l), 4)) {
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_LEFT_GAIN, reinterpret_cast<uint8_t *>(&mixer_l_to_l), 4)) {
     ESP_LOGE(TAG, "Error writing Left to Left Mixer Gain");
     return false;
   }
 
-  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_RIGHT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_r_to_r), 4)) {
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_RIGHT_GAIN, reinterpret_cast<uint8_t *>(&mixer_r_to_r), 4)) {
     ESP_LOGE(TAG, "Error writing Right to Right Mixer Gain");
     return false;
   }
 
-  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_RIGHT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_l_to_r), 4)) {
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_RIGHT_GAIN, reinterpret_cast<uint8_t *>(&mixer_l_to_r), 4)) {
     ESP_LOGE(TAG, "Error writing Left to Right Mixer Gain");
     return false;
   }
 
-  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_LEFT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_r_to_l), 4)) {
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_LEFT_GAIN, reinterpret_cast<uint8_t *>(&mixer_r_to_l), 4)) {
     ESP_LOGE(TAG, "Error writing Right to Left Mixer Gain");
     return false;
   }
