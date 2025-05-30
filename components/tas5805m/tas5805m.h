@@ -101,7 +101,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    #ifdef USE_NUMBER
    bool run_refresh_eq_gains_{false};
-   bool restore_eq_off_{false}
+   bool restore_eq_off_{false};
    uint8_t refresh_band_{0};
 
    #endif
