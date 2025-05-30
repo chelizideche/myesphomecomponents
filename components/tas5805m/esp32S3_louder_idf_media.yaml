@@ -4,6 +4,11 @@ esphome:
   min_version: 2025.2.0
   platformio_options:
     board_build.flash_mode: dio
+  on_boot:
+    - script.execute:
+                    id: play_sound
+                    priority: true
+                    sound_file: !lambda return id(easter_egg_tada_sound);
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -67,6 +72,24 @@ external_components:
     components: [ tas5805m ]
     refresh: 0s
 
+# Script executed when we want to play sounds on the device.
+  - id: play_sound
+    parameters:
+      priority: bool
+      sound_file: "audio::AudioFile*"
+    then:
+      - lambda: |-
+          if (priority) {
+            id(external_media_player)
+              ->make_call()
+              .set_command(media_player::MediaPlayerCommand::MEDIA_PLAYER_COMMAND_STOP)
+              .set_announcement(true)
+              .perform();
+          }
+          if ( (id(external_media_player).state != media_player::MediaPlayerState::MEDIA_PLAYER_STATE_ANNOUNCING ) || priority) {
+            id(external_media_player)
+              ->play_file(sound_file, true, false);
+          }
 i2c:
   sda: GPIO8
   scl: GPIO9
@@ -128,6 +151,10 @@ media_player:
     announcement_pipeline:
       speaker: announcement_spk_resampling_input
       num_channels: 1
+
+    files:
+      id: easter_egg_tada_sound
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/easter_egg_tada.mp3
 
     on_play:
       - if:

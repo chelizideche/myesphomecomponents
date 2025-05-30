@@ -233,7 +233,7 @@ switch:
     name: Enable EQ Control
     id: enable_eq_control
     optimistic: true
-    restore_mode: RESTORE_DEFAULT_ON
+    restore_mode: ALWAYS_ON
     turn_on_action:
       - lambda: id(tas5805m_dac).set_eq_on();
       - if:
