@@ -12,6 +12,7 @@ static const char *const TAG = "tas5805m";
 static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
 static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // milliseconds
+static const uint8_t LOOPS_EQUAL_500MS       = 30;    // number of loop iterations about equal 500ms
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -29,10 +30,16 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::loop() {
-  // do a re-write of gains for all eq bands when triggered by boolean
+  // do a re-write of gains for all eq bands when triggered by boolean 'run_refresh_eq_gains_'
   // write gains for one band per loop so component does not take too long
 
   if (!this->run_refresh_eq_gains_) return;
+
+  // once refresh eq gains is activated wait about 500ms before execution
+  if this->loop_counter_ < LOOPS_EQUAL_500MS {
+    this->loop_counter_ = this->loop_counter_ + 1;
+    return;
+  }
 
   // refresh_band_ is initially set to 0 in tas5805m.h
   // when finished reset variables ready for next time
@@ -43,6 +50,7 @@ void Tas5805mComponent::loop() {
       this->set_eq_off();
       this->restore_eq_off_ = false;
     }
+    this->loop_counter_ = 0;
     return;
   }
 
