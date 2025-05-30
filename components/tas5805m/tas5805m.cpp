@@ -253,6 +253,7 @@ bool Tas5805mComponent::set_dac_mode(DacMode mode) {
     if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_1, current_value)) return false;
 
     this->tas5805m_state_.dac_mode = mode;
+    ESP_LOGD(TAG, "Tas5805m DAC mode set to: %s", this->tas5805m_state_.dac_mode ? "PBTL" : "BTL");
     return true;
 }
 
@@ -336,6 +337,7 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   }
 
   this->tas5805m_state_.mixer_mode = mode;
+  ESP_LOGD(TAG, "Tas5805m Mixer mode set to: %s", MIXER_MODE_CHARS[this->tas5805m_state_.mixer_mode]);
   return true;
 }
 
