@@ -34,7 +34,7 @@ void Tas5805mComponent::loop() {
   // do a re-write of gains for all eq bands when triggered by boolean 'run_refresh_eq_gains_'
   // write gains one band per loop so component does not take too long in loop
 
-  if (!this->run_refresh_eq_gains_) return;
+  if (!this->running_refresh_eq_gains_) return;
 
   // once refresh eq gains is activated wait 'DELAY_LOOPS' before execution
   // to ensure on boot sound has played and tas5805m has detected i2s clock
@@ -46,7 +46,7 @@ void Tas5805mComponent::loop() {
   // refresh_band_ is initially set to 0 in tas5805m.h
   // when finished reset variables ready for next time
   if (this->refresh_band_ == TAS5805M_EQ_BANDS) {
-    this->run_refresh_eq_gains_ = false;
+    this->running_refresh_eq_gains_ = false;
     this->refresh_band_ = 0;
     this->loop_counter_ = 0;
     return;
@@ -234,6 +234,7 @@ bool Tas5805mComponent::get_dac_mode(DacMode* mode) {
     } else {
         *mode = BTL;
     }
+    this->tas5805m_state_.dac_mode = *mode;
     return true;
 }
 
@@ -248,7 +249,92 @@ bool Tas5805mComponent::set_dac_mode(DacMode mode) {
         current_value &= ~(1 << 2); // Clear bit 2 to 0 (BTL mode)
     }
     if (!this->tas5805m_write_byte(TAS5805M_DEVICE_CTRL_1, current_value)) return false;
+
+    this->tas5805m_state_.dac_mode = mode;
     return true;
+}
+
+bool Tas5805mComponent::get_mixer_mode(MixerMode *mode) {
+  *mode = this->tas5805m_state_.mixer_mode;
+  return true;
+}
+
+bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
+  uint32_t mixer_l_to_l, mixer_r_to_r, mixer_l_to_r, mixer_r_to_l;
+
+  switch (mode) {
+    case STEREO:
+      mixer_l_to_l = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_l_to_r = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_0DB;
+      break;
+
+    case STEREO_INVERSE:
+      mixer_l_to_l = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_0DB;
+      mixer_l_to_r = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_MUTE;
+      break;
+
+    case MONO:
+      mixer_l_to_l = TAS5805M_MIXER_VALUE_MINUS6DB;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_MINUS6DB;
+      mixer_l_to_r = TAS5805M_MIXER_VALUE_MINUS6DB;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_MINUS6DB;
+      break;
+
+    case LEFT:
+      mixer_l_to_l = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_l_to_r = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_MUTE;
+      break;
+
+    case RIGHT:
+      mixer_l_to_l = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_0DB;
+      mixer_l_to_r = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_0DB;
+      break;
+
+    default:
+      ESP_LOGD(TAG, "Attempt to set invalid Mixer Mode");
+      return false;
+  }
+
+  if(!this->set_book_and_page(TAS5805M_REG_BOOK_5, TAS5805M_REG_BOOK_5_MIXER_PAGE)) {
+    ESP_LOGE(TAG, "Error writing book and page to start setting Mixer Mode");
+    return false;
+  }
+
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_LEFT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_l_to_l), 4)) {
+    ESP_LOGE(TAG, "Error writing Left to Left Mixer Gain");
+    return false;
+  }
+
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_RIGHT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_r_to_r), 4)) {
+    ESP_LOGE(TAG, "Error writing Right to Right Mixer Gain");
+    return false;
+  }
+
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_RIGHT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_l_to_r), 4)) {
+    ESP_LOGE(TAG, "Error writing Left to Right Mixer Gain");
+    return false;
+  }
+
+  if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_LEFT_GAIN, reinterpret_cast<const uint8_t *>(&mixer_r_to_l), 4)) {
+    ESP_LOGE(TAG, "Error writing Right to Left Mixer Gain");
+    return false;
+  }
+
+  if (!this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO)) {
+    ESP_LOGE(TAG, "Error writing book and page to complete setting Mixer Mode");
+    return false;
+  }
+
+  this->tas5805m_state_.mixer_mode = mode;
+  return true;
 }
 
 #ifdef USE_NUMBER
@@ -293,6 +379,12 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
+  if (!this->eq_gains_refresh_initiated_) {
+    this->tas5805m_state_.eq_gain[band] = gain;
+    ESP_LOGD(TAG, "EQ Band: %d updated Gain: %ddB for later setup", band, gain);
+    return true;
+  }
+
   uint8_t current_page = 0;
   bool ok = true;
   ESP_LOGD(TAG, "EQ Band %d (%dHz) set to Gain %ddB", band, tas5805m_eq_bands[band], gain);
@@ -323,13 +415,15 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   }
 
   this->tas5805m_state_.eq_gain[band] = gain;
-  this->tas5805m_state_.eq_gain_set[band] = true;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
 void Tas5805mComponent::refresh_eq_gains() {
-  // trigger a gain refresh of EQ gains in 'loop'
-  this->run_refresh_eq_gains_ = true;
+  // trigger refresh of EQ gains in 'loop'
+  this->running_refresh_eq_gains_ = true;
+
+  // refresh has been initiated so changes to eq gains can written now
+  this->eq_gains_refresh_initiated_ = true;
   ESP_LOGE(TAG, "Refresh gains activated with EQ %s", this->tas5805m_state_.eq_enabled ? "Enabled" : "Disabled");
 }
 

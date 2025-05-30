@@ -23,6 +23,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void set_enable_pin(GPIOPin *enable) { this->enable_pin_ = enable; }
   void config_analog_gain(float analog_gain) { this->tas5805m_state_.analog_gain = analog_gain; }
   void config_dac_mode(DacMode dac_mode) {this->tas5805m_state_.dac_mode = dac_mode; }
+  void config_mixer_mode(MixerMode mixer_mode) {this->tas5805m_state_.mixer_mode = mixer_mode; }
 
   float volume() override;
   bool set_volume(float value) override;
@@ -56,6 +57,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_dac_mode(DacMode* mode);
    bool set_dac_mode(DacMode mode);
 
+   bool get_mixer_mode(MixerMode *mode);
+   bool set_mixer_mode(MixerMode mode);
+
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
 
@@ -87,20 +91,22 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    struct Tas5805mState {
     //bool               is_muted;                   // not used as esphome AudioDac component has its own is_muted variable
-    //bool               is_powered;
+    //bool               is_powered;                 // currently not used
     float             analog_gain;
     DacMode           dac_mode;
+    MixerMode         mixer_mode;
     ControlState      control_state;
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};
-    bool              eq_gain_set[TAS5805M_EQ_BANDS]{false};
+    //bool              eq_gain_set[TAS5805M_EQ_BANDS]{false};
     #endif
-    //MixerMode          mixer_mode;
+
    } tas5805m_state_;
 
    #ifdef USE_NUMBER
-   bool run_refresh_eq_gains_{false};
+   bool running_refresh_eq_gains_{false};
+   bool eq_gains_refresh_initiated_{false};
    uint8_t refresh_band_{0};
 
    #endif

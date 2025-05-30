@@ -14,6 +14,7 @@ DEPENDENCIES = ["i2c"]
 
 CONF_ANALOG_GAIN = "analog_gain"
 CONF_DAC_MODE = "dac_mode"
+CONF_MIXER_MODE = "mixer_mode"
 
 CONF_TAS5805M_ID = "tas5805m_id"
 
@@ -25,6 +26,16 @@ DacMode = tas5805m_ns.enum("DacMode")
 DAC_MODES = {
     "BTL" : DacMode.BTL,
     "PBTL": DacMode.PBTL,
+}
+
+MixerMode = tas5805m_ns.enum("MixerMode")
+
+MIXER_MODES = {
+    "STEREO"         : MixerMode.STEREO,
+    "STEREO_INVERSE" : MixerMode.STEREO_INVERSE,
+    "MONO"           : MixerMode.MONO,
+    "MIXER_RIGHT"    : MixerMode.RIGHT,
+    "MIXER_LEFT"     : MixerMode.LEFT,
 }
 
 ANALOG_GAINS = [-15.5, -15, -14.5, -14, -13.5, -13, -12.5, -12, -11.5, -11, -10.5, -10, -9.5, -9, -8.5, -8,
@@ -41,6 +52,9 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_DAC_MODE, default="BTL"): cv.enum(
                         DAC_MODES, upper=True
             ),
+            cv.Optional(CONF_MIXER_MODE, default="STEREO"): cv.enum(
+                        MIXER_MODES, upper=True
+            ),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -55,3 +69,4 @@ async def to_code(config):
     cg.add(var.set_enable_pin(enable))
     cg.add(var.config_analog_gain(config[CONF_ANALOG_GAIN]))
     cg.add(var.config_dac_mode(config[CONF_DAC_MODE]))
+    cg.add(var.config_mixer_mode(config[CONF_MIXER_MODE]))
