@@ -75,6 +75,7 @@ bool Tas5805mComponent::configure_registers() {
   if (!this->set_dac_mode(tas5805m_state_.dac_mode)) return false;
   if (!this->set_analog_gain(this->tas5805m_state_.analog_gain)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
+  if (!this->set_eq(false)) return false;
   return true;
 }
 
@@ -270,8 +271,10 @@ bool Tas5805mComponent::set_eq_off() {
 }
 
 bool Tas5805mComponent::set_eq(bool enable) {
-  ESP_LOGD(TAG, "Setting EQ to %d", enable);
-  return this->tas5805m_write_byte(TAS5805M_DSP_MISC, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF);
+  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, enable ? TAS5805M_CTRL_EQ_ON : TAS5805M_CTRL_EQ_OFF)) return false;
+  this->tas5805m_state_.eq_enabled = enable;
+  ESP_LOGD(TAG, "  Tas5805m Set EQ control %s", enable ? "On" : "Off");
+  return true;
 }
 
 bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
