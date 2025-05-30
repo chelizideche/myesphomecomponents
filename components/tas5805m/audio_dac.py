@@ -34,8 +34,8 @@ MIXER_MODES = {
     "STEREO"         : MixerMode.STEREO,
     "STEREO_INVERSE" : MixerMode.STEREO_INVERSE,
     "MONO"           : MixerMode.MONO,
-    "MIXER_RIGHT"    : MixerMode.RIGHT,
-    "MIXER_LEFT"     : MixerMode.LEFT,
+    "RIGHT"          : MixerMode.RIGHT,
+    "LEFT"           : MixerMode.LEFT,
 }
 
 ANALOG_GAINS = [-15.5, -15, -14.5, -14, -13.5, -13, -12.5, -12, -11.5, -11, -10.5, -10, -9.5, -9, -8.5, -8,

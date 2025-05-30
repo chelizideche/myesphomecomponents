@@ -16,11 +16,11 @@ namespace tas5805m {
   };
 
   enum MixerMode : uint8_t {
-    MIXER_STEREO = 0,
-    MIXER_STEREO_INVERSE,
-    MIXER_MONO,
-    MIXER_RIGHT,
-    MIXER_LEFT,
+    STEREO = 0,
+    STEREO_INVERSE,
+    MONO,
+    RIGHT,
+    LEFT,
   };
 
   // enum SwFreq : uint8_t {
