@@ -12,7 +12,7 @@ static const char *const TAG = "tas5805m";
 static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
 static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // milliseconds
-static const uint8_t LOOPS_EQUAL_500MS       = 30;    // number of loop iterations about equal 500ms
+static const uint8_t DELAY_LOOPS             = 30;    // number of loop iterations about equal 500ms
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -30,13 +30,15 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::loop() {
+  // when tas5805m has detected i2s clock, eq gains can be written
   // do a re-write of gains for all eq bands when triggered by boolean 'run_refresh_eq_gains_'
-  // write gains for one band per loop so component does not take too long
+  // write gains one band per loop so component does not take too long in loop
 
   if (!this->run_refresh_eq_gains_) return;
 
-  // once refresh eq gains is activated wait about 500ms before execution
-  if (this->loop_counter_ < LOOPS_EQUAL_500MS) {
+  // once refresh eq gains is activated wait 'DELAY_LOOPS' before execution
+  // to ensure on boot sound has played and tas5805m has detected i2s clock
+  if (this->loop_counter_ < DELAY_LOOPS) {
     this->loop_counter_ = this->loop_counter_ + 1;
     return;
   }
@@ -46,10 +48,6 @@ void Tas5805mComponent::loop() {
   if (this->refresh_band_ == TAS5805M_EQ_BANDS) {
     this->run_refresh_eq_gains_ = false;
     this->refresh_band_ = 0;
-    // if (this->restore_eq_off_) {
-    //   this->set_eq_off();
-    //   this->restore_eq_off_ = false;
-    // }
     this->loop_counter_ = 0;
     return;
   }
@@ -295,13 +293,6 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
-  // if (!this->tas5805m_state_.eq_enabled) {
-  //   this->tas5805m_state_.eq_gain[band] = gain;
-  //   this->tas5805m_state_.eq_gain_set[band] = false;
-  //   ESP_LOGD(TAG, "EQ Band: %d updated Gain: %ddB for later setup", band, gain);
-  //   return true;
-  // }
-
   uint8_t current_page = 0;
   bool ok = true;
   ESP_LOGD(TAG, "EQ Band %d (%dHz) set to Gain %ddB", band, tas5805m_eq_bands[band], gain);
@@ -337,16 +328,8 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 }
 
 void Tas5805mComponent::refresh_eq_gains() {
-  bool eq_enabled;
-  if (!this->get_eq(&eq_enabled)) return;
-
-  ESP_LOGE(TAG, "Current state of EQ enabled %s", eq_enabled ? "True" : "False");
-  // if (!eq_enabled) {
-  //   this->restore_eq_off_ = true;
-  //   this->set_eq_on();
-  // }
-  // if EQ is enable then trigger a gain refresh of EQ gains in loop
-  this->run_refresh_eq_gains_ = true; //eq_enabled;
+  // trigger a gain refresh of EQ gains in 'loop'
+  this->run_refresh_eq_gains_ = true;
   ESP_LOGE(TAG, "Refresh gains activated with EQ %s", this->tas5805m_state_.eq_enabled ? "Enabled" : "Disabled");
 }
 
