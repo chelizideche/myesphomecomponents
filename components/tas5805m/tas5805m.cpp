@@ -333,6 +333,7 @@ void Tas5805mComponent::refresh_eq_gains() {
   }
   // if EQ is enable then trigger a gain refresh of EQ gains in loop
   this->run_refresh_eq_gains_ = true; //eq_enabled;
+  ESP_LOGE(TAG, "Refresh gains activated with EQ %s", this->tas5805m_state_.eq_enabled ? "Enabled" : "Disabled");
 }
 
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
