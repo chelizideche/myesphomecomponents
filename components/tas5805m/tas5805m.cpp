@@ -78,7 +78,7 @@ bool Tas5805mComponent::configure_registers() {
   }
   this->number_registers_configured_ = counter;
 
-  if (!this->set_dac_mode(this->tas5805m_state_.dac_mode)) return false;
+  //if (!this->set_dac_mode(this->tas5805m_state_.dac_mode)) return false;
   //if (!this->set_mixer_mode(this->tas5805m_state_.mixer_mode)) return false;
   if (!this->set_analog_gain(this->tas5805m_state_.analog_gain)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
