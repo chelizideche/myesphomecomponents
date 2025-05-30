@@ -326,8 +326,8 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
 
 void Tas5805mComponent::refresh_eq_gains() {
   bool eq_enabled;
-  if (!this->get_eq(&eq_enabled))
-    ESP_LOGE(TAG, "Fauly getting eq state");
+  if (!this->get_eq(&eq_enabled)) {
+    ESP_LOGE(TAG, "Faulty getting eq state");
     return;
   }
   ESP_LOGE(TAG, "Current state of EQ enabled %s", eq_enabled ? "True" : "False");
