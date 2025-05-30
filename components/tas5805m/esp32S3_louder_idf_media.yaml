@@ -80,6 +80,8 @@ i2c:
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
+    dac_mode: BTL
+    mixer_mode: MONO
     enable_pin: GPIO17
     analog_gain: -15.5db
 
