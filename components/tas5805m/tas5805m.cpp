@@ -249,6 +249,7 @@ bool Tas5805mComponent::get_eq(bool* enabled) {
   uint8_t current_value;
   if (!this->tas5805m_read_byte(TAS5805M_DSP_MISC, &current_value)) return false;
   *enabled = !(current_value & 0x01);
+  this->tas5805m_state_.eq_enabled = *enabled;
   return true;
 }
 
