@@ -158,10 +158,10 @@ media_player:
       - mixer_speaker.apply_ducking:
             id: media_spk_mixer_input
             decibel_reduction: 40
-            duration: 0.25s
+            duration: 0.0s
       - wait_until:
             media_player.is_announcing:
-      - delay: 0.5s
+      - delay: 0.7s
       - lambda: id(tas5805m_dac).set_volume(id(announce_volume).state / 100);
 
       - wait_until:
@@ -170,7 +170,7 @@ media_player:
       - mixer_speaker.apply_ducking:
             id: media_spk_mixer_input
             decibel_reduction: 0
-            duration: 2.0s
+            duration: 1.0s
       - lambda: id(tas5805m_dac).set_volume(id(current_volume));
 
 number:
