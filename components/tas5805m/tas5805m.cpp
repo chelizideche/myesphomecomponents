@@ -36,7 +36,7 @@ void Tas5805mComponent::loop() {
   if (!this->run_refresh_eq_gains_) return;
 
   // once refresh eq gains is activated wait about 500ms before execution
-  if this->loop_counter_ < LOOPS_EQUAL_500MS {
+  if (this->loop_counter_ < LOOPS_EQUAL_500MS) {
     this->loop_counter_ = this->loop_counter_ + 1;
     return;
   }
