@@ -295,12 +295,12 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
     return false;
   }
 
-  if (!this->tas5805m_state_.eq_enabled) {
-    this->tas5805m_state_.eq_gain[band] = gain;
-    this->tas5805m_state_.eq_gain_set[band] = false;
-    ESP_LOGD(TAG, "EQ Band: %d updated Gain: %ddB for later setup", band, gain);
-    return true;
-  }
+  // if (!this->tas5805m_state_.eq_enabled) {
+  //   this->tas5805m_state_.eq_gain[band] = gain;
+  //   this->tas5805m_state_.eq_gain_set[band] = false;
+  //   ESP_LOGD(TAG, "EQ Band: %d updated Gain: %ddB for later setup", band, gain);
+  //   return true;
+  // }
 
   uint8_t current_page = 0;
   bool ok = true;
