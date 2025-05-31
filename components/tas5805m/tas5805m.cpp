@@ -440,6 +440,44 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
 }
 #endif
 
+
+bool Tas5805mComponent::refresh_faults() {
+  if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_chan_fault)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault1)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_global_fault2)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_OT_WARNING, &this->tas5805m_state_.last_ot_warning)) return false;
+  this->tas5805m_state_.is_fault = this->tas5805m_state_.last_chan_fault    || this->tas5805m_state_.last_global_fault1 ||
+                                   this->tas5805m_state_.last_global_fault2 || this->tas5805m_state_.last_ot_warning;
+
+  if (this->tas5805m_state_.is_fault) this->clear_faults();
+  return true;
+}
+
+uint8_t Tas5805mComponent::get_auto_clear_faults_count() {
+  return this->tas5805m_state_.auto_clear_faults_count;
+}
+uint8_t Tas5805mComponent::get_last_channel_fault() {
+ return this->tas5805m_state_.last_chan_fault;
+}
+
+uint8_t Tas5805mComponent::get_last_global_fault1() {
+ return this->tas5805m_state_.last_global_fault1;
+}
+
+uint8_t Tas5805mComponent::get_last_global_fault2() {
+  return this->tas5805m_state_.last_global_fault2;
+}
+
+bool Tas5805mComponent::clear_faults() {
+  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
+  this->tas5805m_state_.auto_clear_faults_count++;
+  return true;
+}
+
+bool Tas5805mComponent::is_fault() {
+  return this->tas5805m_state_.is_fault;
+}
+
 // bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
 //   uint8_t device_ctrl1_value;
 //   if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;

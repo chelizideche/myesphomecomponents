@@ -35,6 +35,13 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
 
+  bool refresh_faults();
+  uint8_t get_auto_clear_faults_count();
+  uint8_t get_last_channel_fault();
+  uint8_t get_last_global_fault1();
+  uint8_t get_last_global_fault2();
+  bool is_fault();
+
   #ifdef USE_NUMBER
   bool set_eq_on();
   bool set_eq_off();
@@ -66,6 +73,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool get_state(ControlState* state);
    bool set_state(ControlState state);
 
+   bool clear_faults();
+
    #ifdef USE_NUMBER
    bool get_eq(bool* enabled);
    bool set_eq(bool enable);
@@ -95,7 +104,14 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     float             analog_gain;
     DacMode           dac_mode;
     MixerMode         mixer_mode;
+
     ControlState      control_state;
+
+    uint32_t          auto_clear_faults_count{0};
+    uint8_t           last_chan_fault{0};
+    uint8_t           last_global_fault1{0};
+    uint8_t           last_global_fault2{0};
+
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};
