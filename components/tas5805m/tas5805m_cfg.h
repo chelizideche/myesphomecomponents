@@ -101,16 +101,16 @@ static const uint8_t  TAS5805M_CTRL_EQ_OFF             = 0x01;
 // Level meter register
 
 // Mixer registers
-static const uint32_t TAS5805M_REG_BOOK_5              = 0x8C;
-static const uint32_t TAS5805M_REG_BOOK_5_MIXER_PAGE   = 0x29;
-static const uint32_t TAS5805M_REG_LEFT_TO_LEFT_GAIN   = 0x18;
-static const uint32_t TAS5805M_REG_RIGHT_TO_LEFT_GAIN  = 0x1C;
-static const uint32_t TAS5805M_REG_LEFT_TO_RIGHT_GAIN  = 0x20;
-static const uint32_t TAS5805M_REG_RIGHT_TO_RIGHT_GAIN = 0x24;
-static const uint32_t TAS5805M_REG_BOOK_5_VOLUME_PAGE  = 0x2A;
-static const uint32_t TAS5805M_REG_LEFT_VOLUME         = 0x24;
-static const uint32_t TAS5805M_REG_RIGHT_VOLUME        = 0x28;
-static const uint32_t TAS5805M_MIXER_VALUE_MUTE        = 0x00;
+static const uint8_t TAS5805M_REG_BOOK_5               = 0x8C;
+static const uint8_t TAS5805M_REG_BOOK_5_MIXER_PAGE    = 0x29;
+static const uint8_t TAS5805M_REG_LEFT_TO_LEFT_GAIN    = 0x18;
+static const uint8_t TAS5805M_REG_RIGHT_TO_LEFT_GAIN   = 0x1C;
+static const uint8_t TAS5805M_REG_LEFT_TO_RIGHT_GAIN   = 0x20;
+static const uint8_t TAS5805M_REG_RIGHT_TO_RIGHT_GAIN  = 0x24;
+static const uint8_t TAS5805M_REG_BOOK_5_VOLUME_PAGE   = 0x2A;
+static const uint8_t TAS5805M_REG_LEFT_VOLUME          = 0x24;
+static const uint8_t TAS5805M_REG_RIGHT_VOLUME         = 0x28;
+static const uint32_t TAS5805M_MIXER_VALUE_MUTE        = 0x00000000;
 static const uint32_t TAS5805M_MIXER_VALUE_0DB         = 0x00008000;
 static const uint32_t TAS5805M_MIXER_VALUE_MINUS6DB    = 0xE7264000;
 
