@@ -524,7 +524,7 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
 }
 
 bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
-  for (uint8_t i=0; i < len) {
+  for (uint8_t i=0; i < len; i++) {
     this->tas5805m_write_byte(uint8_t a_register, data+i, 1, true);
     ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
   }
