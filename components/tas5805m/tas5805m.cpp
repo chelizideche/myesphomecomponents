@@ -99,7 +99,7 @@ void Tas5805mComponent::dump_config() {
     case NONE:
       ESP_LOGD(TAG, "  Registers configured: %i", this->number_registers_configured_);
       ESP_LOGD(TAG, "  DAC mode: %s", this->tas5805m_state_.dac_mode ? "PBTL" : "BTL");
-      ESP_LOGD(TAG, "  Mixer mode: %s", MIXER_MODE_CHARS[this->tas5805m_state_.mixer_mode]);
+      ESP_LOGD(TAG, "  Mixer mode: %s", MIXER_MODE_TEXT[this->tas5805m_state_.mixer_mode]);
       ESP_LOGD(TAG, "  Analog Gain: %3.1fdB", this->tas5805m_state_.analog_gain);
       ESP_LOGD(TAG, "  Setup successful");
       LOG_I2C_DEVICE(this);
@@ -337,7 +337,7 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   }
 
   this->tas5805m_state_.mixer_mode = mode;
-  ESP_LOGD(TAG, "Tas5805m Mixer mode set to: %s", MIXER_MODE_CHARS[this->tas5805m_state_.mixer_mode]);
+  ESP_LOGD(TAG, "Tas5805m Mixer mode set to: %s", MIXER_MODE_TEXT[this->tas5805m_state_.mixer_mode]);
   return true;
 }
 
@@ -524,17 +524,17 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
 }
 
 bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
-  for (uint8_t i=0; i < len; i++) {
-    this->tas5805m_write_byte(a_register, *(data+i));
-    ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
-  }
-
-  // i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
-  // if (error_code != i2c::ERROR_OK) {
-  //   ESP_LOGE(TAG, "  Write register error %i", error_code);
-  //   this->i2c_error_ = (uint8_t)error_code;
-  //   return false;
+  // for (uint8_t i=0; i < len; i++) {
+  //   this->tas5805m_write_byte(a_register, *(data+i));
+  //   ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
   // }
+
+  i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
+  if (error_code != i2c::ERROR_OK) {
+    ESP_LOGE(TAG, "  Write register error %i", error_code);
+    this->i2c_error_ = (uint8_t)error_code;
+    return false;
+  }
   return true;
 }
 
