@@ -93,12 +93,6 @@ static const uint8_t TAS5805M_DSP_MISC                 = 0x66;
 static const uint8_t TAS5805M_POWER_STATE              = 0x68;
 
 // TAS5805M_REG_FAULT register values
-static const uint8_t TAS5805M_CHAN_FAULT               = 0x70;
-static const uint8_t TAS5805M_GLOBAL_FAULT1            = 0x71;
-static const uint8_t TAS5805M_GLOBAL_FAULT2            = 0x72;
-static const uint8_t TAS5805M_OT_WARNING               = 0x73;
-static const uint8_t TAS5805M_FAULT_CLEAR              = 0x78;
-static const uint8_t TAS5805M_ANALOG_FAULT_CLEAR       = 0x80;
 
 // EQ registers
 static const uint8_t  TAS5805M_CTRL_EQ_ON              = 0x00;
