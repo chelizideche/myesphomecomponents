@@ -16,6 +16,9 @@ CONF_ANALOG_GAIN = "analog_gain"
 CONF_DAC_MODE = "dac_mode"
 CONF_MIXER_MODE = "mixer_mode"
 
+CONF_MIN_VOLUME = "min_volume"
+CONF_MAX_VOLUME = "max_volume"
+
 CONF_TAS5805M_ID = "tas5805m_id"
 
 tas5805m_ns = cg.esphome_ns.namespace("tas5805m")
@@ -55,6 +58,8 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_MIXER_MODE, default="STEREO"): cv.enum(
                         MIXER_MODES, upper=True
             ),
+            cv.Optional(CONF_MIN_VOLUME, default=254): cv.int_range(0, 254),
+            cv.Optional(CONF_MAX_VOLUME, default=0): cv.int_range(0, 254),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -70,3 +75,5 @@ async def to_code(config):
     cg.add(var.config_analog_gain(config[CONF_ANALOG_GAIN]))
     cg.add(var.config_dac_mode(config[CONF_DAC_MODE]))
     cg.add(var.config_mixer_mode(config[CONF_MIXER_MODE]))
+    cg.add(var.config_min_volume(config[CONF_MIN_VOLUME]))
+    cg.add(var.config_max_volume(config[CONF_MAX_VOLUME]))
