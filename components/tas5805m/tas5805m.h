@@ -24,6 +24,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(float analog_gain) { this->tas5805m_state_.analog_gain = analog_gain; }
   void config_dac_mode(DacMode dac_mode) {this->tas5805m_state_.dac_mode = dac_mode; }
   void config_mixer_mode(MixerMode mixer_mode) {this->tas5805m_state_.mixer_mode = mixer_mode; }
+  void config_min_volume(uint8_t min_volume) { this->tas5805m_state_.min_volume = min_volume; }
+  void config_max_volume(uint8_t max_volume) { this->tas5805m_state_.max_volume = max_volume; }
 
   float volume() override;
   bool set_volume(float value) override;
