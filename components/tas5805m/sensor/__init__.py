@@ -61,10 +61,10 @@ async def to_code(config):
 
     recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
     sens = await sensor.new_sensor(recovery_count_config)
-    var = await cg.register_component(sens, recovery_count_config)
-    await cg.register_parented(var, tas5805m_component)
+    await cg.register_component(sens, recovery_count_config)
+    await cg.register_parented(sens, tas5805m_component)
 
-    cg.add(var.set_recovery_count_sensor(sens))
+    cg.add(sens.set_recovery_count_sensor(sens))
 
 #     if last_channel_fault_config := config.get(CONF_LAST_CHANNEL_FAULT):
 #       sens = await sensor.new_sensor(last_channel_fault_config)
