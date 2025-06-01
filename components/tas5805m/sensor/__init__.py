@@ -58,13 +58,11 @@ CONFIG_SCHEMA = cv.Schema(
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
     recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
-    await cg.register_component(var, recovery_count_config)
-    await sensor.register_sensor(var, recovery_count_config)
-    # sens = await sensor.new_sensor(recovery_count_config)
-    await cg.register_parented(var, tas5805m_component)
-    cg.add(var.set_recovery_count_sensor(var))
+    sens = await sensor.new_sensor(recovery_count_config)
+    await cg.register_component(sens, recovery_count_config)
+    await cg.register_parented(sens, tas5805m_component)
+    cg.add(sens.set_recovery_count_sensor(sens))
 
 #     if last_channel_fault_config := config.get(CONF_LAST_CHANNEL_FAULT):
 #       sens = await sensor.new_sensor(last_channel_fault_config)
