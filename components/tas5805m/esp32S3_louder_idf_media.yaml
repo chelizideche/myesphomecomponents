@@ -37,11 +37,11 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "xxxx"
+    key: "ThIGPAL4Tde3pNvWy1tyHeitB9XlUcXn+LZ5q/N9OuY="
 
 ota:
   - platform: esphome
-    password: "xxxx"
+    password: "35925d04e9ba07c835429bb2c040be8e"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -67,7 +67,7 @@ external_components:
     components: [ speaker, speaker/media_player ]
     refresh: 0s
 
-  - source: github://mrtoy-me/esphome-components-test@eq_dev
+  - source: github://mrtoy-me/esphome-components-test@eq_dev_plus_fault
     components: [ tas5805m ]
     refresh: 0s
 
@@ -85,6 +85,18 @@ audio_dac:
     enable_pin: GPIO17
     analog_gain: -15.5db
 
+sensor:
+  - platform: tas5805m
+    fault_recovery_count:
+      name: "Fault Recovery Count"
+    # last_channel_fault:
+    #   name: "Last Channel Fault"
+    # last_global_fault1:
+    #   name: "Last Global Fault 1"
+    # last_global_fault2:
+    #   name: "Last Global Fault 2"
+    update_interval: 30s
+
 i2s_audio:
   i2s_lrclk_pin: GPIO15
   i2s_bclk_pin: GPIO14
@@ -97,11 +109,12 @@ speaker:
     audio_dac: tas5805m_dac
     channel: stereo
     sample_rate: 48000
+    #bits_per_sample: 32bit
     timeout: never
 
   - platform: mixer
     id: mixer_speaker_id
-    task_stack_in_psram: true
+    #task_stack_in_psram: true
     output_speaker: speaker_id
     source_speakers:
       - id: announcement_spk_mixer_input
