@@ -35,7 +35,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
 
-  uint8_t get_auto_clear_faults_count();
+  uint32_t get_auto_clear_faults_count();
   uint8_t get_last_channel_fault();
   uint8_t get_last_global_fault();
   bool get_last_over_temperature_fault();
