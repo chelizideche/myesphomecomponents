@@ -102,6 +102,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};
     //bool              eq_gain_set[TAS5805M_EQ_BANDS]{false};
+    uint8_t           min_volume;
+    uint8_t           max_volume;
     #endif
 
    } tas5805m_state_;
