@@ -109,7 +109,7 @@ void Tas5805mComponent::dump_config() {
 
 bool Tas5805mComponent::set_volume(float volume) {
   float new_volume = clamp(volume, 0.0f, 1.0f);
-  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, this->tas5805m_state_.max_volume, this->tas5805m_state_.min_volume);
+  uint8_t raw_volume = remap<uint8_t, float>(new_volume, 0.0f, 1.0f, this->tas5805m_state_.min, this->tas5805m_state_.max_volume);
   if (!this->set_digital_volume(raw_volume)) return false;
   ESP_LOGD(TAG, "  Volume changed to: %2.0f%% (raw: %3d)", new_volume*100, raw_volume);
   return true;
@@ -118,7 +118,7 @@ bool Tas5805mComponent::set_volume(float volume) {
 float Tas5805mComponent::volume() {
   uint8_t raw_volume;
   get_digital_volume(&raw_volume);
-  return remap<float, uint8_t>(raw_volume, this->tas5805m_state_.max_volume, this->tas5805m_state_.min_volume, 0.0f, 1.0f);
+  return remap<float, uint8_t>(raw_volume, this->tas5805m_state_.min_volume, this->tas5805m_state_.max_volume, 0.0f, 1.0f);
 }
 
 bool Tas5805mComponent::set_mute_off() {
