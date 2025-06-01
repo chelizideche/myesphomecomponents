@@ -15,7 +15,9 @@ CONF_LAST_GLOBAL_FAULT2 = "last_global_fault2"
 #from ..audio_dac import CONF_TAS5805M_ID, TAS5805M_COMPONENT_SCHEMA, tas5805m_ns
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
-FaultRecoveryCountSensor = tas5805m_ns.class_("FaultRecoveryCountSensor", cg.PollingComponent)
+FaultRecoveryCountSensor = tas5805m_ns.class_(
+    "FaultRecoveryCountSensor", sensor.Sensor, cg.PollingComponent
+)
 
 #CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 CONFIG_SCHEMA = cv.Schema(
@@ -59,10 +61,10 @@ async def to_code(config):
 
     recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
     sens = await sensor.new_sensor(recovery_count_config)
-    var = await cg.register_component(sens, recovery_count_config)
+    await cg.register_component(sens, recovery_count_config)
     await cg.register_parented(sens, tas5805m_component)
 
-    cg.add(var.set_recovery_count_sensor(sens))
+    cg.add(sens.set_recovery_count_sensor(sens))
 
 #     if last_channel_fault_config := config.get(CONF_LAST_CHANNEL_FAULT):
 #       sens = await sensor.new_sensor(last_channel_fault_config)
