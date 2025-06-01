@@ -111,7 +111,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     uint8_t           last_chan_fault{0};
     uint8_t           last_global_fault1{0};
     uint8_t           last_global_fault2{0};
-
+    uint8_t           last_ot_warning{0};
+    bool              is_fault;
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};

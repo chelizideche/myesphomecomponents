@@ -7,7 +7,7 @@
 namespace esphome {
 namespace tas5805m {
 
-class TAS5805MSensor : public Polling Component, public Parented<Tas5805mComponent> {
+class TAS5805MSensor : public sensor.Sensor, public PollingComponent, public Parented<Tas5805mComponent> {
  public:
   //TAS5805MSensor(Tas5805mComponent *parent) : parent_(parent) {}
 
