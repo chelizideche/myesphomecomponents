@@ -58,8 +58,8 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_MIXER_MODE, default="STEREO"): cv.enum(
                         MIXER_MODES, upper=True
             ),
-            cv.Optional(CONF_MIN_VOLUME, default=0): cv.int_range(0, 254),
-            cv.Optional(CONF_MAX_VOLUME, default=254): cv.int_range(0, 254),
+            cv.Optional(CONF_MIN_VOLUME, default=254): cv.int_range(0, 254),
+            cv.Optional(CONF_MAX_VOLUME, default=0): cv.int_range(0, 254),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
