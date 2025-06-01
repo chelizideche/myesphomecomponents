@@ -37,8 +37,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
   uint8_t get_auto_clear_faults_count();
   uint8_t get_last_channel_fault();
-  uint8_t get_last_global_fault1();
-  uint8_t get_last_global_fault2();
+  uint8_t get_last_global_fault();
+  bool get_last_over_temperature_fault();
+  bool get_last_over_temperature_warning();
 
   #ifdef USE_NUMBER
   bool set_eq_on();
@@ -106,11 +107,11 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     ControlState      control_state;
 
     uint32_t          auto_clear_faults_count{0};
-    uint8_t           last_chan_fault{0};
-    uint8_t           last_global_fault1{0};
-    uint8_t           last_global_fault2{0};
-    uint8_t           last_ot_warning{0};
-    bool              is_fault;
+    uint8_t           last_channel_fault{0};
+    uint8_t           last_global_fault{0};
+    bool              last_over_temperature_fault{false};
+    bool              last_over_temperature_warning{false};
+
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};

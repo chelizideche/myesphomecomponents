@@ -440,26 +440,31 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
 }
 #endif
 
-uint8_t Tas5805mComponent::get_auto_clear_faults_count() {
+uint32_t Tas5805mComponent::get_auto_clear_faults_count() {
+  if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_channel_fault)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_over_temperature_fault)) return false;
+  if (!this->tas5805m_read_byte(TAS5805M_OT_WARNING, &this->tas5805m_state_.last_over_temperature_warning)) return false;
+  if (this->tas5805m_state_.last_channel_fault ||
+      this->tas5805m_state_.last_global_fault ||
+      this->tas5805m_state_.last_over_temperature_fault) this->clear_faults();
   return this->tas5805m_state_.auto_clear_faults_count;
 }
 
 uint8_t Tas5805mComponent::get_last_channel_fault() {
-  if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_chan_fault)) return false;
-  if (this->tas5805m_state_.last_chan_fault != 0) this->clear_faults();
-  return this->tas5805m_state_.last_chan_fault;
+  return this->tas5805m_state_.last_channel_fault;
 }
 
-uint8_t Tas5805mComponent::get_last_global_fault1() {
-  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault1)) return false;
-  if (this->tas5805m_state_.last_global_fault1 != 0) this->clear_faults();
-  return this->this->tas5805m_state_.last_global_fault1;
+uint8_t Tas5805mComponent::get_last_global_fault() {
+  return this->tas5805m_state_.last_global_fault;
 }
 
-uint8_t Tas5805mComponent::get_last_global_fault2() {
-  if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_global_fault2)) return false;
-  if (this->tas5805m_state_.last_global_fault2 != 0) this->clear_faults();
-  return this->this->tas5805m_state_.last_global_fault2;
+bool Tas5805mComponent::get_last_over_temperature_fault() {
+  return (this->tas5805m_state_.last_over_temperature_fault != 0);
+}
+
+bool Tas5805mComponent::get_last_over_temperature_warning() {
+  return (this->tas5805m_state_.last_over_temperature_warning != 0);
 }
 
 bool Tas5805mComponent::clear_faults() {
