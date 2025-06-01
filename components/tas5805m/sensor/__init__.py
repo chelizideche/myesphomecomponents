@@ -30,7 +30,8 @@ CONFIG_SCHEMA = cv.Schema(
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_DISTANCE,
                 state_class=STATE_CLASS_MEASUREMENT,
-        ),
+        )
+        .extend(cv.polling_component_schema("60s")),
 
         # cv.Optional(CONF_LAST_CHANNEL_FAULT): sensor.sensor_schema(
         #         TAS5805MSensor,
@@ -53,8 +54,7 @@ CONFIG_SCHEMA = cv.Schema(
         #         state_class=STATE_CLASS_MEASUREMENT,
         # ),
     }
-).extend(cv.polling_component_schema("60s"))
-
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
