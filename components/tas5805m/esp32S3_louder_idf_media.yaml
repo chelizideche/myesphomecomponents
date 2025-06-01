@@ -80,22 +80,8 @@ i2c:
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
-    dac_mode: BTL
-    mixer_mode: MONO
     enable_pin: GPIO17
     analog_gain: -15.5db
-
-# sensor:
-#   - platform: tas5805m
-#     fault_recovery_count:
-#       name: "Fault Recovery Count"
-#     # last_channel_fault:
-#     #   name: "Last Channel Fault"
-#     # last_global_fault1:
-#     #   name: "Last Global Fault 1"
-#     # last_global_fault2:
-#     #   name: "Last Global Fault 2"
-#     update_interval: 30s
 
 i2s_audio:
   i2s_lrclk_pin: GPIO15
