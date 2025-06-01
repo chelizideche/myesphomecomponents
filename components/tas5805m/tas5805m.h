@@ -109,8 +109,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     uint32_t          auto_clear_faults_count{0};
     uint8_t           last_channel_fault{0};
     uint8_t           last_global_fault{0};
-    bool              last_over_temperature_fault{false};
-    bool              last_over_temperature_warning{false};
+    uint8_t           last_over_temperature_fault{0};
+    uint8_t           last_over_temperature_warning{0};
 
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
