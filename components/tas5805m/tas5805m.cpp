@@ -28,6 +28,7 @@ void Tas5805mComponent::setup() {
     this->mark_failed();
   }
 }
+void Tas5805mComponent::update()  {return; }
 
 void Tas5805mComponent::loop() {
   // when tas5805m has detected i2s clock, eq gains can be written

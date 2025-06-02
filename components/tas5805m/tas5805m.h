@@ -18,6 +18,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
  public:
   void setup() override;
   void loop() override;
+  void update() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::IO; }
 
