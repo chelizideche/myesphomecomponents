@@ -2,6 +2,7 @@
 
 #include "esphome/components/audio_dac/audio_dac.h"
 #include "esphome/core/component.h"
+#include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
 #include "esphome/core/hal.h"
 #include "tas5805m_cfg.h"
@@ -13,7 +14,7 @@
 namespace esphome {
 namespace tas5805m {
 
-class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i2c::I2CDevice {
+class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, public i2c::I2CDevice {
  public:
   void setup() override;
   void loop() override;
@@ -49,6 +50,13 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   int8_t eq_gain(uint8_t band);
   void refresh_eq_gains();
   #endif
+  void set_recovery_count_sensor(sensor::Sensor *sensor) { this->recovery_count_sensor_ = sensor; }
+  // void set_last_channel_fault_sensor(sensor::Sensor *sensor) { this->last_channel_fault_ = sensor; }
+  // void set_last_global_fault1_sensor(sensor::Sensor *sensor) { this->last_global_fault1_sensor_ = sensor; }
+  // void set_last_global_fault2_sensor(sensor::Sensor *sensor) { this->last_global_fault2_sensor_ = sensor; }
+
+
+
 
  protected:
    GPIOPin *enable_pin_{nullptr};
@@ -81,7 +89,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
 
-
+  sensor::Sensor *recovery_count_sensor_{nullptr};
 
   //  bool get_modulation_mode(ModMode* mode, SwFreq* freq, BdFreq* bd_freq);
   //  bool get_fs_freq(FsFreq* freq);
