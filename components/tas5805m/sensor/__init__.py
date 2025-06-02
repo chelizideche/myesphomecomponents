@@ -2,7 +2,7 @@ import esphome.codegen as cg
 from esphome.components import sensor
 import esphome.config_validation as cv
 from esphome.const import (
-    CONFIG_ID,
+    CONF_ID,
     DEVICE_CLASS_DISTANCE,
     STATE_CLASS_MEASUREMENT,
 )
@@ -55,7 +55,7 @@ CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    var = cg.new_Pvariable(config[CONFIG_ID], tas5805m_component)
+    var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
     await cg.register_component(var,config)
 
     recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
