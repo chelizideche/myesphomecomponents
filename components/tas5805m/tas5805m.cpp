@@ -28,7 +28,15 @@ void Tas5805mComponent::setup() {
     this->mark_failed();
   }
 }
-// 
+void Tas5805mComponent::update()  {
+  this->parent_->refresh_faults();
+  if (this->recovery_count_sensor_ != nullptr) {
+    this->recovery_count_sensor_->publish_state(this->parent_->get_auto_clear_faults_count());
+    return;
+  }
+  ESP_LOGE(TAG, "  Recovery Count Sensor is not setup");
+  return;
+}
 
 void Tas5805mComponent::loop() {
   // when tas5805m has detected i2s clock, eq gains can be written

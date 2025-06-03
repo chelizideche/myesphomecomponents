@@ -17,6 +17,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
  public:
   void setup() override;
   void loop() override;
+  void update() overide;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::IO; }
 
@@ -24,7 +25,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   void config_analog_gain(float analog_gain) { this->tas5805m_state_.analog_gain = analog_gain; }
   void config_dac_mode(DacMode dac_mode) {this->tas5805m_state_.dac_mode = dac_mode; }
   void config_mixer_mode(MixerMode mixer_mode) {this->tas5805m_state_.mixer_mode = mixer_mode; }
-
+  void set_recovery_count_sensor(sensor::Sensor* sensor) { this->recovery_count_sensor_ = sensor; }
+  
   float volume() override;
   bool set_volume(float value) override;
 
@@ -127,9 +129,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool running_refresh_eq_gains_{false};
    bool eq_gains_refresh_initiated_{false};
    uint8_t refresh_band_{0};
-
    #endif
-
+   sensor::Sensor* recovery_count_sensor_{nullptr};
    uint8_t i2c_error_{0};
    uint8_t loop_counter_{0};
 
