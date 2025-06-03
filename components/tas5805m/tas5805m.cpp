@@ -29,9 +29,9 @@ void Tas5805mComponent::setup() {
   }
 }
 void Tas5805mComponent::update()  {
-  this->parent_->refresh_faults();
+  this->refresh_faults();
   if (this->recovery_count_sensor_ != nullptr) {
-    this->recovery_count_sensor_->publish_state(this->parent_->get_auto_clear_faults_count());
+    this->recovery_count_sensor_->publish_state(this->get_auto_clear_faults_count());
     return;
   }
   ESP_LOGE(TAG, "  Recovery Count Sensor is not setup");
