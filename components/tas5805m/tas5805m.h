@@ -3,6 +3,7 @@
 #include "esphome/components/audio_dac/audio_dac.h"
 #include "esphome/core/component.h"
 #include "esphome/components/i2c/i2c.h"
+#include "esphome/components/sensor/sensor.h"
 #include "esphome/core/hal.h"
 #include "tas5805m_cfg.h"
 
@@ -17,7 +18,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
  public:
   void setup() override;
   void loop() override;
-  void update() overide;
+  void update() override;
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::IO; }
 
