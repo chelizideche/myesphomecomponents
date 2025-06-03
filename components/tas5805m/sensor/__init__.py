@@ -56,7 +56,7 @@ CONFIG_SCHEMA = cv.All(
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    await cg.register_component(tas5805m_component,config)
+    #await cg.register_sensor(tas5805m_component, config)
 
     recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
     sens = await sensor.new_sensor(recovery_count_config)
