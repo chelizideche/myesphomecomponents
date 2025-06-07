@@ -22,7 +22,7 @@ Tas5805mSensor = tas5805m_ns.class_(
 CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 #CONFIG_SCHEMA = cv.Schema(
     {
-        cv.GenerateID(): cv.use_id(TAS5805mSensor),
+        cv.GenerateID(): cv.declare_id(Tas5805mSensor),
         #cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
 
         cv.Required(CONF_FAULT_RECOVERY_COUNT): sensor.sensor_schema(

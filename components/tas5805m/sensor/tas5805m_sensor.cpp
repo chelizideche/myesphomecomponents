@@ -1,4 +1,5 @@
 #include "esphome/core/log.h"
+#include "esphome/core/helpers.h"
 #include "tas5805m_sensor.h"
 
 namespace esphome {
