@@ -445,9 +445,11 @@ bool Tas5805mComponent::refresh_faults() {
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_over_temperature_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_OT_WARNING, &this->tas5805m_state_.last_over_temperature_warning)) return false;
-  if (this->tas5805m_state_.last_channel_fault ||
-      this->tas5805m_state_.last_global_fault ||
-      this->tas5805m_state_.last_over_temperature_fault) this->clear_faults();
+  if (this->tas5805m_state_.last_channel_fault || this->tas5805m_state_.last_global_fault ||
+      this->tas5805m_state_.last_over_temperature_fault || this->tas5805m_state_.last_over_temperature_warning ) {
+        this->clear_faults();
+        ESP_LOGD(TAG, "Tas5805m faults detected: now clearing faults");
+      }
   return true;
 }
 
