@@ -8,9 +8,9 @@ namespace tas5805m {
 static const char *const TAG = "Tas5805m.sensor";
 
 void  Tas5805mSensor::dump_config() {
-  LOG_SENSOR("  ", "Auto Fault Recovery Count:", this->clear_faults_sensor_);
-  // LOG_SENSOR("  ", "Last Channel Fault Code:", this->last_channel_fault_);
-  // LOG_SENSOR("  ", "Last Global Fault 1 Code:", this->last_global_fault1_sensor_);
+  LOG_SENSOR("  ", "Clear Faults:", this->clear_faults_sensor_);
+  LOG_SENSOR("  ", "Last Channel Fault Code:", this->last_channel_fault_);
+  LOG_SENSOR("  ", "Last Global Fault Code:", this->last_global_fault_sensor_);
   // LOG_SENSOR("  ", "Last Global Fault 2 Code:", this->last_global_fault2_sensor_);
 }
 // void  Tas5805mSensor::setup() {
