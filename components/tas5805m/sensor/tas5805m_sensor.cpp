@@ -20,18 +20,14 @@ void  Tas5805mSensor::update() {
     float recovery_count = this->parent_->get_auto_clear_faults_count();
     this->recovery_count_sensor_->publish_state(recovery_count);
   }
-  // if (this->last_channel_fault_ != nullptr) {
-  //   float channel_fault = this->parent_->get_last_channel_fault();
-  //   this->last_channel_fault_->publish_state(channel_fault);
-  // }
-  // if (this->last_global_fault1_sensor_ != nullptr) {
-  //   float global_fault1 = this->parent_->get_last_global_fault1();
-  //   this->last_global_fault1_sensor->publish_state(global_fault1);
-  // }
-  // if (this->last_global_fault2_sensor_ != nullptr) {
-  //   float global_fault2 = this->parent_->get_last_global_fault2();
-  //   this->last_global_fault2_sensor->publish_state(global_fault2);
-  // }
+  if (this->last_channel_fault_ != nullptr) {
+    float channel_fault = this->parent_->get_last_channel_fault();
+    this->last_channel_fault_->publish_state(channel_fault);
+  }
+  if (this->last_global_fault1_sensor_ != nullptr) {
+    float global_fault = this->parent_->get_last_global_fault();
+    this->last_global_fault_sensor->publish_state(global_fault);
+  }
 }
 
 }  // namespace tas5805m
