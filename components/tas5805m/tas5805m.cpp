@@ -23,6 +23,11 @@ void Tas5805mComponent::setup() {
     this->enable_pin_->digital_write(true);
   }
 
+  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) {
+    this->error_code_ = CONFIGURATION_FAILED;
+    this->mark_failed();
+  }
+
   if (!configure_registers()) {
     this->error_code_ = CONFIGURATION_FAILED;
     this->mark_failed();
