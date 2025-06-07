@@ -1,5 +1,5 @@
 #include "esphome/core/log.h"
-#include "fault_recovery_count_sensor.h"
+#include "tas5805m_sensor.h"
 
 namespace esphome {
 namespace tas5805m {

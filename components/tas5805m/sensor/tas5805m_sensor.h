@@ -9,7 +9,7 @@ namespace tas5805m {
 
 class TAS5805MSensor : public sensor::Sensor, public PollingComponent, public Parented<Tas5805mComponent> {
  public:
-  //TAS5805MSensor(Tas5805mComponent *parent) : parent_(parent) {}
+  Tas5805mSensor(Tas5805mComponent *parent) : parent_(parent) {}
 
   void dump_config() override;
   void update() override;
@@ -21,7 +21,7 @@ class TAS5805MSensor : public sensor::Sensor, public PollingComponent, public Pa
   // void set_last_global_fault2_sensor(sensor::Sensor *sensor) { this->last_global_fault2_sensor_ = sensor; }
 
  protected:
-  //Tas5805mComponent *parent_;
+  Tas5805mComponent *parent_;
   sensor::Sensor *recovery_count_sensor_{nullptr};
   // sensor::Sensor *last_channel_fault_sensor_{nullptr};
   // sensor::Sensor *last_global_fault1_sensor_{nullptr};
