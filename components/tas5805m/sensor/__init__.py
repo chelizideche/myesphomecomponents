@@ -15,11 +15,7 @@ CONF_LAST_GLOBAL_FAULT2 = "last_global_fault2"
 from ..audio_dac import CONF_TAS5805M_ID, TAS5805M_COMPONENT_SCHEMA, tas5805m_ns
 #from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
-DEPENDENCIES = ["tas5805m"]
-
-Tas5805mSensor = tas5805m_ns.class_(
-    "FaultRecoveryCountSensor", cg.PollingComponent
-)
+Tas5805mSensor = tas5805m_ns.class_("Tas5805mSensor", cg.PollingComponent)
 
 CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 #CONFIG_SCHEMA = cv.Schema(
