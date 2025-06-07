@@ -24,7 +24,9 @@ void  Tas5805mSensor::update() {
     this->clear_faults_sensor_->publish_state(this->parent_->number_of_clear_faults());
   }
   if (this->last_channel_fault_sensor_ != nullptr) {
-    this->last_channel_fault_sensor_->publish_state(this->parent_->last_channel_fault());
+    if ((uint8_t)(this->clear_faults_sensor_-> get_state()) != this->parent_->last_channel_fault()) {
+      this->last_channel_fault_sensor_->publish_state(this->parent_->last_channel_fault());
+    }
   }
   if (this->last_global_fault_sensor_ != nullptr) {
     this->last_global_fault_sensor_->publish_state(this->parent_->last_global_fault());
