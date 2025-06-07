@@ -12,10 +12,9 @@ CONF_LAST_CHANNEL_FAULT = "last_channel_fault"
 CONF_LAST_GLOBAL_FAULT = "last_global_fault"
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
-#TAS5805M_COMPONENT_SCHEMA,
+
 Tas5805mSensor = tas5805m_ns.class_("Tas5805mSensor", cg.PollingComponent)
 
-#CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 CONFIG_SCHEMA = (
     cv.Schema(
         {
@@ -45,7 +44,6 @@ CONFIG_SCHEMA = (
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    #var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await cg.register_parented(var, tas5805m_component)
