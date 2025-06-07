@@ -26,7 +26,7 @@ void  Tas5805mSensor::update() {
   }
   if (this->last_global_fault_sensor_ != nullptr) {
     //float global_fault = this->parent_->last_global_fault();
-    this->last_global_fault_sensor->publish_state(this->parent_->last_global_fault());
+    this->last_global_fault_sensor_->publish_state(this->parent_->last_global_fault());
   }
 }
 
