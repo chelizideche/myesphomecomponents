@@ -11,7 +11,7 @@ class Tas5805mSensor : public PollingComponent {
  public:
   Tas5805mSensor(Tas5805mComponent *parent) : parent_(parent) {}
 
-  void setup() override;
+  //void setup() override;
   void dump_config() override;
   void update() override;
   float get_setup_priority() const override { return setup_priority::LATE; }
@@ -25,6 +25,7 @@ class Tas5805mSensor : public PollingComponent {
   sensor::Sensor *clear_faults_sensor_{nullptr};
   sensor::Sensor *last_channel_fault_sensor_{nullptr};
   sensor::Sensor *last_global_fault_sensor_{nullptr};
+  bool first_update_{true};
 };
 
 }  // namespace tas5805m
