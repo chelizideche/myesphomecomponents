@@ -7,7 +7,7 @@
 namespace esphome {
 namespace tas5805m {
 
-class Tas5805mSensor : public PollingComponent, public Parented<ADS1115Component> {
+class Tas5805mSensor : public PollingComponent, public Parented<Tas5805mComponent> {
  public:
   //Tas5805mSensor(Tas5805mComponent *parent) : parent_(parent) {}
 
@@ -21,7 +21,7 @@ class Tas5805mSensor : public PollingComponent, public Parented<ADS1115Component
   void set_last_global_fault_sensor(sensor::Sensor *sensor) { this->last_global_fault_sensor_ = sensor; }
 
  protected:
-  Tas5805mComponent *parent_;
+  //Tas5805mComponent *parent_;
   sensor::Sensor *clear_faults_sensor_{nullptr};
   sensor::Sensor *last_channel_fault_sensor_{nullptr};
   sensor::Sensor *last_global_fault_sensor_{nullptr};
