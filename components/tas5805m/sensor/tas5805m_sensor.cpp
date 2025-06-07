@@ -13,7 +13,7 @@ void  Tas5805mSensor::dump_config() {
   LOG_SENSOR("  ", "Last Global Fault Code:", this->last_global_fault_sensor_);
 }
 void Tas5805mSensor::setup() {
-  this->parent_->reset_faults();
+   this->set_timeout(100, [this]() { this->parent_->reset_faults(); });
 }
 
 void  Tas5805mSensor::update() {
