@@ -42,7 +42,8 @@ CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
+    #var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
+    var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await cg.register_parented(var, tas5805m_component)
 
