@@ -15,13 +15,13 @@ class Tas5805mSensor : public PollingComponent {
   void update() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
-  void set_recovery_count_sensor(sensor::Sensor *sensor) { this->recovery_count_sensor_ = sensor; }
+  void set_clear_faults_sensor(sensor::Sensor *sensor) { this->clear_faults_sensor_ = sensor; }
   void set_last_channel_fault_sensor(sensor::Sensor *sensor) { this->last_channel_fault_ = sensor; }
-  void set_last_global_fault_sensor(sensor::Sensor *sensor) { this->last_global_fault1_sensor_ = sensor; }
+  void set_last_global_fault_sensor(sensor::Sensor *sensor) { this->last_global_fault_sensor_ = sensor; }
 
  protected:
   Tas5805mComponent *parent_;
-  sensor::Sensor *recovery_count_sensor_{nullptr};
+  sensor::Sensor *clear_faults_sensor_{nullptr};
   sensor::Sensor *last_channel_fault_sensor_{nullptr};
   sensor::Sensor *last_global_fault_sensor_{nullptr};
 };

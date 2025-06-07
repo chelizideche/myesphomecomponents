@@ -7,7 +7,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
 )
 
-CONF_FAULT_RECOVERY_COUNT = "fault_recovery_count"
+CONF_CLEAR_FAULTS = "clear_faults"
 CONF_LAST_CHANNEL_FAULT = "last_channel_fault"
 CONF_LAST_GLOBAL_FAULT = "last_global_fault"
 
@@ -22,7 +22,7 @@ CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
         cv.GenerateID(): cv.declare_id(Tas5805mSensor),
         #cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
 
-        cv.Required(CONF_FAULT_RECOVERY_COUNT): sensor.sensor_schema(
+        cv.Required(CONF_CLEAR_FAULTS): sensor.sensor_schema(
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_DISTANCE,
                 state_class=STATE_CLASS_MEASUREMENT,
@@ -48,10 +48,10 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
     await cg.register_component(var, config)
     #if CONF_FAULT_RECOVERY_COUNT in config:
-    if recovery_count_config := config.get(CONF_FAULT_RECOVERY_COUNT)
+    if clear_faults_config := config.get(CONF_CLEAR_FAULTS)
     #sens = await sensor.new_sensor(config[CONF_FAULT_RECOVERY_COUNT])
-      sens = await sensor.new_sensor(recovery_count_config)
-      cg.add(var.set_recovery_count_sensor(sens))
+      sens = await sensor.new_sensor(clear_faults_config)
+      cg.add(var.set_clear_faults_sensor(sens))
 
 #     if last_channel_fault_config := config.get(CONF_LAST_CHANNEL_FAULT):
 #       sens = await sensor.new_sensor(last_channel_fault_config)
