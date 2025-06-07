@@ -50,6 +50,7 @@ void Tas5805mComponent::loop() {
     this->refresh_band_ = 0;
     this->loop_counter_ = 0;
     tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR);
+    this->tas5805m_state_.number_of_clear_faults=0;
     return;
   }
 
