@@ -9,7 +9,7 @@ static const char *const TAG = "Tas5805m.sensor";
 
 void  Tas5805mSensor::dump_config() {
   LOG_SENSOR("  ", "Clear Faults:", this->clear_faults_sensor_);
-  LOG_SENSOR("  ", "Last Channel Fault Code:", this->last_channel_fault_);
+  LOG_SENSOR("  ", "Last Channel Fault Code:", this->last_channel_fault_sensor_);
   LOG_SENSOR("  ", "Last Global Fault Code:", this->last_global_fault_sensor_);
   // LOG_SENSOR("  ", "Last Global Fault 2 Code:", this->last_global_fault2_sensor_);
 }
