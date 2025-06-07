@@ -17,30 +17,31 @@ Tas5805mSensor = tas5805m_ns.class_("Tas5805mSensor", cg.PollingComponent)
 
 #CONFIG_SCHEMA = TAS5805M_COMPONENT_SCHEMA.extend(
 CONFIG_SCHEMA = (
-    {
-        cv.GenerateID(): cv.declare_id(Tas5805mSensor),
-        cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+    cv.Schema(
+        {
+            cv.GenerateID(): cv.declare_id(Tas5805mSensor),
+            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
 
-        cv.Required(CONF_CLEAR_FAULTS): sensor.sensor_schema(
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_DISTANCE,
-                state_class=STATE_CLASS_MEASUREMENT,
-        ),
+            cv.Required(CONF_CLEAR_FAULTS): sensor.sensor_schema(
+                    accuracy_decimals=0,
+                    device_class=DEVICE_CLASS_DISTANCE,
+                    state_class=STATE_CLASS_MEASUREMENT,
+            ),
 
-        cv.Optional(CONF_LAST_CHANNEL_FAULT): sensor.sensor_schema(
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_DISTANCE,
-                state_class=STATE_CLASS_MEASUREMENT,
-        ),
+            cv.Optional(CONF_LAST_CHANNEL_FAULT): sensor.sensor_schema(
+                    accuracy_decimals=0,
+                    device_class=DEVICE_CLASS_DISTANCE,
+                    state_class=STATE_CLASS_MEASUREMENT,
+            ),
 
-        cv.Optional(CONF_LAST_GLOBAL_FAULT): sensor.sensor_schema(
-                accuracy_decimals=0,
-                device_class=DEVICE_CLASS_DISTANCE,
-                state_class=STATE_CLASS_MEASUREMENT,
-        ),
-    }
-).extend(cv.polling_component_schema("60s"))
-
+            cv.Optional(CONF_LAST_GLOBAL_FAULT): sensor.sensor_schema(
+                    accuracy_decimals=0,
+                    device_class=DEVICE_CLASS_DISTANCE,
+                    state_class=STATE_CLASS_MEASUREMENT,
+            ),
+        }
+    ).extend(cv.polling_component_schema("60s"))
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
