@@ -49,8 +49,6 @@ void Tas5805mComponent::loop() {
     this->running_refresh_eq_gains_ = false;
     this->refresh_band_ = 0;
     this->loop_counter_ = 0;
-    tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR);
-    this->tas5805m_state_.number_of_clear_faults=0;
     return;
   }
 
@@ -473,11 +471,19 @@ bool Tas5805mComponent::last_over_temperature_warning_state() {
   return (this->tas5805m_state_.last_over_temperature_warning != 0);
 }
 
+bool Tas5805mComponent::reset_faults() {
+  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
+  this->tas5805m_state_.number_of_clear_faults = 0;
+  return true;
+}
+
 bool Tas5805mComponent::clear_faults() {
   if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
   this->tas5805m_state_.number_of_clear_faults++;
   return true;
 }
+
+
 
 // bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
 //   uint8_t device_ctrl1_value;
