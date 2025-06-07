@@ -21,12 +21,12 @@ void  Tas5805mSensor::update() {
     this->clear_faults_sensor_->publish_state(this->parent_->number_of_clear_faults());
   }
   if (this->last_channel_fault_ != nullptr) {
-    float channel_fault = this->parent_->get_last_channel_fault();
-    this->last_channel_fault_->publish_state(channel_fault);
+    //float channel_fault = this->parent_->last_channel_fault();
+    this->last_channel_fault_sensor_->publish_state(this->parent_->last_channel_fault());
   }
   if (this->last_global_fault1_sensor_ != nullptr) {
-    float global_fault = this->parent_->get_last_global_fault();
-    this->last_global_fault_sensor->publish_state(global_fault);
+    //float global_fault = this->parent_->last_global_fault();
+    this->last_global_fault_sensor->publish_state(this->parent_->last_global_fault());
   }
 }
 
