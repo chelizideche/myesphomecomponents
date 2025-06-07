@@ -44,9 +44,9 @@ async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     var = cg.new_Pvariable(config[CONF_ID], tas5805m_component)
     await cg.register_component(var, config)
-    #if CONF_FAULT_RECOVERY_COUNT in config:
+    await cg.register_parented(var, tas5805m_component)
+
     if clear_faults_config := config.get(CONF_CLEAR_FAULTS):
-    #sens = await sensor.new_sensor(config[CONF_FAULT_RECOVERY_COUNT])
       sens = await sensor.new_sensor(clear_faults_config)
       cg.add(var.set_clear_faults_sensor(sens))
 
@@ -57,27 +57,3 @@ async def to_code(config):
     if last_global_fault_config := config.get(CONF_LAST_GLOBAL_FAULT):
       sens = await sensor.new_sensor(last_global_fault_config)
       cg.add(var.set_last_global_fault_sensor(sens))
-
-#     if last_global_fault2_config := config.get(CONF_LAST_GLOBAL_FAULT2):
-#       sens = await sensor.new_sensor(last_global_fault2_config)
-#       cg.add(var.set_last_global_fault2_sensor(sens))
-
-#      tas5805m_parent = await cg.get_variable(config[CONF_TAS5805M_ID])
-
-#      recovery_count_config = config.get(CONF_FAULT_RECOVERY_COUNT)
-#      sens = await sensor.new_sensor(recovery_count_config, tas5805m_parent)
-#      cg.add(sens.set_recovery_count_sensor(sens))
-
-#      if last_channel_fault_config := config.get(CONF_LAST_CHANNEL_FAULT):
-#         sens = await sensor.new_sensor(last_channel_fault_config, tas5805m_parent)
-#         cg.add(sens.set_last_channel_fault_sensor(sens))
-
-#      if last_global_fault1_config := config.get(CONF_LAST_GLOBAL_FAULT1):
-#         sens = await sensor.new_sensor(last_global_fault1_config, tas5805m_parent)
-#         cg.add(sens.set_last_global_fault1_sensor(sens))
-
-#      if last_global_fault2_config := config.get(CONF_LAST_GLOBAL_FAULT2):
-#         sens = await sensor.new_sensor(last_global_fault2_config, tas5805m_parent)
-#         cg.add(sens.set_last_global_fault2_sensor(sens))
-
-

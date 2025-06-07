@@ -7,9 +7,9 @@
 namespace esphome {
 namespace tas5805m {
 
-class Tas5805mSensor : public PollingComponent {
+class Tas5805mSensor : public PollingComponent, public Parented<ADS1115Component> {
  public:
-  Tas5805mSensor(Tas5805mComponent *parent) : parent_(parent) {}
+  //Tas5805mSensor(Tas5805mComponent *parent) : parent_(parent) {}
 
   //void setup() override;
   void dump_config() override;
