@@ -12,15 +12,15 @@ void  Tas5805mSensor::dump_config() {
   LOG_SENSOR("  ", "Last Channel Fault Code:", this->last_channel_fault_sensor_);
   LOG_SENSOR("  ", "Last Global Fault Code:", this->last_global_fault_sensor_);
 }
-void Tas5805mSensor::setup() {
-   this->set_timeout(100, [this]() { this->parent_->reset_faults(); });
-}
+// void Tas5805mSensor::setup() {
+//    this->set_timeout(100, [this]() { this->parent_->reset_faults(); });
+// }
 
 void  Tas5805mSensor::update() {
-  // if (this->first_update_) {
-  //   this->parent_->reset_faults();
-  //   this->first_update_ = false;
-  // }
+  if (this->first_update_) {
+    this->parent_->reset_faults();
+    this->first_update_ = false;
+  }
 
   this->parent_->refresh_faults();
   if (this->clear_faults_sensor_ != nullptr) {
