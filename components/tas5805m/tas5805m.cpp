@@ -51,7 +51,7 @@ void Tas5805mComponent::loop() {
     this->loop_counter_ = 0;
     return;
   }
-  #ifdef USE_NUMBER
+  #ifdef USE_TAS5805M_EQ
   // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
@@ -342,28 +342,35 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   return true;
 }
 
-#ifdef USE_NUMBER
+
+
+
+bool Tas5805mComponent::set_eq_on() {
+  #ifdef USE_TAS5805M_EQ
+  if (this->tas5805m_state_.eq_enabled) return true;
+  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_ON)) return false;
+  this->tas5805m_state_.eq_enabled = true;
+  ESP_LOGD(TAG, "  Tas5805m EQ control On");
+  #endif
+  return true;
+}
+
+bool Tas5805mComponent::set_eq_off() {
+  #ifdef USE_TAS5805M_EQ
+  if (!this->tas5805m_state_.eq_enabled) return true;
+  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_OFF)) return false;
+  this->tas5805m_state_.eq_enabled = false;
+  ESP_LOGD(TAG, "  Tas5805m EQ control Off");
+  #endif
+  return true;
+}
+
+#ifdef USE_TAS5805M_EQ
 bool Tas5805mComponent::get_eq(bool* enabled) {
   uint8_t current_value;
   if (!this->tas5805m_read_byte(TAS5805M_DSP_MISC, &current_value)) return false;
   *enabled = !(current_value & 0x01);
   this->tas5805m_state_.eq_enabled = *enabled;
-  return true;
-}
-
-bool Tas5805mComponent::set_eq_on() {
-  if (this->tas5805m_state_.eq_enabled) return true;
-  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_ON)) return false;
-  this->tas5805m_state_.eq_enabled = true;
-  ESP_LOGD(TAG, "  Tas5805m EQ control On");
-  return true;
-}
-
-bool Tas5805mComponent::set_eq_off() {
-  if (!this->tas5805m_state_.eq_enabled) return true;
-  if (!this->tas5805m_write_byte(TAS5805M_DSP_MISC, TAS5805M_CTRL_EQ_OFF)) return false;
-  this->tas5805m_state_.eq_enabled = false;
-  ESP_LOGD(TAG, "  Tas5805m EQ control Off");
   return true;
 }
 
@@ -423,17 +430,10 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
-int8_t Tas5805mComponent::eq_gain(uint8_t band) {
-  if (band < 0 || band >= TAS5805M_EQ_BANDS) {
-    ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
-    return TAS5805M_EQ_MIN_DB;
-  }
-  return this->tas5805m_state_.eq_gain[band];
-}
 #endif
 
 void Tas5805mComponent::refresh_eq_gains() {
-  #ifdef USE_NUMBER
+  #ifdef USE_TAS5805M_EQ
   // trigger refresh of EQ gains in 'loop'
   this->running_refresh_eq_gains_ = true;
 
@@ -444,6 +444,13 @@ void Tas5805mComponent::refresh_eq_gains() {
   return;
 }
 
+// int8_t Tas5805mComponent::eq_gain(uint8_t band) {
+//   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
+//     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
+//     return TAS5805M_EQ_MIN_DB;
+//   }
+//   return this->tas5805m_state_.eq_gain[band];
+//}
 
 
 
@@ -532,7 +539,7 @@ bool Tas5805mComponent::clear_faults() {
 //   return true;
 // }
 
-#ifdef USE_NUMBER
+#ifdef USE_TAS5805M_EQ
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
     ESP_LOGE(TAG, "  Error writing page_zero");

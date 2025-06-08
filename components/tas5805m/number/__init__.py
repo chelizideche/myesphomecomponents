@@ -185,6 +185,7 @@ CONFIG_SCHEMA = cv.Schema(
 )
 
 async def to_code(config):
+    cg.add_define("USE_TAS5805M_EQ")
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     gain_20hz_config = config.get(CONF_GAIN_20HZ)
     n = await number.new_number(

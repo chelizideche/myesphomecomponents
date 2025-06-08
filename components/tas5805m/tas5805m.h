@@ -6,7 +6,7 @@
 #include "esphome/core/hal.h"
 #include "tas5805m_cfg.h"
 
-#ifdef USE_NUMBER
+#ifdef USE_TAS5805M_EQ
 #include "tas5805m_eq.h"
 #endif
 
@@ -44,12 +44,12 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool last_over_temperature_fault_state();
   bool last_over_temperature_warning_state();
 
-  #ifdef USE_NUMBER
   bool set_eq_on();
   bool set_eq_off();
-  bool set_eq_gain(uint8_t band, int8_t gain);
-  int8_t eq_gain(uint8_t band);
   void refresh_eq_gains();
+
+  #ifdef USE_TAS5805M_EQ
+  bool set_eq_gain(uint8_t band, int8_t gain);
   #endif
 
  protected:
@@ -77,12 +77,13 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
    bool clear_faults();
 
-   #ifdef USE_NUMBER
+   #ifdef USE_TAS5805M_EQ
    bool get_eq(bool* enabled);
    bool set_eq(bool enable);
    bool set_book_and_page(uint8_t book, uint8_t page);
    #endif
-
+   
+  //int8_t eq_gain(uint8_t band);
 
 
   //  bool get_modulation_mode(ModMode* mode, SwFreq* freq, BdFreq* bd_freq);
@@ -115,7 +116,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     uint8_t           last_over_temperature_fault{0};
     uint8_t           last_over_temperature_warning{0};
 
-    #ifdef USE_NUMBER
+    #ifdef USE_TAS5805M_EQ
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};
     #endif
