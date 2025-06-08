@@ -118,7 +118,8 @@ static const uint8_t TAS5805M_REG_LEFT_VOLUME          = 0x24;
 static const uint8_t TAS5805M_REG_RIGHT_VOLUME         = 0x28;
 static const uint32_t TAS5805M_MIXER_VALUE_MUTE        = 0x00000000;
 static const uint32_t TAS5805M_MIXER_VALUE_0DB         = 0x00008000;
-static const uint32_t TAS5805M_MIXER_VALUE_MINUS6DB    = 0xE7264000;
+//static const uint32_t TAS5805M_MIXER_VALUE_MINUS6DB    = 0xE7264000;
+static const uint32_t TAS5805M_MIXER_VALUE_MINUS6DB    = 0x00004000;
 
 } // namespace tas5805m
 } // namespace esphome

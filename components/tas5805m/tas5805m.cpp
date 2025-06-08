@@ -571,17 +571,17 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
 }
 
 bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
-  // for (uint8_t i=0; i < len; i++) {
-  //   this->tas5805m_write_byte(a_register, *(data+i));
-  //   ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
-  // }
+   for (uint8_t i=0; i < len; i++) {
+     this->tas5805m_write_byte(a_register, *(data+i));
+     ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
+   }
 
-  i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
-  if (error_code != i2c::ERROR_OK) {
-    ESP_LOGE(TAG, "  Write register error %i", error_code);
-    this->i2c_error_ = (uint8_t)error_code;
-    return false;
-  }
+  // i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
+  // if (error_code != i2c::ERROR_OK) {
+  //   ESP_LOGE(TAG, "  Write register error %i", error_code);
+  //   this->i2c_error_ = (uint8_t)error_code;
+  //   return false;
+  // }
   return true;
 }
 
