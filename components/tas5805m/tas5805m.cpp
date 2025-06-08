@@ -51,10 +51,11 @@ void Tas5805mComponent::loop() {
     this->loop_counter_ = 0;
     return;
   }
-
+  #ifdef USE_NUMBER
   // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
+  #endif
   return;
 }
 
@@ -422,15 +423,6 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
 
-void Tas5805mComponent::refresh_eq_gains() {
-  // trigger refresh of EQ gains in 'loop'
-  this->running_refresh_eq_gains_ = true;
-
-  // refresh has been initiated so changes to eq gains can written now
-  this->eq_gains_refresh_initiated_ = true;
-  ESP_LOGE(TAG, "Refresh gains activated with EQ %s", this->tas5805m_state_.eq_enabled ? "Enabled" : "Disabled");
-}
-
 int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
@@ -439,6 +431,21 @@ int8_t Tas5805mComponent::eq_gain(uint8_t band) {
   return this->tas5805m_state_.eq_gain[band];
 }
 #endif
+
+void Tas5805mComponent::refresh_eq_gains() {
+  #ifdef USE_NUMBER
+  // trigger refresh of EQ gains in 'loop'
+  this->running_refresh_eq_gains_ = true;
+
+  // refresh has been initiated so changes to eq gains can written now
+  this->eq_gains_refresh_initiated_ = true;
+  ESP_LOGE(TAG, "Refresh gains activated with EQ %s", this->tas5805m_state_.eq_enabled ? "Enabled" : "Disabled");
+  #endif
+  return;
+}
+
+
+
 
 bool Tas5805mComponent::refresh_faults() {
   if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_channel_fault)) return false;
@@ -570,8 +577,9 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
     return true;
 }
 
-bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t *data, uint8_t len) {
-  //  for (uint8_t i=0; i < len; i++) {
+bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t* data, uint8_t len) {
+  //    for (uint8_t i=0; i < len; i++) {
+  //      i2c::ErrorCode error_code = this->write_register(a_register, (data+i), 1, true);
   //    this->tas5805m_write_byte(a_register, *(data+i));
   //    ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
   //  }

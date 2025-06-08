@@ -37,7 +37,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
 
   bool refresh_faults();
   bool reset_faults();
-  
+
   uint32_t number_of_clear_faults();
   uint8_t last_channel_fault();
   uint8_t last_global_fault();
@@ -118,18 +118,15 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
     #ifdef USE_NUMBER
     bool              eq_enabled{false};
     int8_t            eq_gain[TAS5805M_EQ_BANDS]{0};
-    //bool              eq_gain_set[TAS5805M_EQ_BANDS]{false};
     #endif
 
    } tas5805m_state_;
 
-   #ifdef USE_NUMBER
+
    bool running_refresh_eq_gains_{false};
    bool eq_gains_refresh_initiated_{false};
+
    uint8_t refresh_band_{0};
-
-   #endif
-
    uint8_t i2c_error_{0};
    uint8_t loop_counter_{0};
 
