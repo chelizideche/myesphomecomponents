@@ -5,10 +5,11 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
   on_boot:
-    priority: -100
+    priority: 220.0
     then:
       - lambda: id(louder_mediaplayer)->play_file(id(startup), true, false);
       - lambda: id(tas5805m_dac).refresh_eq_gains();
+
 esp32:
   board: esp32-s3-devkitc-1
   variant: ESP32S3
@@ -37,11 +38,11 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "ThIGPAL4Tde3pNvWy1tyHeitB9XlUcXn+LZ5q/N9OuY="
+    key: "xxxx"
 
 ota:
   - platform: esphome
-    password: "35925d04e9ba07c835429bb2c040be8e"
+    password: "xxxx"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -80,21 +81,24 @@ i2c:
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
-    dac_mode: BTL
-    mixer_mode: MONO
+    #dac_mode: BTL
+    mixer_mode: STEREO
     enable_pin: GPIO17
     analog_gain: -15.5db
 
+select:
+  - platform: tas5805m
+    mixer_mode:
+      name: "Select Mixer Mode"
+
 sensor:
   - platform: tas5805m
-    fault_recovery_count:
-      name: "Fault Recovery Count"
-    # last_channel_fault:
-    #   name: "Last Channel Fault"
-    # last_global_fault1:
-    #   name: "Last Global Fault 1"
-    # last_global_fault2:
-    #   name: "Last Global Fault 2"
+    clear_faults:
+      name: "Number of Clear Faults"
+    last_channel_fault:
+      name: "Last Channel Fault"
+    last_global_fault:
+      name: "Last Global Fault"
     update_interval: 30s
 
 i2s_audio:
