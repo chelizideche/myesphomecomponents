@@ -7,7 +7,7 @@ void MixerModeSelect::control(const std::string &value) {
   this->publish_state(value);
   auto index = this->index_of(value);
   if (index.has_value()) {
-    this->parent_->set_mixer_mode(index.value());
+    this->parent_->select_mixer_mode(index.value());
   }
 }
 

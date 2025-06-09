@@ -342,8 +342,11 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   return true;
 }
 
-
-
+void Tas5805mComponent::select_mixer_mode(uint8_t mode) {
+  if (!this->set_mixer_mode((MixerMode)mode)) {
+    ESP_LOGW(TAG, "Unexpected error selecting mixer mode");
+  }
+}
 
 bool Tas5805mComponent::set_eq_on() {
   #ifdef USE_TAS5805M_EQ

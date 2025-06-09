@@ -43,7 +43,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
 
-  bool set_mixer_mode(MixerMode mode);
+  void select_mixer_mode(uint8_t mode);
 
   bool refresh_faults();
   bool reset_faults();
@@ -77,6 +77,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool set_dac_mode(DacMode mode);
 
    bool get_mixer_mode(MixerMode *mode);
+   bool set_mixer_mode(MixerMode mode);
 
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
