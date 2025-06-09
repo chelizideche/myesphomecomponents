@@ -77,7 +77,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public Component, public i
    bool set_dac_mode(DacMode mode);
 
    bool get_mixer_mode(MixerMode *mode);
-   bool set_mixer_mode(MixerMode mode);
 
    bool get_digital_volume(uint8_t*  raw_volume);
    bool set_digital_volume(uint8_t new_volume);
