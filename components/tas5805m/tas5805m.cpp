@@ -36,6 +36,7 @@ void Tas5805mComponent::loop() {
 
   if (!this->running_refresh_eq_gains_) return;
 
+  #ifdef USE_TAS5805M_EQ
   // once refresh eq gains is activated wait 'DELAY_LOOPS' before execution
   // to ensure on boot sound has played and tas5805m has detected i2s clock
   if (this->loop_counter_ < DELAY_LOOPS) {
@@ -51,11 +52,12 @@ void Tas5805mComponent::loop() {
     this->loop_counter_ = 0;
     return;
   }
-  #ifdef USE_TAS5805M_EQ
+
   // re-write gains of current band and increment to next band ready for when loop next runs
   this->set_eq_gain(this->refresh_band_, this->tas5805m_state_.eq_gain[this->refresh_band_]);
   this->refresh_band_ = this->refresh_band_ + 1;
   #endif
+
   return;
 }
 
@@ -83,7 +85,9 @@ bool Tas5805mComponent::configure_registers() {
   if (!this->set_mixer_mode(this->tas5805m_state_.mixer_mode)) return false;
   if (!this->set_analog_gain(this->tas5805m_state_.analog_gain)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
+  #ifdef USE_TAS5805M_EQ
   if (!this->set_eq(false)) return false;
+  #endif
   return true;
 }
 
