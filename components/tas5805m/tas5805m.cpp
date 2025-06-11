@@ -28,7 +28,15 @@ void Tas5805mComponent::setup() {
     this->mark_failed();
   }
 }
+void Tas5805mComponent::update() {
+  // if (this->first_update_) {
+  //   this->parent_->reset_faults();
+  //   this->first_update_ = false;
+  // }
 
+  this->refresh_faults();
+
+}
 void Tas5805mComponent::loop() {
   // when tas5805m has detected i2s clock, eq gains can be written
   // do a re-write of gains for all eq bands when triggered by boolean 'run_refresh_eq_gains_'
@@ -497,6 +505,7 @@ bool Tas5805mComponent::last_over_temperature_warning_state() {
 bool Tas5805mComponent::reset_faults() {
   if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
   this->tas5805m_state_.number_of_clear_faults = 0;
+
   return true;
 }
 

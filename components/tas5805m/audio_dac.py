@@ -19,7 +19,7 @@ CONF_MIXER_MODE = "mixer_mode"
 CONF_TAS5805M_ID = "tas5805m_id"
 
 tas5805m_ns = cg.esphome_ns.namespace("tas5805m")
-Tas5805mComponent = tas5805m_ns.class_("Tas5805mComponent", AudioDac, cg.Component, i2c.I2CDevice)
+Tas5805mComponent = tas5805m_ns.class_("Tas5805mComponent", AudioDac, cg.PollingComponent, i2c.I2CDevice)
 
 DacMode = tas5805m_ns.enum("DacMode")
 
@@ -57,7 +57,7 @@ CONFIG_SCHEMA = (
             ),
         }
     )
-    .extend(cv.COMPONENT_SCHEMA)
+    .extend(cv.polling_component_schema("60s"))
     .extend(i2c.i2c_device_schema(0x2D))
 )
 
