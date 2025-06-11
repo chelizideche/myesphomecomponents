@@ -36,6 +36,7 @@ void Tas5805mComponent::update() {
   // }
 
   this->refresh_faults();
+  ESP_LOGD(TAG, "refresh faults");
 }
 
 void Tas5805mComponent::loop() {
