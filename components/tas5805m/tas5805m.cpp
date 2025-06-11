@@ -315,22 +315,22 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
     ESP_LOGE(TAG, "Error writing book and page to start setting Mixer Mode");
     return false;
   }
-  ESP_LOGE(TAG, "writing Left to Left Mixer Gain");
+
   if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_LEFT_GAIN, reinterpret_cast<uint8_t *>(&mixer_l_to_l), 4)) {
     ESP_LOGE(TAG, "Error writing Left to Left Mixer Gain");
     return false;
   }
-  ESP_LOGE(TAG, "writing Right to Right Mixer Gain");
+
   if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_RIGHT_GAIN, reinterpret_cast<uint8_t *>(&mixer_r_to_r), 4)) {
     ESP_LOGE(TAG, "Error writing Right to Right Mixer Gain");
     return false;
   }
-  ESP_LOGE(TAG, "writing Left to Right Mixer Gain");
+
   if (!this->tas5805m_write_bytes(TAS5805M_REG_LEFT_TO_RIGHT_GAIN, reinterpret_cast<uint8_t *>(&mixer_l_to_r), 4)) {
     ESP_LOGE(TAG, "Error writing Left to Right Mixer Gain");
     return false;
   }
-  ESP_LOGE(TAG, "writing Right to Left Mixer Gain");
+
   if (!this->tas5805m_write_bytes(TAS5805M_REG_RIGHT_TO_LEFT_GAIN, reinterpret_cast<uint8_t *>(&mixer_r_to_l), 4)) {
     ESP_LOGE(TAG, "Error writing Right to Left Mixer Gain");
     return false;
@@ -546,7 +546,6 @@ bool Tas5805mComponent::clear_faults() {
 //   return true;
 // }
 
-#ifdef USE_TAS5805M_EQ
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
     ESP_LOGE(TAG, "  Error writing page_zero");
@@ -562,7 +561,6 @@ bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   }
   return true;
 }
-#endif
 
 bool Tas5805mComponent::tas5805m_read_byte(uint8_t a_register, uint8_t* data) {
   i2c::ErrorCode error_code;
