@@ -28,6 +28,7 @@ void Tas5805mComponent::setup() {
     this->mark_failed();
   }
 }
+
 void Tas5805mComponent::update() {
   // if (this->first_update_) {
   //   this->parent_->reset_faults();
@@ -35,8 +36,8 @@ void Tas5805mComponent::update() {
   // }
 
   this->refresh_faults();
-
 }
+
 void Tas5805mComponent::loop() {
   // when tas5805m has detected i2s clock, eq gains can be written
   // do a re-write of gains for all eq bands when triggered by boolean 'run_refresh_eq_gains_'
