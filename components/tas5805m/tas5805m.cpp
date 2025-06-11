@@ -281,16 +281,16 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   switch (mode) {
     case STEREO:
       mixer_l_to_l = TAS5805M_MIXER_VALUE_0DB;
-      mixer_r_to_r = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_0DB;
       mixer_l_to_r = TAS5805M_MIXER_VALUE_MUTE;
-      mixer_r_to_l = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_MUTE;
       break;
 
     case STEREO_INVERSE:
       mixer_l_to_l = TAS5805M_MIXER_VALUE_MUTE;
-      mixer_r_to_r = TAS5805M_MIXER_VALUE_0DB;
+      mixer_r_to_r = TAS5805M_MIXER_VALUE_MUTE;
       mixer_l_to_r = TAS5805M_MIXER_VALUE_0DB;
-      mixer_r_to_l = TAS5805M_MIXER_VALUE_MUTE;
+      mixer_r_to_l = TAS5805M_MIXER_VALUE_0DB;
       break;
 
     case MONO:
