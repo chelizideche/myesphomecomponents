@@ -22,19 +22,19 @@ CONFIG_SCHEMA = {
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    tas5805m_config = Tas5805mComponent.config
+    #tas5805m_config = tas5805m_component.config
 
-    if tas5805m_config[CONF_DAC_MODE] == "PBTL":
+    if tas5805m_component.config.get(CONF_DAC_MODE) == "PBTL":
       raise cv.Invalid(
             f"DAC MODE set to PBTL ok"
         )
-    if tas5805m_config[CONF_DAC_MODE] != "BTL":
+    if tas5805m_component.config.get(CONF_DAC_MODE) != "BTL":
       raise cv.Invalid(
             f"DAC MODE set to BTL ok"
         )
     mixer_mode_config = config.get(CONF_MIXER_MODE)
 
-    if tas5805m_config[CONF_DAC_MODE] == CONF_PBTL:
+    if tas5805m_component.config.get(CONF_DAC_MODE) == CONF_PBTL:
         s = await select.new_select(
                 mixer_mode_config,
                 options=["MONO", "RIGHT", "LEFT"],
