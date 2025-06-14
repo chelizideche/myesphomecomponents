@@ -1,15 +1,12 @@
 import esphome.codegen as cg
 from esphome.components import select
 import esphome.config_validation as cv
-import esphome.final_validate as fv
 from esphome.const import ENTITY_CATEGORY_CONFIG
-from esphome.core import CORE
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
 from esphome.const import CONF_ID
 
 MixerModeSelect = tas5805m_ns.class_("MixerModeSelect", select.Select)
-CONF_AUDIO_DAC = "audio_dac"
 CONF_MIXER_MODE = "mixer_mode"
 CONF_DAC_MODE = "dac_mode"
 CONF_PBTL = "PBTL"
@@ -26,13 +23,9 @@ async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     tas5805m_config = tas5805m_component.config
     dac_config = tas5805m_config.get(CONF_DAC_MODE)
-    full_config = fv.full_config.get()
-
-    if full_config[CONF_AUDIO_DAC][CONF_DAC_MODE]:
-      dac_config = full_config[CONF_AUDIO_DAC][CONF_DAC_MODE]
-      raise cv.Invalid(
-                f"DAC MODE set to {dac_config} ok"
-            )
+    raise cv.Invalid(
+            f"DAC MODE set to {dac_config} ok"
+        )
     mixer_mode_config = config.get(CONF_MIXER_MODE)
 
     if dac_config == CONF_PBTL:
