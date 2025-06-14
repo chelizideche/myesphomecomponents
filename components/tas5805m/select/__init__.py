@@ -5,6 +5,7 @@ from esphome.const import ENTITY_CATEGORY_CONFIG
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 import esphome.final_validate as fv
 from esphome.const import CONF_ID
+from esphome.core.entity_helpers import inherit_property_from
 
 MixerModeSelect = tas5805m_ns.class_("MixerModeSelect", select.Select)
 CONF_AUDIO_DAC = "audio_dac"
@@ -23,12 +24,12 @@ CONFIG_SCHEMA = {
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     #tas5805m_config = tas5805m_component.config
-
-    if tas5805m_component.config.get(CONF_DAC_MODE) == "PBTL":
+    inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID)(config)
+    if config(CONF_DAC_MODE) == "PBTL":
       raise cv.Invalid(
             f"DAC MODE set to PBTL ok"
         )
-    if tas5805m_component.config.get(CONF_DAC_MODE) != "BTL":
+    if config(CONF_DAC_MODE) != "BTL":
       raise cv.Invalid(
             f"DAC MODE set to BTL ok"
         )
