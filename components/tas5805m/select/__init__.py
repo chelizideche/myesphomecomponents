@@ -29,6 +29,10 @@ async def to_code(config):
       raise cv.Invalid(
             f"DAC MODE set to PBTL ok"
         )
+    if audio_dac_conf[CONF_DAC_MODE] != CONF_PBTL:
+      raise cv.Invalid(
+            f"DAC MODE set to BTL ok"
+        )
     mixer_mode_config = config.get(CONF_MIXER_MODE)
 
     if audio_dac_conf[CONF_DAC_MODE] == CONF_PBTL:
