@@ -24,12 +24,11 @@ CONFIG_SCHEMA = {
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    mixer_mode_config = config.get(CONF_MIXER_MODE)
-    # Get ID for the output speaker and add it to the source speakrs config to easily inherit properties
-     # You can also access the referenced component's config here
-    # This is useful for generating different code based on the other component
     tas5805m_config = tas5805m_component.config
     dac_config = tas5805m_config.get(CONF_DAC_MODE)
+
+    mixer_mode_config = config.get(CONF_MIXER_MODE)
+
     if dac_config == CONF_PBTL:
         s = await select.new_select(
                 mixer_mode_config,
