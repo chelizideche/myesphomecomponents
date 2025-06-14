@@ -22,7 +22,7 @@ CONFIG_SCHEMA = {
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     tas5805m_config = Tas5805mComponent.config
-    dac_config = tas5805m_config.get(CONF_DAC_MODE)
+    dac_config = tas5805m_config[CONF_DAC_MODE]
     raise cv.Invalid(
             f"DAC MODE set to {dac_config} ok"
         )
