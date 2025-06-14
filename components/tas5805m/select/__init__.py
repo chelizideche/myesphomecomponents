@@ -48,7 +48,6 @@ def find_component_config(component_id, domain=None):
     return None
 
 async def to_code(config):
-
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     mixer_mode_config = config.get(CONF_MIXER_MODE)
     # Get ID for the output speaker and add it to the source speakrs config to easily inherit properties
