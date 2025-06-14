@@ -28,6 +28,9 @@ async def to_code(config):
     dac_config = tas5805m_config.get(CONF_DAC_MODE)
 
     mixer_mode_config = config.get(CONF_MIXER_MODE)
+    raise cv.Invalid(
+                f"DAC MODE set to {dac_config} ok"
+            )
 
     if dac_config == CONF_PBTL:
         s = await select.new_select(
