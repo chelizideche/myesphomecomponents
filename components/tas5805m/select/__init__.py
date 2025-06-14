@@ -23,7 +23,7 @@ CONFIG_SCHEMA = {
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID)
+    inherit_property_from(CONF_DAC_MODE, config[CONF_TAS5805M_ID])
 
     mixer_mode_config = config.get(CONF_MIXER_MODE)
     if config[CONF_DAC_MODE] == CONF_BTL:
