@@ -21,7 +21,6 @@ CONFIG_SCHEMA = (
           entity_category=ENTITY_CATEGORY_CONFIG,
         ),
      },
-     extra=cv.ALLOW_EXTRA,
     ),
     inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
 )
