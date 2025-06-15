@@ -6,9 +6,9 @@
 namespace esphome {
 namespace tas5805m {
 
-class MixerModeSelect : public select::Select, public Parented<Tas5805mComponent> {
+class MixerModePreset : public select::Select, public Parented<Tas5805mComponent> {
  public:
-  MixerModeSelect() = default;
+  MixerModePreset() = default;
 
  protected:
   void control(const std::string &value) override;
