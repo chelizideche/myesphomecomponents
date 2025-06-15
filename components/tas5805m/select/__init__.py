@@ -7,22 +7,22 @@ from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
 MixerPresetSelect = tas5805m_ns.class_("MixerPresetSelect", select.Select, cg.Component)
 
-CONF_MIXER_PRESET = "mixer_preset"
+# CONF_MIXER_PRESET = "mixer_preset"
 
-CONFIG_SCHEMA = (
-    cv.Schema(
-      {
-            cv.GenerateID(): cv.declare_id(MixerPresetSelect),
-            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-            cv.Required(CONF_MIXER_PRESET): select.select_schema(
-                entity_category=ENTITY_CATEGORY_CONFIG,
-            )
-            .extend(cv.COMPONENT_SCHEMA),
-      }
-    )
-)
+# CONFIG_SCHEMA = (
+#     cv.Schema(
+#       {
+#             cv.GenerateID(): cv.declare_id(MixerPresetSelect),
+#             cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+#             cv.Required(CONF_MIXER_PRESET): select.select_schema(
+#                 entity_category=ENTITY_CATEGORY_CONFIG,
+#             )
+#             .extend(cv.COMPONENT_SCHEMA),
+#       }
+#     )
+# )
 CONFIG_SCHEMA = cv.All(
-    select.select_schema( MixerPresetSelect)
+    select.select_schema(MixerPresetSelect)
     .extend(
         {
             cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
