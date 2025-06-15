@@ -12,7 +12,45 @@ CONF_MIXER_MODE = "mixer_mode"
 CONF_DAC_MODE = "dac_mode"
 CONF_PBTL = "PBTL"
 
-CONFIG_SCHEMA = (
+# CONFIG_SCHEMA = (
+#     sensor.sensor_schema(IntegrationSensor)
+#     .extend(
+#         {
+#             cv.Required(CONF_SENSOR): cv.use_id(sensor.Sensor),
+#             cv.Required(CONF_TIME_UNIT): cv.enum(INTEGRATION_TIMES, lower=True),
+#             cv.Optional(CONF_INTEGRATION_METHOD, default="trapezoid"): cv.enum(
+#                 INTEGRATION_METHODS, lower=True
+#             ),
+#             cv.Optional(CONF_RESTORE, default=False): cv.boolean,
+#             cv.Optional("min_save_interval"): cv.invalid(
+#                 "min_save_interval was removed in 2022.8.0. Please use the `preferences` -> `flash_write_interval` to adjust."
+#             ),
+#         }
+#     )
+#     .extend(cv.COMPONENT_SCHEMA)
+# )
+
+
+# FINAL_VALIDATE_SCHEMA = cv.All(
+#     cv.Schema(
+#         {
+#             cv.Required(CONF_ID): cv.use_id(IntegrationSensor),
+#             cv.Optional(CONF_ICON): cv.icon,
+#             cv.Optional(CONF_UNIT_OF_MEASUREMENT): sensor.validate_unit_of_measurement,
+#             cv.Optional(CONF_ACCURACY_DECIMALS): sensor.validate_accuracy_decimals,
+#             cv.Required(CONF_SENSOR): cv.use_id(sensor.Sensor),
+#         },
+#         extra=cv.ALLOW_EXTRA,
+#     ),
+#     inherit_property_from(CONF_ICON, CONF_SENSOR),
+#     inherit_property_from(
+#         CONF_UNIT_OF_MEASUREMENT, CONF_SENSOR, transform=inherit_unit_of_measurement
+#     ),
+#     inherit_property_from(
+#         CONF_ACCURACY_DECIMALS, CONF_SENSOR, transform=inherit_accuracy_decimals
+#     ),
+# )
+FINAL_VALIDATE_SCHEMA = cv.All(
    cv.Schema(
      {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
