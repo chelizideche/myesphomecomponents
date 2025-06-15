@@ -45,16 +45,16 @@ async def to_code(config):
     # raise cv.Invalid(
     #         f"DAC MODE set to {config.get(CONF_DAC_MODE)} ok"
     #    )
-    mixer_mode_config = config.get(CONF_MIXER_MODE)
+    #mixer_mode_config = config.get(CONF_MIXER_MODE)
 
     if config.get(CONF_DAC_MODE) == "PBTL":
         s = await select.new_select(
-                mixer_mode_config,
+                #mixer_mode_config,
                 options=["MONO", "RIGHT", "LEFT"],
         )
     else:
         s = await select.new_select(
-                mixer_mode_config,
+                #mixer_mode_config,
                 options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
         )
     await cg.register_parented(s, config[CONF_TAS5805M_ID])
