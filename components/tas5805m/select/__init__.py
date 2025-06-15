@@ -53,7 +53,7 @@ CONF_PBTL = "PBTL"
 CONFIG_SCHEMA = cv.All(
    cv.Schema(
      {
-        cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        #cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
         cv.Required(CONF_MIXER_MODE): select.select_schema(
           MixerModeSelect,
           entity_category=ENTITY_CATEGORY_CONFIG,
@@ -64,6 +64,9 @@ CONFIG_SCHEMA = cv.All(
 )
 FINAL_VALIDATE_SCHEMA = cv.All(
      cv.Schema(
+        {
+           cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        }
      ),
      inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
 )
