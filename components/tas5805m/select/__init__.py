@@ -18,14 +18,12 @@ CONFIG_SCHEMA = {
         MixerModeSelect,
         entity_category=ENTITY_CATEGORY_CONFIG,
     ),
-    cv.Optional(CONF_DAC_MODE): cv.enum(
-                        DAC_MODES
-    ),
+    inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
 }
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID)
+    #inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID)config
 
     if config.get(CONF_DAC_MODE) == "PBTL":
       raise cv.Invalid(
