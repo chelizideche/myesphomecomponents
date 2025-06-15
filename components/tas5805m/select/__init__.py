@@ -21,23 +21,22 @@ CONFIG_SCHEMA = (
       }
     )
 )
-# CONFIG_SCHEMA = cv.All(
-#     select.select_schema( MixerPresetSelect)
-#     .extend(
-#         {
-#             cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-#         }
-#     )
-#     .extend(cv.COMPONENT_SCHEMA),
-# )
+CONFIG_SCHEMA = cv.All(
+    select.select_schema( MixerPresetSelect)
+    .extend(
+        {
+            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA),
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await cg.register_parented(var, tas5805m_component)
-    await select.new_select(
-            config,
+    await select.register_select(var, config,
             options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
     )
 
