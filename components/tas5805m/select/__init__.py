@@ -15,7 +15,6 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(MixerPresetSelect),
             cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
             cv.Required(CONF_MIXER_PRESET): select.select_schema(
-                MixerPresetSelect,
                 entity_category=ENTITY_CATEGORY_CONFIG,
             )
             .extend(cv.COMPONENT_SCHEMA),
