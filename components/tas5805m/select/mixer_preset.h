@@ -9,7 +9,7 @@ namespace tas5805m {
 
 class MixerModePreset : public select::Select, public Component, public Parented<Tas5805mComponent> {
  public:
-  MixerModePreset() = default;
+  //MixerModePreset() = default;
 
  protected:
   void control(const std::string &value) override;
