@@ -47,8 +47,18 @@ async def to_code(config):
     #         f"Not caught - value is {config.get(CONF_DAC_MODE)} ok"
     #    )
     #mixer_mode_config = config.get(CONF_MIXER_MODE)
-
-    if config.get(CONF_DAC_MODE) == "PBTL":
+    if config[CONF_DAC_MODE] == CONF_PBTL:
+      raise cv.Invalid(
+            f"DAC MODE set to PBTL ok - value is {config[CONF_DAC_MODE]}"
+        )
+    else:
+      raise cv.Invalid(
+            f"DAC MODE set to BTL ok - value is {config[CONF_DAC_MODE]}"
+      )
+    # raise cv.Invalid(
+    #         f"Not caught - value is {config.get(CONF_DAC_MODE)} ok"
+    #    )
+    if config[CONF_DAC_MODE] == CONF_PBTL:
         s = await select.new_select(
                 #mixer_mode_config,
                 config,
