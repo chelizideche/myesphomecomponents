@@ -2,7 +2,7 @@ import esphome.codegen as cg
 from esphome.components import select
 import esphome.config_validation as cv
 from esphome.const import CONF_ID, ENTITY_CATEGORY_CONFIG
-from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
+from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns, DAC_MODES
 import esphome.final_validate as fv
 from esphome.core.entity_helpers import inherit_property_from
 
@@ -17,6 +17,9 @@ CONFIG_SCHEMA = {
     cv.Required(CONF_MIXER_MODE): select.select_schema(
         MixerModeSelect,
         entity_category=ENTITY_CATEGORY_CONFIG,
+    ),
+    cv.Optional(CONF_DAC_MODE): cv.enum(
+                        DAC_MODES
     ),
 }
 
