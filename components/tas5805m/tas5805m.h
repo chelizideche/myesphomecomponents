@@ -30,9 +30,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
   void config_dac_mode(DacMode dac_mode) {this->tas5805m_state_.dac_mode = dac_mode; }
   void config_mixer_mode(MixerMode mixer_mode) {this->tas5805m_state_.mixer_mode = mixer_mode; }
 
-  // #ifdef USE_SELECT
-  // void set_mixer_mode_select(select::Select *select) { this->mixer_mode_select_ = select; }
-  // #endif
+  #ifdef USE_SELECT
+  void set_mixer_mode_select(select::Select *select) { this->mixer_mode_select_ = select; }
+  #endif
 
   float volume() override;
   bool set_volume(float value) override;
@@ -135,9 +135,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
 
    } tas5805m_state_;
 
-  //  #ifdef USE_SELECT
-  //  select::Select* mixer_mode_select_{nullptr};
-  //  #endif
+   #ifdef USE_SELECT
+   select::Select* mixer_mode_select_{nullptr};
+   #endif
 
    bool running_refresh_eq_gains_{false};
    bool eq_gains_refresh_initiated_{false};
