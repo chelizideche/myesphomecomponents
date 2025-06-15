@@ -13,7 +13,6 @@ CONF_DAC_MODE = "dac_mode"
 CONF_PBTL = "PBTL"
 
 CONFIG_SCHEMA = {
-    cv.GenerateID(): cv.declare_id(MixerModeSelect),
     cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
     cv.Required(CONF_MIXER_MODE): select.select_schema(
         MixerModeSelect,
@@ -23,10 +22,6 @@ CONFIG_SCHEMA = {
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
-    await cg.register_parented(var, tas5805m_component)
-
     inherit_property_from(config[CONF_DAC_MODE], config[CONF_TAS5805M_ID], CONF_DAC_MODE)
 
     if config.get(CONF_DAC_MODE) == "PBTL":
@@ -39,7 +34,7 @@ async def to_code(config):
         )
     mixer_mode_config = config.get(CONF_MIXER_MODE)
 
-    if tas5805m_component.config.get(CONF_DAC_MODE) == CONF_PBTL:
+    if config.get(CONF_DAC_MODE) == CONF_PBTL:
         s = await select.new_select(
                 mixer_mode_config,
                 options=["MONO", "RIGHT", "LEFT"],
@@ -49,5 +44,5 @@ async def to_code(config):
                 mixer_mode_config,
                 options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
         )
-    #await cg.register_parented(s, config[CONF_TAS5805M_ID])
+    await cg.register_parented(s, config[CONF_TAS5805M_ID])
     cg.add(tas5805m_component.set_mixer_mode_select(s))
