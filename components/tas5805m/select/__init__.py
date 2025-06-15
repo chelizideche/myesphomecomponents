@@ -5,7 +5,7 @@ from esphome.const import ENTITY_CATEGORY_CONFIG
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
-MixerPresetSelect = tas5805m_ns.class_("MixerPresetSelect", select.Select)
+MixerPresetSelect = tas5805m_ns.class_("MixerPresetSelect", select.Select, cg.Component)
 
 CONF_MIXER_PRESET = "mixer_preset"
 
