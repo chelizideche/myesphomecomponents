@@ -24,11 +24,11 @@ async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
     inherit_property_from(config, config[CONF_TAS5805M_ID], CONF_DAC_MODE)
 
-    if config.get(CONF_DAC_MODE) == "PBTL":
+    if config[CONF_TAS5805M_ID].get(CONF_DAC_MODE) == "PBTL":
       raise cv.Invalid(
             f"DAC MODE set to PBTL ok"
         )
-    if config.get(CONF_DAC_MODE) == "BTL":
+    if config[CONF_TAS5805M_ID].get(CONF_DAC_MODE) == "BTL":
       raise cv.Invalid(
             f"DAC MODE set to BTL ok"
         )
