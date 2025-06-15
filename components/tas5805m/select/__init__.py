@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import select
 import esphome.config_validation as cv
-from esphome.const import ENTITY_CATEGORY_CONFIG
+from esphome.const import CONF_ID, ENTITY_CATEGORY_CONFIG
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
@@ -9,13 +9,17 @@ MixerModeSelect = tas5805m_ns.class_("MixerModeSelect", select.Select)
 
 CONF_MIXER_MODE = "mixer_mode"
 
-CONFIG_SCHEMA = {
-    cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-    cv.Required(CONF_MIXER_MODE): select.select_schema(
-        MixerModeSelect,
-        entity_category=ENTITY_CATEGORY_CONFIG,
-    ),
-}
+CONFIG_SCHEMA = (
+    cv.Schema(
+      {
+            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+            cv.Required(CONF_MIXER_MODE): select.select_schema(
+                MixerModeSelect,
+                entity_category=ENTITY_CATEGORY_CONFIG,
+            ),
+      }
+    )
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
@@ -24,5 +28,5 @@ async def to_code(config):
             mixer_mode_config,
             options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
     )
-    await cg.register_parented(s, config[CONF_TAS5805M_ID])
-    cg.add(tas5805m_component.set_mixer_mode_select(s))
+    await cg.register_component(s, mixer_mode_config)
+    await cg.register_parented(s, tas5805m_component)
