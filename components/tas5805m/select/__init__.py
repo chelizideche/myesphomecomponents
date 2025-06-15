@@ -3,7 +3,7 @@ from esphome.components import select
 import esphome.config_validation as cv
 from esphome.const import ENTITY_CATEGORY_CONFIG
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
-
+import esphome.final_validate as fv
 from esphome.core.entity_helpers import inherit_property_from
 
 MixerModeSelect = tas5805m_ns.class_("MixerModeSelect", select.Select)
