@@ -50,24 +50,19 @@ CONF_PBTL = "PBTL"
 #         CONF_ACCURACY_DECIMALS, CONF_SENSOR, transform=inherit_accuracy_decimals
 #     ),
 # )
-CONFIG_SCHEMA = cv.All(
+CONFIG_SCHEMA = (
    cv.Schema(
      {
-        #cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
         cv.Required(CONF_MIXER_MODE): select.select_schema(
           MixerModeSelect,
           entity_category=ENTITY_CATEGORY_CONFIG,
         ),
      },
-    ),
-    #inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
+    )
 )
+
 FINAL_VALIDATE_SCHEMA = cv.All(
-     cv.Schema(
-        {
-           cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-        }
-     ),
      inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
 )
 
