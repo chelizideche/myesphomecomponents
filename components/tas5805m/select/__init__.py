@@ -10,13 +10,22 @@ CONF_AUDIO_DAC = "audio_dac"
 CONF_MIXER_MODE = "mixer_mode"
 CONF_DAC_MODE = "dac_mode"
 
-CONFIG_SCHEMA = {
-    cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-    cv.Required(CONF_MIXER_MODE): select.select_schema(
-        MixerModeSelect,
-        entity_category=ENTITY_CATEGORY_CONFIG,
-    ),
-}
+CONFIG_SCHEMA = (
+    select.select_schema(MixerModeSelect,
+             entity_category=ENTITY_CATEGORY_CONFIG)
+    .extend(
+        {
+            cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        }
+    )
+)
+# CONFIG_SCHEMA = {
+#     cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+#     cv.Required(CONF_MIXER_MODE): select.select_schema(
+#         MixerModeSelect,
+#         entity_category=ENTITY_CATEGORY_CONFIG,
+#     ),
+# }
 
 FINAL_VALIDATE_SCHEMA = cv.All(
      inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
