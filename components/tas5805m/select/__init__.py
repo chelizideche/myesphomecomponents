@@ -50,7 +50,7 @@ CONF_PBTL = "PBTL"
 #         CONF_ACCURACY_DECIMALS, CONF_SENSOR, transform=inherit_accuracy_decimals
 #     ),
 # )
-FINAL_VALIDATE_SCHEMA = cv.All(
+CONFIG_SCHEMA = cv.All(
    cv.Schema(
      {
         cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
