@@ -34,17 +34,17 @@ FINAL_VALIDATE_SCHEMA = cv.All(
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
 
-    if config.get(CONF_DAC_MODE) == "PBTL":
-      raise cv.Invalid(
-            f"DAC MODE set to PBTL ok"
-        )
-    if config.get(CONF_DAC_MODE) == "BTL":
-      raise cv.Invalid(
-            f"DAC MODE set to BTL ok"
-      )
-    raise cv.Invalid(
-            f"DAC MODE set to {config.get(CONF_DAC_MODE)} ok"
-        )
+    # if config.get(CONF_DAC_MODE) == "PBTL":
+    #   raise cv.Invalid(
+    #         f"DAC MODE set to PBTL ok"
+    #     )
+    # if config.get(CONF_DAC_MODE) == "BTL":
+    #   raise cv.Invalid(
+    #         f"DAC MODE set to BTL ok"
+    #   )
+    # raise cv.Invalid(
+    #         f"DAC MODE set to {config.get(CONF_DAC_MODE)} ok"
+    #    )
     mixer_mode_config = config.get(CONF_MIXER_MODE)
 
     if config.get(CONF_DAC_MODE) == "PBTL":
