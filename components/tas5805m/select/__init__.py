@@ -65,8 +65,8 @@ async def to_code(config):
     #             options=["MONO", "RIGHT", "LEFT"],
     #     )
     # else:
+
     s = await select.new_select(
-            #mixer_mode_config,
             config,
             options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
     )
