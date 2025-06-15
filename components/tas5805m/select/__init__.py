@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import select
 import esphome.config_validation as cv
-from esphome.const import ENTITY_CATEGORY_CONFIG
+from esphome.const import CONF_ID, ENTITY_CATEGORY_CONFIG
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 import esphome.final_validate as fv
 from esphome.core.entity_helpers import inherit_property_from
@@ -13,6 +13,7 @@ CONF_DAC_MODE = "dac_mode"
 CONF_PBTL = "PBTL"
 
 CONFIG_SCHEMA = {
+    cv.GenerateID(): cv.declare_id(MixerModeSelect),
     cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
     cv.Required(CONF_MIXER_MODE): select.select_schema(
         MixerModeSelect,
@@ -22,13 +23,17 @@ CONFIG_SCHEMA = {
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
-    inherit_property_from(config, config[CONF_TAS5805M_ID], CONF_DAC_MODE)
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+    await cg.register_parented(var, tas5805m_component)
 
-    if config[CONF_TAS5805M_ID].get(CONF_DAC_MODE) == "PBTL":
+    inherit_property_from(config[CONF_DAC_MODE], config[CONF_TAS5805M_ID], CONF_DAC_MODE)
+
+    if config.get(CONF_DAC_MODE) == "PBTL":
       raise cv.Invalid(
             f"DAC MODE set to PBTL ok"
         )
-    if config[CONF_TAS5805M_ID].get(CONF_DAC_MODE) == "BTL":
+    if config.get(CONF_DAC_MODE) == "BTL":
       raise cv.Invalid(
             f"DAC MODE set to BTL ok"
         )
@@ -44,5 +49,5 @@ async def to_code(config):
                 mixer_mode_config,
                 options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
         )
-    await cg.register_parented(s, config[CONF_TAS5805M_ID])
+    #await cg.register_parented(s, config[CONF_TAS5805M_ID])
     cg.add(tas5805m_component.set_mixer_mode_select(s))
