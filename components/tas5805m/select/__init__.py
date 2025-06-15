@@ -63,7 +63,7 @@ CONFIG_SCHEMA = (
 )
 
 FINAL_VALIDATE_SCHEMA = cv.All(
-     inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
+     inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID)config[CONF_TAS5805M_ID],
 )
 
 async def to_code(config):
