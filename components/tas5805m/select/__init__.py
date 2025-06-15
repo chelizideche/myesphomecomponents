@@ -12,14 +12,19 @@ CONF_MIXER_MODE = "mixer_mode"
 CONF_DAC_MODE = "dac_mode"
 CONF_PBTL = "PBTL"
 
-CONFIG_SCHEMA = {
-    cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
-    cv.Required(CONF_MIXER_MODE): select.select_schema(
-        MixerModeSelect,
-        entity_category=ENTITY_CATEGORY_CONFIG,
+CONFIG_SCHEMA = (
+   cv.Schema(
+     {
+        cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
+        cv.Required(CONF_MIXER_MODE): select.select_schema(
+          MixerModeSelect,
+          entity_category=ENTITY_CATEGORY_CONFIG,
+        ),
+     },
+     extra=cv.ALLOW_EXTRA,
     ),
     inherit_property_from(CONF_DAC_MODE, CONF_TAS5805M_ID),
-}
+)
 
 async def to_code(config):
     tas5805m_component = await cg.get_variable(config[CONF_TAS5805M_ID])
