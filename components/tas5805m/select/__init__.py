@@ -16,7 +16,8 @@ CONFIG_SCHEMA = (
             cv.Required(CONF_MIXER_MODE): select.select_schema(
                 MixerPresetSelect,
                 entity_category=ENTITY_CATEGORY_CONFIG,
-            ),
+            )
+            .extend(cv.COMPONENT_SCHEMA),
       }
     )
 )
