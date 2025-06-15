@@ -22,7 +22,7 @@ async def to_code(config):
     mixer_mode_config = config.get(CONF_MIXER_MODE)
     s = await select.new_select(
             mixer_mode_config,
-            options=["STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"],
+            options=["STEREO", "LEFT"],
     )
     await cg.register_parented(s, config[CONF_TAS5805M_ID])
     cg.add(tas5805m_component.set_mixer_mode_select(s))
