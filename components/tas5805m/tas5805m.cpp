@@ -33,9 +33,10 @@ void Tas5805mComponent::update() {
   if (this->first_fault_update_) {
     this->reset_faults();
     this->first_fault_update_ = false;
-  } else {
-    if (this->have_fault_) this->clear_faults();
+    return;
   }
+
+  if (this->have_fault_) this->clear_faults();
 
   if (!this->update_faults()) {
     ESP_LOGD(TAG, "Error updating fault status");
