@@ -18,7 +18,7 @@ CONF_PVDD_UNDER_VOLTAGE = "pcdd_under_voltage"
 CONF_OVER_TEMP_SHUTDOWN = "over_temp_shutdown"
 CONF_OVER_TEMP_WARNING = "over_temp_warning"
 
-from audio_dac import CONF_TAS5805M_ID, Tas5805mComponent
+from .audio_dac import CONF_TAS5805M_ID, Tas5805mComponent
 
 #DEPENDENCIES = ["tas5805m"]
 
