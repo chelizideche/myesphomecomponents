@@ -1,7 +1,7 @@
 esphome:
   name: louder-s3
   friendly_name: Louder-S3
-  min_version: 2025.5.0
+  min_version: 2025.6.0
   platformio_options:
     board_build.flash_mode: dio
   on_boot:
@@ -64,11 +64,7 @@ psram:
   speed: 80MHz
 
 external_components:
-  - source: github://pr#8898
-    components: [ speaker, speaker/media_player ]
-    refresh: 0s
-
-  - source: github://mrtoy-me/esphome-components-test@eq_dev_plus_fault
+  - source: github://mrtoy-me/esphome-components-test@eq_dev_plus_fault_in_audiodac
     components: [ tas5805m ]
     refresh: 0s
 
@@ -81,25 +77,44 @@ i2c:
 audio_dac:
   - platform: tas5805m
     id: tas5805m_dac
-    #dac_mode: BTL
+    dac_mode: BTL
     mixer_mode: STEREO
     enable_pin: GPIO17
     analog_gain: -15.5db
-
-select:
-  - platform: tas5805m
-    mixer_mode:
-      name: "Select Mixer Mode"
+    update_interval: 10s
 
 sensor:
   - platform: tas5805m
     clear_faults:
       name: "Number of Clear Faults"
-    last_channel_fault:
-      name: "Last Channel Fault"
-    last_global_fault:
-      name: "Last Global Fault"
-    update_interval: 30s
+    update_interval: 60s
+
+binary_sensor:
+  - platform: tas5805m
+    have_fault:
+      name: Fault
+    left_channel_dc_fault:
+      name: Left Channel DC Fault
+    right_channel_dc_fault:
+      name: Right Channel DC Fault
+    left_channel_over_current:
+      name: Left Channel Over Current
+    right_channel_over_current:
+      name: Right Channel Over Current
+    otp_crc_check:
+      name: CRC Check Fault
+    bq_write_failed:
+      name: BQ Write Failure
+    clock fault:
+      name: I2S Clock Fault
+    pcdd_over_voltage:
+      name: PCDD Over Voltage
+    pcdd_under_voltage:
+      name: PCDD Under Voltage
+    over_temp_shutdown:
+      name: Over Temperature Shutdown Fault
+    over_temp_warning:
+      name: Over Temperature Warning
 
 i2s_audio:
   i2s_lrclk_pin: GPIO15
