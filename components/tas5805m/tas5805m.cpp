@@ -35,7 +35,7 @@ void Tas5805mComponent::update() {
   //   this->first_fault_update_ = false;
   // } else {
     if (this->have_fault_) this->clear_faults();
-  /}
+  //}
 
   if (!this->update_faults()) {
     ESP_LOGD(TAG, "Error updating fault status");
