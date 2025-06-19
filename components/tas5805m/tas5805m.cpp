@@ -54,7 +54,7 @@ void Tas5805mComponent::update() {
     this->have_fault_binary_sensor_->publish_state(this->have_fault_);
   }
 
-  if (this->right_channel_over_current_fault_fault_binary_sensor_ != nullptr) {
+  if (this->right_channel_over_current_fault_binary_sensor_ != nullptr) {
     this->right_channel_over_current_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 0));
   }
 
@@ -73,14 +73,14 @@ void Tas5805mComponent::update() {
     this->pvdd_under_voltage_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_global_fault & (1 << 0));
   }
   if (this->pvdd_over_voltage_fault_binary_sensor_ != nullptr) {
-    this->pvdd_over_voltage_fault_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
+    this->pvdd_over_voltage_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
   }
 
   if (this->clock_fault_binary_sensor_ != nullptr) {
     this->clock_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 2));
   }
 
-  if (this->bq_write_failed_binary_sensor_ != nullptr) {
+  if (this->bq_write_failed_fault_binary_sensor_ != nullptr) {
     this->bq_write_failed_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 6));
   }
 
