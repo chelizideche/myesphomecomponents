@@ -10,8 +10,8 @@
 #include "tas5805m_eq.h"
 #endif
 
-#ifdef USE_SELECT
-#include "esphome/components/select/select.h"
+#ifdef USE_BINARY_SENSOR
+#include "esphome/components/binary_sensor/binary_sensor.h"
 #endif
 
 namespace esphome {
@@ -30,8 +30,21 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
   void config_dac_mode(DacMode dac_mode) {this->tas5805m_state_.dac_mode = dac_mode; }
   void config_mixer_mode(MixerMode mixer_mode) {this->tas5805m_state_.mixer_mode = mixer_mode; }
 
-  #ifdef USE_SELECT
-  void set_mixer_mode_select(select::Select *select) { this->mixer_mode_select_ = select; }
+  #ifdef USE_BINARY_SENSOR
+  SUB_BINARY_SENSOR(have_fault)
+  SUB_BINARY_SENSOR(left_channel_dc_fault)
+  SUB_BINARY_SENSOR(right_channel_dc_fault)
+  SUB_BINARY_SENSOR(left_channel_over_current_fault)
+  SUB_BINARY_SENSOR(right_channel_over_current_fault)
+
+  SUB_BINARY_SENSOR(otp_crc_check_error)
+  SUB_BINARY_SENSOR(bq_write_failed_fault)
+  SUB_BINARY_SENSOR(clock_fault)
+  SUB_BINARY_SENSOR(pvdd_over_voltage_fault)
+  SUB_BINARY_SENSOR(pvdd_under_voltage_fault)
+
+  SUB_BINARY_SENSOR(over_temperature_shutdown_fault)
+  SUB_BINARY_SENSOR(over_temperature_warning)
   #endif
 
   float volume() override;
@@ -46,14 +59,9 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
 
   void select_mixer_mode(uint8_t mode);
 
-  bool refresh_faults();
-  bool reset_faults();
-
   uint32_t number_of_clear_faults();
   uint8_t last_channel_fault();
   uint8_t last_global_fault();
-  bool last_over_temperature_fault_state();
-  bool last_over_temperature_warning_state();
 
   bool set_eq_on();
   bool set_eq_off();
@@ -86,7 +94,10 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
    bool get_state(ControlState* state);
    bool set_state(ControlState state);
 
-   bool clear_faults();
+   bool reset_faults();
+   bool clear_faults()
+   bool update_faults();
+   bool have_fault_;
 
    #ifdef USE_TAS5805M_EQ
    bool get_eq(bool* enabled);

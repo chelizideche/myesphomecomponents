@@ -35,7 +35,56 @@ void Tas5805mComponent::update() {
   //   this->first_update_ = false;
   // }
 
-  this->refresh_faults();
+  if (this->have_fault_) this->clear_faults();
+
+  if (!this->update_faults()) {
+    ESP_LOGD(TAG, "Error updating fault status");
+    this->have_fault_ = false;
+    return;
+  }
+
+  this->have_fault_ = (this->tas5805m_state_.last_channel_fault || this->tas5805m_state_.last_global_fault ||
+                       this->tas5805m_state_.last_over_temperature_fault || this->tas5805m_state_.last_over_temperature_warning );
+
+  if (this->have_fault_) {
+    ESP_LOGD(TAG, "Tas5805m faults detected: faults will be cleared next update interval");
+  }
+
+  if (this->have_fault_fault_binary_sensor_ != nullptr) {
+    this->have_fault_binary_sensor_->publish_state(this->have_fault_);
+
+  if (this->right_channel_over_current_fault_fault_binary_sensor_ != nullptr) {
+    this->right_channel_over_current_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 0));
+
+  if (this->left_channel_over_current_fault_binary_sensor_ != nullptr) {
+    this->left_channel_over_current_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
+
+  if (this->right_channel_dc_fault_binary_sensor_ != nullptr) {
+    this->right_channel_dc_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 2));
+
+  if (this->left_channel_dc_fault_binary_sensor_ != nullptr) {
+    this->left_channel_dc_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 3))
+
+  if (this->pvdd_under_voltage_fault_binary_sensor_ != nullptr) {
+    this->pvdd_under_voltage_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_global_fault & (1 << 0));
+
+  if (this->pvdd_over_voltage_fault_binary_sensor_ != nullptr) {
+    this->pvdd_over_voltage_fault_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
+
+  if (this->clock_fault_binary_sensor_ != nullptr) {
+    this->clock_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 2));
+
+  if (this->bq_write_failed_binary_sensor_ != nullptr) {
+    this->bq_write_failed_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 6));
+
+  if (this->otp_crc_check_error_binary_sensor_ != nullptr) {
+    this->otp_crc_check_error_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 7));
+
+  if (this->over_temperature_shutdown_fault_binary_sensor_ != nullptr) {
+    this->over_temperature_shutdown_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_over_temperature_fault);
+
+  if (this->over_temperature_warning_binary_sensor_ != nullptr) {
+    this->over_temperature_warning_binary_sensor_->publish_state(this->tas5805m_state_.last_over_temperature_warning);
 }
 
 void Tas5805mComponent::loop() {
@@ -119,6 +168,9 @@ void Tas5805mComponent::dump_config() {
       LOG_I2C_DEVICE(this);
       break;
   }
+  #ifdef USE_BINARY_SENSOR
+  LOG_BINARY_SENSOR("  ", "Left Channel DC Fault Binary Sensor", this->left_channel_dc_fault_binary_sensor_);
+  #endif
 }
 
 bool Tas5805mComponent::set_volume(float volume) {
@@ -469,17 +521,24 @@ void Tas5805mComponent::refresh_eq_gains() {
 //}
 
 
+bool Tas5805mComponent::reset_faults() {
+  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
+  this->tas5805m_state_.number_of_clear_faults = 0;
 
-bool Tas5805mComponent::refresh_faults() {
+  return true;
+}
+
+bool Tas5805mComponent::clear_faults() {
+  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
+  this->tas5805m_state_.number_of_clear_faults++;
+  return true;
+}
+
+bool Tas5805mComponent::update_faults() {
   if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_channel_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_over_temperature_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_OT_WARNING, &this->tas5805m_state_.last_over_temperature_warning)) return false;
-  if (this->tas5805m_state_.last_channel_fault || this->tas5805m_state_.last_global_fault ||
-      this->tas5805m_state_.last_over_temperature_fault || this->tas5805m_state_.last_over_temperature_warning ) {
-        this->clear_faults();
-        ESP_LOGD(TAG, "Tas5805m faults detected: now clearing faults");
-      }
   return true;
 }
 
@@ -494,28 +553,6 @@ uint8_t Tas5805mComponent::last_channel_fault() {
 uint8_t Tas5805mComponent::last_global_fault() {
   return this->tas5805m_state_.last_global_fault;
 }
-
-bool Tas5805mComponent::last_over_temperature_fault_state() {
-  return (this->tas5805m_state_.last_over_temperature_fault != 0);
-}
-
-bool Tas5805mComponent::last_over_temperature_warning_state() {
-  return (this->tas5805m_state_.last_over_temperature_warning != 0);
-}
-
-bool Tas5805mComponent::reset_faults() {
-  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
-  this->tas5805m_state_.number_of_clear_faults = 0;
-
-  return true;
-}
-
-bool Tas5805mComponent::clear_faults() {
-  if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
-  this->tas5805m_state_.number_of_clear_faults++;
-  return true;
-}
-
 
 
 // bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
