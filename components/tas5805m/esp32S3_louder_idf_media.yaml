@@ -92,7 +92,7 @@ sensor:
 binary_sensor:
   - platform: tas5805m
     have_fault:
-      name: Fault
+      name: Any Faults
     left_channel_dc_fault:
       name: Left Channel DC Fault
     right_channel_dc_fault:
@@ -128,7 +128,6 @@ speaker:
     audio_dac: tas5805m_dac
     channel: stereo
     sample_rate: 48000
-    #bits_per_sample: 32bit
     timeout: never
 
   - platform: mixer
