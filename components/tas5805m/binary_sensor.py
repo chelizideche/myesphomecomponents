@@ -20,7 +20,7 @@ CONF_OVER_TEMP_WARNING = "over_temp_warning"
 
 from audio_dac import CONF_TAS5805M_ID, Tas5805mComponent
 
-DEPENDENCIES = ["tas5805"]
+DEPENDENCIES = ["tas5805m"]
 
 CONFIG_SCHEMA = {
     cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
