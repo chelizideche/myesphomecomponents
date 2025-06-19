@@ -97,8 +97,8 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
    bool reset_faults();
    bool clear_faults();
    bool update_faults();
-   bool update_count_{0};
    bool have_fault_{false};
+   uint8_t update_count_{0};
 
    #ifdef USE_TAS5805M_EQ
    bool get_eq(bool* enabled);
