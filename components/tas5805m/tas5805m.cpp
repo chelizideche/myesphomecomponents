@@ -13,6 +13,7 @@ static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
 static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // milliseconds
 static const uint8_t DELAY_LOOPS             = 30;    // number of loop iterations about equal 500ms
+static const uint8_t INITIAL_UPDATES_TO_SKIP = 5;     // number of updates to initially skip so i2s stabilises
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -30,9 +31,14 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::update() {
-  if (this->first_fault_update_) {
+  if (this->update_count_ < INITIAL_UPDATES_TO_SKIP) {
+    this->update_count_++;
+    return;
+  }
+
+  if (this->update_count_ == INITIAL_UPDATES_TO_SKIP) {
+    this->update_count_++;
     this->reset_faults();
-    this->first_fault_update_ = false;
     return;
   }
 
