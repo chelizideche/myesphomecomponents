@@ -50,41 +50,51 @@ void Tas5805mComponent::update() {
     ESP_LOGD(TAG, "Tas5805m faults detected: faults will be cleared next update interval");
   }
 
-  if (this->have_fault_fault_binary_sensor_ != nullptr) {
+  if (this->have_fault_binary_sensor_ != nullptr) {
     this->have_fault_binary_sensor_->publish_state(this->have_fault_);
+  }
 
   if (this->right_channel_over_current_fault_fault_binary_sensor_ != nullptr) {
     this->right_channel_over_current_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 0));
+  }
 
   if (this->left_channel_over_current_fault_binary_sensor_ != nullptr) {
     this->left_channel_over_current_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
+  }
 
   if (this->right_channel_dc_fault_binary_sensor_ != nullptr) {
     this->right_channel_dc_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 2));
+  }
 
   if (this->left_channel_dc_fault_binary_sensor_ != nullptr) {
-    this->left_channel_dc_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 3))
-
+    this->left_channel_dc_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 3));
+  }
   if (this->pvdd_under_voltage_fault_binary_sensor_ != nullptr) {
     this->pvdd_under_voltage_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_global_fault & (1 << 0));
-
+  }
   if (this->pvdd_over_voltage_fault_binary_sensor_ != nullptr) {
     this->pvdd_over_voltage_fault_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 1));
+  }
 
   if (this->clock_fault_binary_sensor_ != nullptr) {
     this->clock_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 2));
+  }
 
   if (this->bq_write_failed_binary_sensor_ != nullptr) {
     this->bq_write_failed_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 6));
+  }
 
   if (this->otp_crc_check_error_binary_sensor_ != nullptr) {
     this->otp_crc_check_error_binary_sensor_->publish_state(this->tas5805m_state_.last_channel_fault & (1 << 7));
+  }
 
   if (this->over_temperature_shutdown_fault_binary_sensor_ != nullptr) {
     this->over_temperature_shutdown_fault_binary_sensor_->publish_state(this->tas5805m_state_.last_over_temperature_fault);
+  }
 
   if (this->over_temperature_warning_binary_sensor_ != nullptr) {
     this->over_temperature_warning_binary_sensor_->publish_state(this->tas5805m_state_.last_over_temperature_warning);
+  }
 }
 
 void Tas5805mComponent::loop() {
