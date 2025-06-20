@@ -125,6 +125,7 @@ void Tas5805mComponent::loop() {
     this->running_refresh_eq_gains_ = false;
     this->refresh_band_ = 0;
     this->loop_counter_ = 0;
+    if (!this->set_mixer_mode(this->tas5805m_state_.mixer_mode)) return false;
     return;
   }
 
