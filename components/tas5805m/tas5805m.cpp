@@ -33,6 +33,55 @@ void Tas5805mComponent::setup() {
     this->error_code_ = CONFIGURATION_FAILED;
     this->mark_failed();
   }
+  #ifdef USE_BINARY_SENSOR
+  // initialise all binary sensors
+  if (this->have_fault_binary_sensor_ != nullptr) {
+    this->have_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->right_channel_over_current_fault_binary_sensor_ != nullptr) {
+    this->right_channel_over_current_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->left_channel_over_current_fault_binary_sensor_ != nullptr) {
+    this->left_channel_over_current_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->right_channel_dc_fault_binary_sensor_ != nullptr) {
+    this->right_channel_dc_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->left_channel_dc_fault_binary_sensor_ != nullptr) {
+    this->left_channel_dc_fault_binary_sensor_->publish_state(false);
+  }
+  if (this->pvdd_under_voltage_fault_binary_sensor_ != nullptr) {
+    this->pvdd_under_voltage_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->pvdd_over_voltage_fault_binary_sensor_ != nullptr) {
+    this->pvdd_over_voltage_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->clock_fault_binary_sensor_ != nullptr) {
+    this->clock_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->bq_write_failed_fault_binary_sensor_ != nullptr) {
+    this->bq_write_failed_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->otp_crc_check_error_binary_sensor_ != nullptr) {
+    this->otp_crc_check_error_binary_sensor_->publish_state(false);
+  }
+
+  if (this->over_temperature_shutdown_fault_binary_sensor_ != nullptr) {
+    this->over_temperature_shutdown_fault_binary_sensor_->publish_state(false);
+  }
+
+  if (this->over_temperature_warning_binary_sensor_ != nullptr) {
+    this->over_temperature_warning_binary_sensor_->publish_state(false);
+  }
+  #endif
 }
 
 void Tas5805mComponent::update() {
