@@ -3,11 +3,10 @@ from esphome.components import sensor
 import esphome.config_validation as cv
 from esphome.const import (
     CONF_ID,
-    DEVICE_CLASS_DISTANCE,
     STATE_CLASS_MEASUREMENT,
 )
 
-CONF_CLEAR_FAULTS = "clear_faults"
+CONF_FAULTS_CLEARED = "faults_cleared"
 
 from ..audio_dac import CONF_TAS5805M_ID, Tas5805mComponent, tas5805m_ns
 
@@ -19,9 +18,8 @@ CONFIG_SCHEMA = (
             cv.GenerateID(): cv.declare_id(Tas5805mSensor),
             cv.GenerateID(CONF_TAS5805M_ID): cv.use_id(Tas5805mComponent),
 
-            cv.Optional(CONF_CLEAR_FAULTS): sensor.sensor_schema(
+            cv.Optional(CONF_FAULTS_CLEARED): sensor.sensor_schema(
                     accuracy_decimals=0,
-                    device_class=DEVICE_CLASS_DISTANCE,
                     state_class=STATE_CLASS_MEASUREMENT,
             ),
         }
@@ -34,6 +32,6 @@ async def to_code(config):
     await cg.register_component(var, config)
     await cg.register_parented(var, tas5805m_component)
 
-    if clear_faults_config := config.get(CONF_CLEAR_FAULTS):
+    if clear_faults_config := config.get(CONF_FAULTS_CLEARED):
       sens = await sensor.new_sensor(clear_faults_config)
       cg.add(var.set_clear_faults_sensor(sens))

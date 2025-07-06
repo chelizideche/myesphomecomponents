@@ -25,38 +25,6 @@ namespace tas5805m {
 
   static const char* const MIXER_MODE_TEXT[] = {"STEREO", "STEREO_INVERSE", "MONO", "RIGHT", "LEFT"};
 
-  // enum SwFreq : uint8_t {
-  //   SW_FREQ_768K = (0x00 << 4),
-  //   SW_FREQ_384K = (0x01 << 4),
-  //   SW_FREQ_480K = (0x03 << 4),
-  //   SW_FREQ_576K = (0x04 << 4),
-  // };
-
-  // enum BdFreq : uint8_t {
-  //   bd_FREQ_80K  = (0x00 << 5),
-  //   bd_FREQ_100K = (0x01 << 5),
-  //   bd_FREQ_120K = (0x02 << 5),
-  //   bd_FREQ_175K = (0x03 << 5),
-  // };
-
-  // enum ModMode : uint8_t {
-  //   MOD_MODE_BD     = 0x00,
-  //   MOD_MODE_1SPW   = 0x01,
-  //   MOD_MODE_HYBRID = 0x02,
-  // };
-
-
-
-  // enum FsFreq : uint8_t {
-  //   FS_FREQ_ERROR     = 0b0000,
-  //   FS_FREQ_8K        = 0b0010,
-  //   FS_FREQ_16K       = 0b0100,
-  //   FS_FREQ_32K       = 0b0110,
-  //   FS_FREQ_48K       = 0b1001,
-  //   FS_FREQ_96K       = 0b1011,
-  //   FS_FREQ_RESERVED  = 0b1000,
-  // };
-
   struct Tas5805mConfiguration {
     uint8_t offset;
     uint8_t value;

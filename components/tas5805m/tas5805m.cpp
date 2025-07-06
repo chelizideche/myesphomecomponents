@@ -11,9 +11,14 @@ static const char *const TAG = "tas5805m";
 
 static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
+// maximum delay allowed in "tas5805m_minimal.h" used in configure_registers()
 static const uint8_t ESPHOME_MAXIMUM_DELAY   = 5;     // milliseconds
+
+// delay for writing eq gains to ensure on boot sound has played and tas5805m has detected i2s clock
 static const uint8_t DELAY_LOOPS             = 30;    // number of loop iterations about equal 500ms
-static const uint8_t INITIAL_UPDATES_TO_SKIP = 5;     // number of updates to initially skip so i2s stabilises
+
+// number of updates to initially skip so i2s stabilises
+static const uint8_t INITIAL_UPDATES_TO_SKIP = 5;
 
 void Tas5805mComponent::setup() {
   if (this->enable_pin_ != nullptr) {
@@ -31,21 +36,23 @@ void Tas5805mComponent::setup() {
 }
 
 void Tas5805mComponent::update() {
+  // skip first few updates to allow i2s clock to stabilise so initial clock faults are avoided
   if (this->update_count_ < INITIAL_UPDATES_TO_SKIP) {
     this->update_count_++;
     return;
   }
-
+  // clear faults registers and zero counter for times faults are cleared
   if (this->update_count_ == INITIAL_UPDATES_TO_SKIP) {
     this->update_count_++;
-    this->reset_faults();
+    this->initialise_fault_registers();
     return;
   }
 
-  if (this->have_fault_) this->clear_faults();
+  // last update had faults, so now clear fault registers
+  if (this->have_fault_) this->clear_fault_registers();
 
-  if (!this->update_faults()) {
-    ESP_LOGD(TAG, "Error updating fault status");
+  if (!this->read_fault_registers()) {
+    ESP_LOGW(TAG, "Error updating fault status");
     this->have_fault_ = false;
     return;
   }
@@ -56,6 +63,9 @@ void Tas5805mComponent::update() {
   if (this->have_fault_) {
     ESP_LOGD(TAG, "Tas5805m faults detected: faults will be cleared next update interval");
   }
+
+
+  // update all binary sensors
 
   if (this->have_fault_binary_sensor_ != nullptr) {
     this->have_fault_binary_sensor_->publish_state(this->have_fault_);
@@ -185,8 +195,20 @@ void Tas5805mComponent::dump_config() {
       LOG_I2C_DEVICE(this);
       break;
   }
+
   #ifdef USE_BINARY_SENSOR
+  LOG_BINARY_SENSOR("  ", "Any TAS5805M Fault Binary Sensor", this->have_fault_);
+  LOG_BINARY_SENSOR("  ", "Right Channel Over Current Fault Binary Sensor", this->right_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "Left Channel Over Current Fault Binary Sensor", this->left_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "Right Channel DC Fault Binary Sensor", this->right_channel_dc_fault_binary_sensor_);
   LOG_BINARY_SENSOR("  ", "Left Channel DC Fault Binary Sensor", this->left_channel_dc_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "PVDD Under Voltage Fault Binary Sensor", this->pvdd_under_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "PVDD Over Voltage Fault Binary Sensor", this->pvdd_over_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "Clock Fault Binary Sensor", this->clock_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "BQ Write Failed Fault Binary Sensor", this->bq_write_failed_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "OTP CRC Check Error Binary Sensor", this->otp_crc_check_error_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "Over Temperature Shutdown Fault Binary Sensor", this->over_temperature_shutdown_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("  ", "Over Temperature Warning Fault Binary Sensor", this->over_temperature_shutdown_fault_binary_sensor_);
   #endif
 }
 
@@ -424,12 +446,6 @@ bool Tas5805mComponent::set_mixer_mode(MixerMode mode) {
   return true;
 }
 
-void Tas5805mComponent::select_mixer_mode(uint8_t mode) {
-  if (!this->set_mixer_mode((MixerMode)mode)) {
-    ESP_LOGW(TAG, "Unexpected error selecting mixer mode");
-  }
-}
-
 bool Tas5805mComponent::set_eq_on() {
   #ifdef USE_TAS5805M_EQ
   if (this->tas5805m_state_.eq_enabled) return true;
@@ -514,7 +530,6 @@ bool Tas5805mComponent::set_eq_gain(uint8_t band, int8_t gain) {
   this->tas5805m_state_.eq_gain[band] = gain;
   return this->set_book_and_page(TAS5805M_REG_BOOK_CONTROL_PORT, TAS5805M_REG_PAGE_ZERO);
 }
-
 #endif
 
 void Tas5805mComponent::refresh_eq_gains() {
@@ -529,29 +544,19 @@ void Tas5805mComponent::refresh_eq_gains() {
   return;
 }
 
-// int8_t Tas5805mComponent::eq_gain(uint8_t band) {
-//   if (band < 0 || band >= TAS5805M_EQ_BANDS) {
-//     ESP_LOGE(TAG, "Invalid EQ Band: %d", band);
-//     return TAS5805M_EQ_MIN_DB;
-//   }
-//   return this->tas5805m_state_.eq_gain[band];
-//}
-
-
-bool Tas5805mComponent::reset_faults() {
+bool Tas5805mComponent::initialise_fault_registers() {
   if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
-  this->tas5805m_state_.number_of_clear_faults = 0;
-
+  this->tas5805m_state_.times_faults_cleared = 0;
   return true;
 }
 
-bool Tas5805mComponent::clear_faults() {
+bool Tas5805mComponent::clear_fault_registers() {
   if (!tas5805m_write_byte(TAS5805M_FAULT_CLEAR, TAS5805M_ANALOG_FAULT_CLEAR)) return false;
-  this->tas5805m_state_.number_of_clear_faults++;
+  this->tas5805m_state_.times_faults_cleared++;
   return true;
 }
 
-bool Tas5805mComponent::update_faults() {
+bool Tas5805mComponent::read_fault_registers() {
   if (!this->tas5805m_read_byte(TAS5805M_CHAN_FAULT, &this->tas5805m_state_.last_channel_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT1, &this->tas5805m_state_.last_global_fault)) return false;
   if (!this->tas5805m_read_byte(TAS5805M_GLOBAL_FAULT2, &this->tas5805m_state_.last_over_temperature_fault)) return false;
@@ -559,8 +564,8 @@ bool Tas5805mComponent::update_faults() {
   return true;
 }
 
-uint32_t Tas5805mComponent::number_of_clear_faults() {
-  return this->tas5805m_state_.number_of_clear_faults;
+uint32_t Tas5805mComponent::times_faults_cleared() {
+  return this->tas5805m_state_.times_faults_cleared;
 }
 
 uint8_t Tas5805mComponent::last_channel_fault() {
@@ -570,45 +575,6 @@ uint8_t Tas5805mComponent::last_channel_fault() {
 uint8_t Tas5805mComponent::last_global_fault() {
   return this->tas5805m_state_.last_global_fault;
 }
-
-
-// bool Tas5805mComponent::get_modulation_mode(Tas5805mModMode *mode, Tas5805mSwFreq *freq, Tas5805mBdFreq *bd_freq) {
-//   uint8_t device_ctrl1_value;
-//   if (!this->tas5805m_read_byte(TAS5805M_DEVICE_CTRL_1, &device_ctrl1_value)) return false;
-//   // Read the BD frequency
-//   uint8_t ana_ctrl_value;
-//   if (!this->tas5805m_read_byte(TAS5805M_ANA_CTRL, &ana_ctrl_value)) return false;
-
-//   // Extract DAMP_MOD bits 0-1
-//   *mode = static_cast<Tas5805mModMode>(device_ctrl1_value & 0x02);
-//   // Extract FSW_SEL bits 4-6
-//   *freq = static_cast<Tas5805mSwFreq>(device_ctrl1_value & 0x70);
-
-//    // Extract ANA_CTRL bits 5-6 (class D bandwidth control)
-//   *bd_freq = static_cast<Tas5805mBdFreq>(ana_ctrl_value & 0x60);
-//   return true;
-// }
-
-// bool Tas5805mComponent::get_fs_freq(Tas5805mFsFreq* freq) {
-//   uint8_t current_value;
-//   if (!this->tas5805m_read_byte(TAS5805M_FS_MON, &current_value)) return false;
-//   *freq = static_cast<Tas5805mFsFreq>(current_value);
-//   return true;
-// }
-
-// bool Tas5805mComponent::get_bck_ratio(uint8_t *ratio) {
-//   uint8_t current_value;
-//   if (!this->tas5805m_read_byte(TAS5805M_BCK_MON, &current_value)) return false;
-//   *ratio = current_value;
-//   return true;
-// }
-
-// bool Tas5805mComponent::get_power_state(ControlState* state) {
-//   uint8_t current_value;
-//   if (!this->tas5805m_read_byte(TAS5805M_POWER_STATE, &current_value)) return false;
-//   *state = static_cast<ControlState>(current_value);
-//   return true;
-// }
 
 bool Tas5805mComponent::set_book_and_page(uint8_t book, uint8_t page) {
   if (!this->tas5805m_write_byte(TAS5805M_REG_PAGE_SET, TAS5805M_REG_PAGE_ZERO)) {
@@ -654,12 +620,6 @@ bool Tas5805mComponent::tas5805m_write_byte(uint8_t a_register, uint8_t data) {
 }
 
 bool Tas5805mComponent::tas5805m_write_bytes(uint8_t a_register, uint8_t* data, uint8_t len) {
-  //    for (uint8_t i=0; i < len; i++) {
-  //      i2c::ErrorCode error_code = this->write_register(a_register, (data+i), 1, true);
-  //    this->tas5805m_write_byte(a_register, *(data+i));
-  //    ESP_LOGE(TAG, "  Write value: 0x%x", *(data+i));
-  //  }
-
   i2c::ErrorCode error_code = this->write_register(a_register, data, len, true);
   if (error_code != i2c::ERROR_OK) {
     ESP_LOGE(TAG, "  Write register error %i", error_code);

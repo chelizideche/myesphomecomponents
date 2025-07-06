@@ -57,9 +57,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
   bool set_deep_sleep_off();
   bool set_deep_sleep_on();
 
-  void select_mixer_mode(uint8_t mode);
-
-  uint32_t number_of_clear_faults();
+  uint32_t times_faults_cleared();
   uint8_t last_channel_fault();
   uint8_t last_global_fault();
 
@@ -72,7 +70,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
   #endif
 
  protected:
-   GPIOPin *enable_pin_{nullptr};
+   GPIOPin* enable_pin_{nullptr};
 
    bool configure_registers();
 
@@ -88,32 +86,25 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
    bool get_mixer_mode(MixerMode *mode);
    bool set_mixer_mode(MixerMode mode);
 
-   bool get_digital_volume(uint8_t*  raw_volume);
+   bool get_digital_volume(uint8_t* raw_volume);
    bool set_digital_volume(uint8_t new_volume);
 
    bool get_state(ControlState* state);
    bool set_state(ControlState state);
 
-   bool reset_faults();
-   bool clear_faults();
-   bool update_faults();
+   bool initialise_fault_registers();
+   bool clear_fault_registers();
+   bool read_fault_registers();
+   
    bool have_fault_{false};
    uint8_t update_count_{0};
 
    #ifdef USE_TAS5805M_EQ
    bool get_eq(bool* enabled);
    bool set_eq(bool enable);
-   bool set_book_and_page(uint8_t book, uint8_t page);
-
    #endif
 
-  //int8_t eq_gain(uint8_t band);
-
-
-  //  bool get_modulation_mode(ModMode* mode, SwFreq* freq, BdFreq* bd_freq);
-  //  bool get_fs_freq(FsFreq* freq);
-  //  bool get_bck_ratio(uint8_t* ratio);
-  //  bool get_power_state(ControlState* state);
+   bool set_book_and_page(uint8_t book, uint8_t page);
 
    bool tas5805m_read_byte(uint8_t a_register, uint8_t* data);
    bool tas5805m_write_byte(uint8_t a_register, uint8_t data);
@@ -134,7 +125,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
 
     ControlState      control_state;
 
-    uint32_t          number_of_clear_faults{0};
+    uint32_t          times_faults_cleared{0};
     uint8_t           last_channel_fault{0};
     uint8_t           last_global_fault{0};
     uint8_t           last_over_temperature_fault{0};
@@ -146,10 +137,6 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
     #endif
 
    } tas5805m_state_;
-
-   #ifdef USE_SELECT
-   select::Select* mixer_mode_select_{nullptr};
-   #endif
 
    bool running_refresh_eq_gains_{false};
    bool eq_gains_refresh_initiated_{false};
