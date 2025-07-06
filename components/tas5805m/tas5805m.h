@@ -95,7 +95,7 @@ class Tas5805mComponent : public audio_dac::AudioDac, public PollingComponent, p
    bool initialise_fault_registers();
    bool clear_fault_registers();
    bool read_fault_registers();
-   
+
    bool have_fault_{false};
    uint8_t update_count_{0};
 
