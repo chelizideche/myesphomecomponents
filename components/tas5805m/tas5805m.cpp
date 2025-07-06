@@ -64,7 +64,7 @@ void Tas5805mComponent::update() {
     ESP_LOGD(TAG, "Tas5805m faults detected: faults will be cleared next update interval");
   }
 
-
+  #ifdef USE_BINARY_SENSOR
   // update all binary sensors
 
   if (this->have_fault_binary_sensor_ != nullptr) {
@@ -112,6 +112,7 @@ void Tas5805mComponent::update() {
   if (this->over_temperature_warning_binary_sensor_ != nullptr) {
     this->over_temperature_warning_binary_sensor_->publish_state(this->tas5805m_state_.last_over_temperature_warning != 0);
   }
+  #endif
 }
 
 void Tas5805mComponent::loop() {
