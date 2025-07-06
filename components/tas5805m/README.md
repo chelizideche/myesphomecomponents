@@ -61,37 +61,43 @@ If not specified defaults to STEREO.<BR>
 cleared at next interval if any are detected. If not specified, defaults to 60 seconds.<BR>
 
 # Template Switches
-
 The example YAML has template switch definitions provide switches in Homeassistant to:
- - enable/disable Louder, more specifically put TAS5805M out of/into low power sleep mode
- - enable/disable TAS5805M EQ Controls works in conjunction with 15 EQ Gain Numbers
+ - Enable Louder Switch, more specifically places TAS5805M out of/into low power sleep mode
+ - Enable TAS5805M EQ Control Switch works in conjunction with 15 EQ Gain Numbers
 
-The example YAML includes ***interval:*** configuration to trigger Louder Enable Switch Off
+The example YAML includes ***interval:*** configuration to trigger Enable Louder Switch Off
 when there is no music player activity (idle or paused) for the defined time (120s) and
-then trigger Louder Enable Switch On when music player is detected.
+then triggers Enable Louder Switch On when music player activity is detected.
 
-The example YAML enable/disable TAS5805M EQ Controls,
-# Template Number
-```
-number:
-  - platform: template
-    name: Announce Volume
-    id: announce_volume
-    icon: mdi:volume-source
-    unit_of_measurement: "%"
-    min_value: 0
-    max_value: 100
-    step: 1
-    restore_value: true
-    initial_value: 50
-    optimistic: true
-```
+The example YAML enable/disable TAS5805M EQ Controls, has option set ***restore_mode: RESTORE_DEFAULT_ON***<BR>
+The last setting of the Enable TAS5805M EQ Controls is restoired and if it cannot be restored, enables EQ Controls.
+
+# Announce Volume Template Number
 The example YAML defines a template number used in conjuction with<BR>
 ***speaker:*** and ***media_player:*** YAML configurations<BR>
 allowing the announcement_pipeline audio volume to be adjusted separate to the media_pipeline volume.
 
 # EQ Gain Configuration Numbers
+Configuration of the 15 EQ Gain Bands is shown in the example YAML.<BR>
+Defining a ***number: -platform: tas5805m*** requires all 15 EQ Gain Bands to be configured.
 
+For TAS5805M EQ control to configure correctly requires some addition YAML configuration as follows:
+- defining in the media_player configuration a "startup" media file
+```
+files:
+      id: startup
+      file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/wake_word_triggered.flac
+```
+
+- defining a ***on_boot:*** action under ***esphome:***
+```
+on_boot:
+    priority: 220.0
+    then:
+      - lambda: id(louder_mediaplayer)->play_file(id(startup), true, false);
+      - lambda: id(tas5805m_dac).refresh_eq_gains();
+```
+# 
 # YAML examples in this Repository
 Esp-idf framework can be used for defining the mediaplayer.
 
