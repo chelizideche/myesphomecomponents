@@ -15,7 +15,12 @@ void  Tas5805mSensor::dump_config() {
 
 void  Tas5805mSensor::update() {
   if (this->times_faults_cleared_sensor_ != nullptr) {
-    this->times_faults_cleared_sensor_->publish_state(this->parent_->times_faults_cleared());
+    // only publish if different to last value but will publish first value
+    uint32_t current_faults_cleared = this->parent_->times_faults_cleared();
+    if (current_faults_cleared != this->last_faults_cleared_) {
+      this->times_faults_cleared_sensor_->publish_state(this->current_faults_cleared);
+      this->last_faults_cleared_ = current_faults_cleared;
+    }
   }
   // if (this->last_channel_fault_sensor_ != nullptr) {
   //   uint8_t new_fault_code = this->parent_->last_channel_fault();
