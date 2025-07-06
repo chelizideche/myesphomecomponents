@@ -1,5 +1,5 @@
 
-# ESPHome component for ESP32-S3 LOuder and ESP32 Louder
+# ESPHome component for ESP32-S3 Louder and ESP32 Louder
 
 This ESPHome external component is based on the TAS5805M DAC driver for ESP32 platform<BR>
 https://github.com/sonocotta/esp32-tas5805m-dac/tree/main by Andriy Malyshenko<BR>
@@ -21,22 +21,22 @@ external_components:
 The base component configuration uses the esphome Audio DAC Core component,<BR>
 so it is configured as a platform under the core audio dac component.<BR><BR>
 The component works in conjuction with the ***speaker:*** ***-platform: i2s_audio***,<BR>
-***- platform: mixer*** , ***-platform: remixer*** and ***mediaplayer: -platform: speaker***.<BR>
+***- platform: mixer*** , ***-platform: remixer*** and ***mediaplayer: -platform: speaker***.<BR><BR>
 These components require ***psram:*** so the example YAML includes psram definitions.<BR>
 The ***mediaplayer: -platform: speaker*** component operates exclusively under IDF,<BR>
-so under ***esp32:*** ***-framework:*** must have ***type: esp-idf***.<BR>
+so under ***esp32:*** ***-framework:*** type must be ***type: esp-idf***.<BR><BR>
 The component also requires definition of ***i2c:*** to define the ***sda:*** and ***scl:*** pins.<BR>
 used to communicate with the ESP32 Louder's TAS5805M.<BR>
 
 The component monitors for TAS5805M faults at the update interval of the ***audio_dac: -platform: tas5805m***<BR>
-If any fault is detected, the faults will be automatically cleared at this next update interval.<BR>
+If any fault is detected, the faults will be automatically cleared at next update interval.<BR>
 
 Several additional settings and sensors can be configured:
 - two template Switch definitions - Enable Louder and Enable EQ Control
-- a template Number for adjusting Announce Volume for example for Text to Speech annnouncement
-- optionally define 15 EQ Gain Numbers (all required or not configured) to control the TAS5805M EQ
+- a template Number for adjusting Announce Volume (for example: for Text to Speech annnouncements)
+- optionally define 15 EQ Gain Numbers (all required or none configured) to control the TAS5805M EQ
 - 12 optional Binary Sensors corresonding to TAS5805M fault codes
-- an optional Sensor indicating the number of times the faults register have been cleared on detecting a fault
+- an optional Sensor indicating the number of times a fault was detected and the fault registers cleared
 
 # YAML configuration
 
@@ -73,9 +73,9 @@ The example YAML enable/disable TAS5805M EQ Controls, has option set ***restore_
 The last setting of the Enable TAS5805M EQ Controls is restoired and if it cannot be restored, enables EQ Controls.
 
 ## Announce Volume Template Number
-The example YAML defines a template number used in conjuction with<BR>
+The example YAML defines a Announve Volume template number which used in conjuction with<BR>
 ***speaker:*** and ***media_player:*** YAML configurations<BR>
-allowing the announcement_pipeline audio volume to be adjusted separate to the media_pipeline volume.
+adjusts the announcement_pipeline audio volume separately to the media_pipeline volume.
 
 ## EQ Gain Configuration Numbers
 Configuration of the 15 EQ Gain Bands is shown in the example YAML.<BR>
@@ -142,7 +142,7 @@ sensor:
       name: "Times Faults Cleared"
 ```
 This sensor counts the number of times that faults has been detected and then automatically cleared.
-It is updated at the update interval of this sensor which defaults to 60 seconds.
+It is updated at the update interval of this sensor which if not configured defaults to 60 seconds.
 
 # YAML examples in this Repository
 The ESP32-S3 Louder configuration is provided in "esp32S3_louder_idf_media.yaml".<BR>
