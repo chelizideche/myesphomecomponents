@@ -98,7 +98,7 @@ on_boot:
       - lambda: id(tas5805m_dac).refresh_eq_gains();
 ```
 ## Binary Sensors
-These binary sensors correspond to fault codes from the TAS5805M
+These binary sensors correspond to fault codes from the TAS5805M.<BR>
 All 12 binary sensors can be optionally defined as follows:
 ```
 binary_sensor:
@@ -133,18 +133,18 @@ if any of the fault conditions exist, then the ***have_fault*** binary sensor is
 Binary sensors are updated at the ***update_interval:*** of the ***audio_dac: -platform: tas5805m***<BR>
 
 ## Sensor
-One sensor can be optionall defined as follows:
+One sensor can be optionally defined as follows:
 ```
 sensor:
   - platform: tas5805m
     faults_cleared:
       name: "Times Faults Cleared"
 ```
-This sensor counts the number of times that a faults has been detected and then automatically cleared.
-It is updated at the update interval of this sensor which defaulst to 60 seconds.
+This sensor counts the number of times that faults has been detected and then automatically cleared.
+It is updated at the update interval of this sensor which defaults to 60 seconds.
 
 # YAML examples in this Repository
-The ESP32-S3 Louder configuration is provide in "esp32S3_louder_idf_media.yaml".<BR>
+The ESP32-S3 Louder configuration is provided in "esp32S3_louder_idf_media.yaml".<BR>
 
-The ESP32 Louder configuration is provide in "esp32_louder_idf_media.yaml".<BR>
+The ESP32 Louder configuration is provided in "esp32_louder_idf_media.yaml".<BR>
 Due to psram memory limitation of the ESP32, there may be some initial distortion for first few seconds of playing a audio stream.
