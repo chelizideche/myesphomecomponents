@@ -179,7 +179,7 @@ bool Tas5805mComponent::configure_registers() {
 }
 
 void Tas5805mComponent::dump_config() {
-  ESP_LOGCONFIG(TAG, "Tas5805m:");
+  ESP_LOGCONFIG(TAG, "Tas5805m Audio Dac:");
 
   switch (this->error_code_) {
     case CONFIGURATION_FAILED:
