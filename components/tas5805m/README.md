@@ -1,12 +1,12 @@
 
-## ESPHome component for ESP32-Louder (using ESP32-S3 with PSRAM and TAS5805m DAC)
+# ESPHome component for ESP32-S3 LOuder and ESP32 Louder
 
 This ESPHome external component is based on the TAS5805M DAC driver for ESP32 platform<BR>
 https://github.com/sonocotta/esp32-tas5805m-dac/tree/main by Andriy Malyshenko<BR>
 which is licenced under GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007.
 
 
-# Usage: Tas5805m component
+# Usage: Tas5805m component on Github
 This component requires Esphome version 2025.6.0 or later.
 
 The following yaml can be used so ESPHome accesses the component files:
