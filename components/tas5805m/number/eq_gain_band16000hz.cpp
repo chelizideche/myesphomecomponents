@@ -4,7 +4,7 @@
 namespace esphome {
 namespace tas5805m {
 
-static const char *const TAG = "Tas5805m.number";
+static const char *const TAG = "tas5805m.number";
 
 void EqGainBand16000hz::setup() {
   float value;

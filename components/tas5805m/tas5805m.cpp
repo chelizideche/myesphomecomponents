@@ -7,7 +7,11 @@
 namespace esphome {
 namespace tas5805m {
 
-static const char *const TAG = "tas5805m";
+static const char *const TAG               = "tas5805m";
+
+#ifdef USE_BINARY_SENSOR
+static const char *const TAG_BINARY_SENSOR = "tas5805m.binary_sensor";
+#endif
 
 static const uint8_t TAS5805M_MUTE_CONTROL   = 0x08;  // LR Channel Mute
 
@@ -199,18 +203,19 @@ void Tas5805mComponent::dump_config() {
   }
 
   #ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR("  ", "Any TAS5805M Fault Binary Sensor", this->have_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Right Channel Over Current Fault Binary Sensor", this->right_channel_over_current_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Left Channel Over Current Fault Binary Sensor", this->left_channel_over_current_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Right Channel DC Fault Binary Sensor", this->right_channel_dc_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Left Channel DC Fault Binary Sensor", this->left_channel_dc_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "PVDD Under Voltage Fault Binary Sensor", this->pvdd_under_voltage_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "PVDD Over Voltage Fault Binary Sensor", this->pvdd_over_voltage_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Clock Fault Binary Sensor", this->clock_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "BQ Write Failed Fault Binary Sensor", this->bq_write_failed_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "OTP CRC Check Error Binary Sensor", this->otp_crc_check_error_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Over Temperature Shutdown Fault Binary Sensor", this->over_temperature_shutdown_fault_binary_sensor_);
-  LOG_BINARY_SENSOR("  ", "Over Temperature Warning Fault Binary Sensor", this->over_temperature_shutdown_fault_binary_sensor_);
+  ESP_LOGCONFIG(TAG_BINARY_SENSOR, "Tas5805m Binary Sensor:");
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Any Faults", this->have_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Right Channel Over Current", this->right_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Left Channel Over Current", this->left_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Right Channel DC Fault", this->right_channel_dc_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Left Channel DC Fault", this->left_channel_dc_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  PVDD Under Voltage", this->pvdd_under_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  PVDD Over Voltage", this->pvdd_over_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Clock Fault", this->clock_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  BQ Write Failed", this->bq_write_failed_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  OTP CRC Check Error", this->otp_crc_check_error_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Over Temperature Shutdown", this->over_temperature_shutdown_fault_binary_sensor_);
+  LOG_BINARY_SENSOR(TAG_BINARY_SENSOR, "  Over Temperature Warning", this->over_temperature_warning_binary_sensor_);
   #endif
 }
 
