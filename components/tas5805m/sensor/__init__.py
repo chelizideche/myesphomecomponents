@@ -34,4 +34,4 @@ async def to_code(config):
 
     if clear_faults_config := config.get(CONF_FAULTS_CLEARED):
       sens = await sensor.new_sensor(clear_faults_config)
-      cg.add(var.set_clear_faults_sensor(sens))
+      cg.add(var.set_times_faults_cleared_sensor(sens))

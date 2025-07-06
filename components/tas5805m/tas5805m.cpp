@@ -198,7 +198,7 @@ void Tas5805mComponent::dump_config() {
   }
 
   #ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR("  ", "Any TAS5805M Fault Binary Sensor", this->have_fault_);
+  LOG_BINARY_SENSOR("  ", "Any TAS5805M Fault Binary Sensor", this->have_fault_binary_sensor_);
   LOG_BINARY_SENSOR("  ", "Right Channel Over Current Fault Binary Sensor", this->right_channel_over_current_fault_binary_sensor_);
   LOG_BINARY_SENSOR("  ", "Left Channel Over Current Fault Binary Sensor", this->left_channel_over_current_fault_binary_sensor_);
   LOG_BINARY_SENSOR("  ", "Right Channel DC Fault Binary Sensor", this->right_channel_dc_fault_binary_sensor_);
