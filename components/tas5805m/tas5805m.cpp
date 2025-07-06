@@ -247,18 +247,18 @@ void Tas5805mComponent::dump_config() {
   }
 
   #ifdef USE_BINARY_SENSOR
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Any Faults:", this->have_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Right Channel Over Current:", this->right_channel_over_current_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Left Channel Over Current:", this->left_channel_over_current_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Right Channel DC Fault:", this->right_channel_dc_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Left Channel DC Fault:", this->left_channel_dc_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor PVDD Under Voltage:", this->pvdd_under_voltage_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor PVDD Over Voltage:", this->pvdd_over_voltage_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Clock Fault:", this->clock_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor BQ Write Failed:", this->bq_write_failed_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor OTP CRC Check Error:", this->otp_crc_check_error_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Over Temperature Shutdown:", this->over_temperature_shutdown_fault_binary_sensor_);
-  LOG_BINARY_SENSOR(" ", "Tas5805m Binary Sensor Over Temperature Warning:", this->over_temperature_warning_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Any Faults:", this->have_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Right Channel Over Current:", this->right_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Left Channel Over Current:", this->left_channel_over_current_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Right Channel DC Fault:", this->right_channel_dc_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Left Channel DC Fault:", this->left_channel_dc_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor PVDD Under Voltage:", this->pvdd_under_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor PVDD Over Voltage:", this->pvdd_over_voltage_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Clock Fault:", this->clock_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor BQ Write Failed:", this->bq_write_failed_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor OTP CRC Check Error:", this->otp_crc_check_error_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Over Temperature Shutdown:", this->over_temperature_shutdown_fault_binary_sensor_);
+  LOG_BINARY_SENSOR("", "Tas5805m Binary Sensor Over Temperature Warning:", this->over_temperature_warning_binary_sensor_);
   #endif
 }
 
