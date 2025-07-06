@@ -19,21 +19,21 @@ external_components:
 
 ## Overview
 The base component configuration uses the esphome Audio DAC Core component,<BR>
-so it is configured as a platform under the core audio dac component.
+so it is configured as a platform under the core audio dac component.<BR>
 The component works in conjuction with the ***speaker:*** ***-platform: i2s_audio***,
-***- platform: mixer*** , ***-platform: remixer*** and ***mediaplayer: -platform: speaker***.
-These component require ***psram:*** so the example YAML includes these definitions.
-The ***mediaplayer: -platform: speaker*** component operates exclusively under IDF, that is
-under ***esp32:***, ***framework:*** must be ***type: esp-idf***.
-The component also requires definition of ***i2c:***, to define the ***sda:*** and ***scl:*** pins
+***- platform: mixer*** , ***-platform: remixer*** and ***mediaplayer: -platform: speaker***.<BR>
+These components require ***psram:*** so the example YAML includes psram definitions.
+The ***mediaplayer: -platform: speaker*** component operates exclusively under IDF,<BR>
+that is under ***esp32:***, ***-framework:*** must be ***type: esp-idf***.<BR>
+The component also requires definition of ***i2c:*** to define the ***sda:*** and ***scl:*** pins
 used to communicate with the ESP32 Louder's TAS5805M.
 
-The component monitors for TAS5805M faults at the update interval of the audio_dac TAS5805M platform<BR>
-If any fault is detected, the faults will be cleared at this next update interval.
+The component monitors for TAS5805M faults at the update interval of the ***audio_dac: -platform: tas5805m***<BR>
+If any fault is detected, the faults will be automatically cleared at this next update interval.
 
 Several additional settings and sensors can be configured:
-- the suggested yaml includes two template switch definitions - Enable Louder and Enable EQ Contro
-- template Number for adjusting Announce Volume for example for Text to Speech annnouncement
+- two template Switch definitions - Enable Louder and Enable EQ Control
+- a template Number for adjusting Announce Volume for example for Text to Speech annnouncement
 - optionally define 15 EQ Gain Numbers (all required or not configured) to control the TAS5805M EQ
 - 12 optional Binary Sensors corresonding to TAS5805M fault codes
 - an optional Sensor indicating the number of times the faults register have been cleared on detecting a fault
@@ -60,30 +60,9 @@ If not specified defaults to STEREO.<BR>
 ***update_interval:*** faults will be checked at this interval and<BR>
 cleared at next interval if any are detected. If not specified, defaults to 60 seconds.<BR>
 
-# Template Switch
-```
-switch:
-  - platform: template
-    name: Enable
-    id: enable_louder
-    optimistic: true
-    restore_mode: ALWAYS_ON
-    turn_on_action:
-      lambda: id(tas5805m_dac).set_deep_sleep_off();
-    turn_off_action:
-      lambda: id(tas5805m_dac).set_deep_sleep_on();
+# Template Switches
 
-  - platform: template
-    name: Enable EQ Control
-    id: enable_eq_control
-    optimistic: true
-    restore_mode: RESTORE_DEFAULT_ON
-    turn_on_action:
-      - lambda: id(tas5805m_dac).set_eq_on();
-    turn_off_action:
-      - lambda: id(tas5805m_dac).set_eq_off();
-```
-These template switch definitions provide switches in Homeassistant to:
+The example YAML has template switch definitions provide switches in Homeassistant to:
  - enable/disable Louder, more specifically put TAS5805M out of/into low power sleep mode
  - enable/disable TAS5805M EQ Controls works in conjunction with 15 EQ Gain Numbers
 
@@ -91,6 +70,7 @@ The example YAML includes ***interval:*** configuration to trigger Louder Enable
 when there is no music player activity (idle or paused) for the defined time (120s) and
 then trigger Louder Enable Switch On when music player is detected.
 
+The example YAML enable/disable TAS5805M EQ Controls,
 # Template Number
 ```
 number:
@@ -106,8 +86,9 @@ number:
     initial_value: 50
     optimistic: true
 ```
-This template number in conjuction with the example ***speaker:*** and ***media_player:*** YAML
-allows the announcement_pipeline audio volume to be adjusted separate to the media_pipeline volume.
+The example YAML defines a template number used in conjuction with<BR>
+***speaker:*** and ***media_player:*** YAML configurations<BR>
+allowing the announcement_pipeline audio volume to be adjusted separate to the media_pipeline volume.
 
 # EQ Gain Configuration Numbers
 
