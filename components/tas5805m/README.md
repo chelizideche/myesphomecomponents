@@ -89,7 +89,8 @@ files:
       file: https://github.com/esphome/home-assistant-voice-pe/raw/dev/sounds/wake_word_triggered.flac
 ```
 
-- defining a ***on_boot:*** action under ***esphome:***
+- defining an ***on_boot:*** action under ***esphome:*** to firstly play the sound file<BR>
+  then configure the TAS5805M with the saved eq gains.
 ```
 on_boot:
     priority: 220.0
