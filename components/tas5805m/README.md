@@ -149,3 +149,4 @@ The ESP32-S3 Louder configuration is provided in "esp32S3_louder_idf_media.yaml"
 
 The ESP32 Louder configuration is provided in "esp32_louder_idf_media.yaml".<BR>
 Due to psram memory limitation of the ESP32, there may be some initial distortion for first few seconds of playing a audio stream.
+Initial distortion can be reduced to minimum by reducing to ***sample_rate: 16000***  under ***speaker: -platform: i2s_audio***
