@@ -173,7 +173,7 @@ bool Tas5805mComponent::configure_registers() {
   if (!this->set_analog_gain(this->tas5805m_state_.analog_gain)) return false;
   if (!this->set_state(CTRL_PLAY)) return false;
   #ifdef USE_TAS5805M_EQ
-  if (!this->set_eq(false)) return false;
+  if (!this->set_eq(true)) return false;
   #endif
   return true;
 }
